@@ -12,6 +12,8 @@ var logger = new LoggerConfiguration()
 
 builder.Logging.AddSerilog(logger);
 
+builder.Services.AddControllersWithViews();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

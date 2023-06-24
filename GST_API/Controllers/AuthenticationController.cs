@@ -17,25 +17,25 @@ namespace GST_API.Controllers
             this._logger = logger;
         }
 
-        [HttpGet("RequestOTP")]
-        [Route("request-otp")]
-        public async Task<GSTNResult<OTPResponseModel>> RequestOTP()
-        {
-            GSTNAuthClient client = new GSTNAuthClient(gstin,userId);
-            var result = await client.RequestOTP();
-            this._logger.LogInformation(JsonConvert.SerializeObject(result));
-            return result;
-        }
+        //[HttpGet("RequestOTP")]
+        //[Route("request-otp")]
+        //public async Task<GSTNResult<OTPResponseModel>> RequestOTP()
+        //{
+        //    GSTNAuthClient client = new GSTNAuthClient(gstin,userId);
+        //    var result = await client.RequestOTP();
+        //    this._logger.LogInformation(JsonConvert.SerializeObject(result));
+        //    return result;
+        //}
 
-        [HttpGet("RequestToken")]
-        [Route("request-token")]
-        public async Task<GSTNResult<OTPResponseModel>> RequestToken()
-        {
-            GSTNAuthClient client = new GSTNAuthClient(gstin, userId);
-            var result = await client.();
-            this._logger.LogInformation(JsonConvert.SerializeObject(result));
-            return result;
-        }
+        //[HttpGet("RequestToken")]
+        //[Route("request-token")]
+        //public async Task<GSTNResult<TokenResponseModel>> RequestToken()
+        //{
+        //    GSTNAuthClient client = new GSTNAuthClient(gstin, userId);
+        //    var result = await client.RequestToken(otp);
+        //    this._logger.LogInformation(JsonConvert.SerializeObject(result));
+        //    return result;
+        //}
 
     }
 }

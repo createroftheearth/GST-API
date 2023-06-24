@@ -5,7 +5,7 @@ VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GST_API", "GST_API\GST_API.csproj", "{AB5C706F-B798-4136-BF04-FC8453AC8EF2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GST_API_Library", "GST_API_Library\GST_API_Library.csproj", "{2F7CB4F9-F273-4CE9-8764-AF06E11F0623}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GST_API_Library", "GST_API_Library\GST_API_Library.csproj", "{2F7CB4F9-F273-4CE9-8764-AF06E11F0623}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
