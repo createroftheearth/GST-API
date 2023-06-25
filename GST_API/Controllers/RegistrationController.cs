@@ -29,7 +29,7 @@ namespace GST_API.Controllers
                 };
                 return res;
             }
-            //TODO: Move this code into 
+            //TODO: Move this code into service
             var result = await _userManager.CreateAsync(user, userModel.Password);
 
 

@@ -26,8 +26,4 @@
     <ProjectReference Include="..\GST_API_Library\GST_API_Library.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Extensions\" />
-  </ItemGroup>
-
 </Project>
