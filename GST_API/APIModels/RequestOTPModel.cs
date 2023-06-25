@@ -1,4 +1,4 @@
-﻿namespace GST_API.Models
+﻿namespace GST_API.APIModels
 {
     public class RequestOTPModel
     {
