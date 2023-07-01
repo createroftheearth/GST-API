@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GST_API_DAL.Repository.Interfaces
 {
-    internal interface IUserRepository
+    public interface IUserRepository
     {
         Task<bool> IsGSTINExists(string GSTIN);
     }

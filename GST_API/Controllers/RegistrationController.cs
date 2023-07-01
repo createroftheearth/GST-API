@@ -1,4 +1,5 @@
-﻿using GST_API.APIModels;
+﻿using AutoMapper;
+using GST_API.APIModels;
 using GST_API_DAL.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +12,12 @@ namespace GST_API.Controllers
     {
 
         private readonly UserManager<User> _userManager;
+        private readonly IMapper _mapper;
 
-        public RegistrationController(UserManager<User> userManger)
+        public RegistrationController(UserManager<User> userManger,IMapper mapper)
         {
             _userManager = userManger;
+            _mapper = mapper;
         }
 
         [HttpPost]
@@ -29,10 +32,22 @@ namespace GST_API.Controllers
                 };
                 return res;
             }
+            User user = _mapper.Map<User>(model);
             //TODO: Move this code into service
-            var result = await _userManager.CreateAsync(user, userModel.Password);
-
-
+            var result = await _userManager.CreateAsync(user, model.PasswordHash);
+            if(!result.Succeeded)
+            {
+                return new ResponseModel
+                {
+                    isSuccess = false,
+                    message = string.Join(",", result.Errors.Select(z=>z.Description + ": "+ z.Code))
+                };
+            }
+            return new ResponseModel
+            {
+                isSuccess = true,
+                message = "success"
+            };
         }
     }
 }

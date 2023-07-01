@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 
 namespace GST_API_DAL.Repository
 {
-    internal abstract class BaseRepository<T> : IBaseRepository<T> where T : class
+    public abstract class BaseRepository<T> : IBaseRepository<T> where T : class
     {
         private ApplicationDbContext _context;
         internal DbSet<T> dbSet;
