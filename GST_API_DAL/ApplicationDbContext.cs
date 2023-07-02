@@ -7,7 +7,7 @@ namespace GST_API_DAL
 {
     public class ApplicationDbContext: IdentityDbContext<User>
     {
-        internal ApplicationDbContext(DbContextOptions<ApplicationDbContext> options):base(options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options):base(options)
         {
         }
 

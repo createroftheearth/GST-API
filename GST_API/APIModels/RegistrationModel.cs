@@ -31,25 +31,11 @@ public class RegistrationModel
     [Required(ErrorMessage = "Email ID is mandatory.")]
     [EmailAddress(ErrorMessage = "Not a valid EmailID")]
     public string Email { get; set; }
-    public bool EmailConfirmed { get; set; }
-    public string PasswordHash { get; set; }
-
-    public string SecurityStamp { get; set; }
 
     [Display(Name = "Phone No")]
     [Required(ErrorMessage = "Phone No is mandatory.")]
     [RegularExpression(@"^[0-9]{10}$", ErrorMessage = "Not a valid phone number")]
     public string PhoneNumber { get; set; }
-
-    public bool PhoneNumberConfirmed { get; set; }
-
-    public bool TwoFactorEnabled { get; set; }
-
-    public DateTime? LockoutEndDateUtc { get; set; }
-
-    public bool LockoutEnabled { get; set; }
-
-    public int AccessFailedCount { get; set; }
 
 
     [Display(Name = "Username")]
@@ -78,9 +64,6 @@ public class RegistrationModel
     [Display(Name = "State")]
     [Required(ErrorMessage = "State is mandatory.")]
     public string StateCode { get; set; }
-    [JsonIgnore]
-    [Column(TypeName = "image")]
-    public byte[] Image{ get; set; }
 
     [Required(ErrorMessage = "Pincode is mandatory.")]
     [StringLength(6, ErrorMessage = "Pincode cannot exceed 6 characters.")]
@@ -89,24 +72,20 @@ public class RegistrationModel
 
     [StringLength(120, ErrorMessage = "Address 2 cannot exceed 120 characters.")]
     [Display(Name = "Address 2")]
-    public string address2 { get; set; }
+    public string Address2 { get; set; }
 
     [StringLength(50, ErrorMessage = "Place cannot exceed 50 characters.")]
     public string Place { get; set; }
 
     [Required(ErrorMessage = "Profile picture is mandatory.")]
-    [JsonIgnore]
-    public byte[] profilePicture { get; set; }
+    public string ProfilePicture { get; set; }
     [Required(ErrorMessage = "Cancelled Cheque is mandatory.")]
     [Display(Name = "Cancelled Cheque Picture")]
-    [JsonIgnore]
-    public byte[] cancelledChequePhoto { get; set; }
+    public string CancelledChequePhoto { get; set; }
 
     [MaxLength(10, ErrorMessage = "Organization PAN cannot exceed 10 characters.")]
     [Required(ErrorMessage = "Organization PAN is mandatory.")]
     [RegularExpression("^([A-Za-z]){5}([0-9]){4}([A-Za-z]){1}$", ErrorMessage = "Invalid PAN Number")]
     [Display(Name = "Organization PAN")]
     public string Organization_PAN { get; set; }
-    [JsonIgnore]
-    public string verificationEmailLink { get; set; }
 }
