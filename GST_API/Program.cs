@@ -89,6 +89,9 @@ app.UseDbTransaction();
 app.MapControllers();
 
 app.UseCors();
-app.Run();
+
 app.UseAuthentication();
+
 app.UseAuthorization();
+
+app.Run();
