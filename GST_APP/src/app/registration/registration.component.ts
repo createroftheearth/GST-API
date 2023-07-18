@@ -434,8 +434,8 @@ export class RegistrationComponent {
       return null;
     }
     return this.registrationService.checkUsernameExists(val).pipe(
-      map((res) => {
-        if (res) {
+      map((res: any) => {
+        if (res.data) {
           return { unique: true };
         }
         return null;
@@ -449,8 +449,8 @@ export class RegistrationComponent {
       return null;
     }
     return this.registrationService.checkGSTNExists(val).pipe(
-      map((res) => {
-        if (res) {
+      map((res: any) => {
+        if (res.data) {
           return { unique: true };
         }
         return null;
@@ -464,8 +464,8 @@ export class RegistrationComponent {
       return null;
     }
     return this.registrationService.checkGSTNUsernameExists(val).pipe(
-      map((res) => {
-        if (res) {
+      map((res: any) => {
+        if (res.data) {
           return { unique: true };
         }
         return null;

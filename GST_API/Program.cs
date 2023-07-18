@@ -11,6 +11,7 @@ using GST_API.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Data.Entity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -78,9 +79,9 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseHttpsRedirection();
 }
 
-app.UseHttpsRedirection();
 
 app.UseAuthorization();
 

@@ -2,6 +2,7 @@
 using GST_API.APIModels;
 using GST_API_DAL.Models;
 using GST_API_DAL.Repository.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,6 +10,7 @@ namespace GST_API.Controllers
 {
     [Route("api/registration")]
     [ApiController]
+    [AllowAnonymous]
     public class RegistrationController : ControllerBase
     {
 
@@ -59,21 +61,39 @@ namespace GST_API.Controllers
         }
 
         [HttpGet("gstn-username-exists")]
-        public async Task<bool> GSTNUserNameExists([FromQuery]string gstnUsername)
+        public async Task<ResponseModel> GSTNUserNameExists([FromQuery]string gstnUsername)
         {
-            return await _userRepository.IsGSTNUsernameExists(gstnUsername);
+            var data = await _userRepository.IsGSTNUsernameExists(gstnUsername);
+            return new ResponseModel
+            {
+                isSuccess = true,
+                message = "success",
+                data = data
+            };
         }
 
         [HttpGet("username-exists")]
-        public async Task<bool> UserNameExists([FromQuery] string username)
+        public async Task<ResponseModel> UserNameExists([FromQuery] string username)
         {
-            return await _userRepository.IsUsernameExists(username);
+            var data = await _userRepository.IsUsernameExists(username);
+            return new ResponseModel
+            {
+                isSuccess = true,
+                message = "success",
+                data = data
+            };
         }
 
         [HttpGet("gstn-exists")]
-        public async Task<bool> GSTNExists([FromQuery] string GSTIN)
+        public async Task<ResponseModel> GSTNExists([FromQuery] string GSTIN)
         {
-            return await _userRepository.IsGSTINExists(GSTIN);
+            var data = await _userRepository.IsGSTINExists(GSTIN);
+            return new ResponseModel
+            {
+                isSuccess = true,
+                message = "success",
+                data = data
+            };
         }
     }
 }
