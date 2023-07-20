@@ -23,15 +23,9 @@ namespace GST_API_Library.Services
         TimeSpan timeout = TimeSpan.FromSeconds(100);
         public GSTNApiClientBase(string path, string gstin)
         {
-            //Change on 14/03/2023
-            //this.path = "/taxpayerapi/v1.0/authenticate";//path;
             this.path = path;
-
             this.gstin = gstin;
-            // pathSub = "https://devapi.gst.gov.in/taxpayerapi/v2.1/returns/gstr1";
-            //url2 = "https://devapi.gst.gov.in/taxpayerapi/v1.0/authenticate";//GSTNConstants.base_url + path;
             url2 = GSTNConstants.base_url + path;
-
         }
         public TimeSpan RequestTimeout
         {
@@ -129,53 +123,7 @@ namespace GST_API_Library.Services
 
         #endregion
 
-        public GSTNResult<TOutput> Get<TOutput>()
-        {
 
-
-            var _task = Task.Run(() => { return GetAsync<TOutput>(); });
-
-            _task.Wait();
-            var result = _task.Result;
-            return result;
-        }
-
-        public async Task<GSTNResult<TOutput>> Post<TInput, TOutput>(TInput data)
-        {
-            return await PostAsync<TInput, TOutput>(data);
-        }
-
-        public GSTNResult<TOutput> Put<TInput, TOutput>(TInput data)
-        {
-
-            var _task = Task.Run(() => { return PutAsync<TInput, TOutput>(data); });
-
-            _task.Wait();
-            var result = _task.Result;
-            return result;
-        }
-
-        public GSTNResult<TOutput> Patch<TInput, TOutput>(TInput data)
-        {
-
-
-            var _task = Task.Run(() => { return PatchAsync<TInput, TOutput>(data); });
-
-            _task.Wait();
-            var result = _task.Result;
-            return result;
-        }
-
-        public GSTNResult<bool> Delete()
-        {
-
-
-            var _task = Task.Run(() => { return DeleteAsync(); });
-
-            _task.Wait();
-            var result = _task.Result;
-            return result;
-        }
 
         protected HttpClient GetHttpClient()
         {

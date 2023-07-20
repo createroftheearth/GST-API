@@ -416,14 +416,18 @@ namespace GST_API_Library.Services
 
         //}
         //This API Is used To save entire GSTR1 invoices
-        public Task<GSTNResult<SaveInfo>> Save(GSTR1Total data)
+        public async Task<GSTNResult<SaveInfo>> Save(GSTR1Total data)
         {
             var model = this.Encrypt(data);
             model.action = "RETSAVE";
-            var info = this.Put<UnsignedDataInfo, ResponseDataInfo>(model);
+            var info = await this.PutAsync<UnsignedDataInfo, ResponseDataInfo>(model);
+            if(info==null)
+            {
+                throw new Exception("Unable to get the details from server");
+            }
             var output = this.Decrypt<SaveInfo>(info.Data);
             var model2 = this.BuildResult<SaveInfo>(info, output);
-            return null;//model2;
+            return model2;
         }
         ////This API Is used To submit GSTR1 return
         //public GSTNResult<FileInfo> File(SummaryOutward data, string sign, string st, string sid, string fp)

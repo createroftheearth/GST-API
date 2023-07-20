@@ -19,18 +19,12 @@ namespace GST_API_Library.Services
     public class EncryptionUtils
     {
 
-        public static X509Certificate2 getPublicKey()
+        public static X509Certificate2 getPublicKey(string basePath)
 
         {
             RSACryptoServiceProvider RSA = new RSACryptoServiceProvider();
 
-            //change on 05 Jun 2023
-            X509Certificate2 cert2 = new X509Certificate2(@"C:\Users\amits\source\repos\GST-API_Application\GST_API_Library\Resource\GSTN_G2B_SANDBOX_UAT_public.cer");//System.IO.Path.Combine(GSTNConstants.base_path, "Resources\\GSTN_G2A_SANDBOX_UAT_public.cer"));
-
-            //X509Certificate2 cert2 = new X509Certificate2(@"D:\GST_OTP\GSTN-master\GSTN.API.Library\Resources\GSTN_G2B_SANDBOX_UAT_public.cer");//System.IO.Path.Combine(GSTNConstants.base_path, "Resources\\GSTN_G2A_SANDBOX_UAT_public.cer"));
-
-            //X509Certificate2 cert2 = new X509Certificate2(@"D:\4 mar\GSTN-master\GSTN.API.Library\Resources\GSTN_G2B_SANDBOX_UAT_public.cer");//System.IO.Path.Combine(GSTNConstants.base_path, "Resources\\GSTN_G2A_SANDBOX_UAT_public.cer"));
-
+            X509Certificate2 cert2 = new X509Certificate2(basePath + @"\GST_API_Library\Resource\GSTN_G2B_SANDBOX_UAT_public.cer");//System.IO.Path.Combine(GSTNConstants.base_path, "Resources\\GSTN_G2A_SANDBOX_UAT_public.cer"));
 
             return cert2;
         }
@@ -98,10 +92,10 @@ namespace GST_API_Library.Services
 
 
 
-        public static string RSAEncrypt(string input)
+        public static string RSAEncrypt(string input,string basePath)
         {
             byte[] bytesToBeEncrypted = Encoding.ASCII.GetBytes(input);
-            return RsaEncrypt(bytesToBeEncrypted);
+            return RsaEncrypt(bytesToBeEncrypted,basePath);
         }
 
         private static readonly byte[] Salt = new byte[] {
@@ -124,9 +118,9 @@ namespace GST_API_Library.Services
             return key;
         }
 
-        public static string RsaEncrypt(byte[] bytesToBeEncrypted)
+        public static string RsaEncrypt(byte[] bytesToBeEncrypted,string basePath)
         {
-            X509Certificate2 certificate = getPublicKey();
+            X509Certificate2 certificate = getPublicKey(basePath);
             RSA RSA = certificate.GetRSAPublicKey();
 
 

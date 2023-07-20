@@ -1,4 +1,5 @@
 ﻿using GST_API.APIModels;
+using GST_API.Services;
 using GST_API_DAL.Models;
 using GST_API_Library.Models;
 using GST_API_Library.Services;
@@ -15,22 +16,33 @@ using System.Text;
 namespace GST_API.Controllers
 {
     [Route("api/auth")]
-    [Authorize]
     [ApiController]
+    [Authorize]
     public class AuthenticationController : ControllerBase
     {
         private readonly ILogger<AuthenticationController> _logger;
         private readonly UserManager<User> _userManager;
+        private readonly TokenService _tokenService;
         private readonly IConfiguration _configuration;
-
+        private readonly string basePath;
         public AuthenticationController(ILogger<AuthenticationController> logger,
             UserManager<User> userManager,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            TokenService tokenService)
         {
             _logger = logger;
             _userManager = userManager;
+            _tokenService = tokenService;
             _configuration = configuration;
-
+            var baseProjectPath = _configuration.GetValue<string>(WebHostDefaults.ContentRootKey);
+            if (string.IsNullOrEmpty(baseProjectPath))
+            {
+                basePath = "";
+            }
+            else
+            {
+                basePath = baseProjectPath.Substring(0, baseProjectPath.LastIndexOf('\\'));
+            }
         }
 
         [HttpPost]
@@ -54,27 +66,13 @@ namespace GST_API.Controllers
                     message = "Invalid password"
                 };
             }
-            var authSignInKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
-            var token = new JwtSecurityToken(
-                issuer: _configuration["Jwt:Issuer"],
-                audience: _configuration["Jwt:Audience"],
-                claims: new Claim[]
-                {
-                        new Claim("Id",user.Id),
-                        new Claim("GSTN",user.GSTNNo),
-                        new Claim("GSTNUsername",user.GSTINUsername)
-                },
-                expires: DateTime.Now.AddHours(1),
-                signingCredentials: new SigningCredentials(authSignInKey, SecurityAlgorithms.HmacSha256)
-                );
             return new ResponseModel
             {
                 isSuccess = true,
                 message = "success",
                 data = new
                 {
-                    token = new JwtSecurityTokenHandler().WriteToken(token),
-                    expiresIn = token.ValidTo,
+                    token = _tokenService.CreateToken(user),
                 }
             };
         }
@@ -84,19 +82,43 @@ namespace GST_API.Controllers
         {
             var gstnUsername = this.User.Claims.FirstOrDefault(z => z.Type == "GSTNUsername")?.Value;
             var gstin = this.User.Claims.FirstOrDefault(z => z.Type == "GSTN")?.Value;
-            GSTNAuthClient client = new GSTNAuthClient(gstin, gstnUsername);
+
+            GSTNAuthClient client = new GSTNAuthClient(gstin, gstnUsername, basePath);
             var result = await client.RequestOTP();
             _logger.LogInformation(JsonConvert.SerializeObject(result));
             return result;
         }
 
-        [HttpGet("request-token")]
-        public async Task<GSTNResult<TokenResponseModel>> RequestToken([FromQuery] string otp)
+        [HttpPost("{otp}/request-token")]
+        public async Task<GSTNResult<TokenResponseModel>> RequestToken(string otp)
         {
             var userId = this.User.Claims.FirstOrDefault(z => z.Type == "GSTNUsername")?.Value;
             var gstin = this.User.Claims.FirstOrDefault(z => z.Type == "GSTN")?.Value;
-            GSTNAuthClient client = new GSTNAuthClient(gstin, userId);
+            GSTNAuthClient client = new GSTNAuthClient(gstin, userId, basePath);
             var result = await client.RequestToken(otp);
+            _logger.LogInformation(JsonConvert.SerializeObject(result));
+            return result;
+        }
+
+        [HttpPost("refresh-token")]
+        public async Task<GSTNResult<TokenResponseModel>> RefreshToken()
+        {
+            var userId = this.User.Claims.FirstOrDefault(z => z.Type == "GSTNUsername")?.Value;
+            var gstin = this.User.Claims.FirstOrDefault(z => z.Type == "GSTN")?.Value;
+            GSTNAuthClient client = new GSTNAuthClient(gstin, userId, basePath);
+            var result = await client.RefreshToken();
+            _logger.LogInformation(JsonConvert.SerializeObject(result));
+            return result;
+        }
+
+        [Authorize]
+        [HttpPost("logout")]
+        public async Task<GSTNResult<LogoutResponseModel>> Logout()
+        {
+            var userId = this.User.Claims.FirstOrDefault(z => z.Type == "GSTNUsername")?.Value;
+            var gstin = this.User.Claims.FirstOrDefault(z => z.Type == "GSTN")?.Value;
+            GSTNAuthClient client = new GSTNAuthClient(gstin, userId, basePath);
+            var result = await client.RequestLogout();
             _logger.LogInformation(JsonConvert.SerializeObject(result));
             return result;
         }

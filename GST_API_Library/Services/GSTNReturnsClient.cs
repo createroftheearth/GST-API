@@ -123,7 +123,7 @@ namespace GST_API_Library.Services
 
         //}
         //This API Is To Get status of return
-        public GSTNResult<StatusInfo> GetStatus(string ret_prd, string reference_id)
+        public async Task<GSTNResult<StatusInfo>> GetStatus(string ret_prd, string reference_id)
         {
             this.PrepareQueryStringGSTR(new Dictionary<string, string> {
             {"gstin",gstin},
@@ -131,14 +131,13 @@ namespace GST_API_Library.Services
             {"ret_period",ret_prd},
             {"ref_id" ,reference_id}
             });//trans_id--ref_id
-            var info = this.Get<ResponseDataInfo>();
+            var info = await this.GetAsync<ResponseDataInfo>();
             var output = this.Decrypt<StatusInfo>(info.Data);
             var model = this.BuildResult<StatusInfo>(info, output);
             return model;
-
         }
 
-        public GSTNResult<StatusInfoGSTR2> GetStatusGSTR2(string ret_prd, string reference_id)
+        public async Task<GSTNResult<StatusInfoGSTR2>> GetStatusGSTR2(string ret_prd, string reference_id)
         {
             this.PrepareQueryStringGSTR(new Dictionary<string, string> {
             {"gstin",gstin},
@@ -146,7 +145,7 @@ namespace GST_API_Library.Services
             {"ret_period",ret_prd},
             {"ref_id" ,reference_id}
             });//trans_id--ref_id
-            var info = this.Get<ResponseDataInfo>();
+            var info = await this.GetAsync<ResponseDataInfo>();
             var output = this.Decrypt<StatusInfoGSTR2>(info.Data);
             var model = this.BuildResult<StatusInfoGSTR2>(info, output);
             return model;
