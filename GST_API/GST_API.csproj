@@ -27,4 +27,8 @@
     <ProjectReference Include="..\GST_API_Library\GST_API_Library.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="APIModels\ResponceModel\" />
+  </ItemGroup>
+
 </Project>

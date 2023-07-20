@@ -79,7 +79,7 @@ namespace GST_API.Controllers
             };
         }
 
-        [HttpGet("request-otp")]
+        [HttpPost("request-otp")]
         public async Task<GSTNResult<OTPResponseModel>> RequestOTP()
         {
             var gstnUsername = this.User.Claims.FirstOrDefault(z => z.Type == "GSTNUsername")?.Value;

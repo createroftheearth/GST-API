@@ -25,7 +25,7 @@ namespace GST_API_Library.Services
             RSACryptoServiceProvider RSA = new RSACryptoServiceProvider();
 
             //change on 05 Jun 2023
-            X509Certificate2 cert2 = new X509Certificate2(@"C:\Users\keert\source\repos\GSTApp_ConsoleNew\GSTN.API\Resources\NewPublicKey\GSTN_G2B_SANDBOX_UAT_public.cer");//System.IO.Path.Combine(GSTNConstants.base_path, "Resources\\GSTN_G2A_SANDBOX_UAT_public.cer"));
+            X509Certificate2 cert2 = new X509Certificate2(@"C:\Users\amits\source\repos\GST-API_Application\GST_API_Library\Resource\GSTN_G2B_SANDBOX_UAT_public.cer");//System.IO.Path.Combine(GSTNConstants.base_path, "Resources\\GSTN_G2A_SANDBOX_UAT_public.cer"));
 
             //X509Certificate2 cert2 = new X509Certificate2(@"D:\GST_OTP\GSTN-master\GSTN.API.Library\Resources\GSTN_G2B_SANDBOX_UAT_public.cer");//System.IO.Path.Combine(GSTNConstants.base_path, "Resources\\GSTN_G2A_SANDBOX_UAT_public.cer"));
 
