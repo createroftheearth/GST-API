@@ -53,17 +53,6 @@ namespace GST_API_Library.Models
         public string ack_num { get; set; }
     }
 
-    public class ErrorDetails
-    {
-        public string code { get; set; }
-        public string desc { get; set; }
-    }
-
-    public class ErrorInfo
-    {
-        public string status_cd { get; set; }
-        public ErrorDetails error { get; set; }
-    }
     public class ResponseDataInfo
     {
         public string data { get; set; }
@@ -99,10 +88,5 @@ namespace GST_API_Library.Models
 
         public T Data { get; set; }
 
-        public string Message { get; set; }
-
-        public string Status { get; set; }
-
-        public ErrorInfo Error { get; set; }
     }
 }

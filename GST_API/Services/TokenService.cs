@@ -15,11 +15,11 @@ namespace GST_API.Services
         }
         private const int ExpirationMinutes = 30;
 
-        public string CreateToken(User user)
+        public string CreateToken(User user, string appKey)
         {
             var expiration = DateTime.UtcNow.AddMinutes(ExpirationMinutes);
             var token = CreateJwtToken(
-                CreateClaims(user),
+                CreateClaims(user, appKey),
                 CreateSigningCredentials(),
                 expiration
             );
@@ -37,15 +37,16 @@ namespace GST_API.Services
                 signingCredentials: credentials
             );
 
-        private List<Claim> CreateClaims(User user)
+        private List<Claim> CreateClaims(User user, string appKey)
         {
             try
             {
                 var claims = new List<Claim>
                 {
                     new Claim("Id", user.Id),
-                        new Claim("GSTN",user.GSTNNo),
-                        new Claim("GSTNUsername",user.GSTINUsername)
+                    new Claim("GSTN",user.GSTNNo),
+                    new Claim("GSTNUsername",user.GSTINUsername),
+                    new Claim("AppKey",appKey)
                 };
                 return claims;
             }

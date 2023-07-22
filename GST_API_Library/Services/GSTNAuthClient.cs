@@ -46,25 +46,26 @@ namespace GST_API_Library.Services
             return await PostAsync<LogoutRequestModel, LogoutResponseModel>(model);
         }
 
-        public async Task<GSTNResult<OTPResponseModel>> RequestOTP()
+        public async Task<(GSTNResult<OTPResponseModel>,string)> RequestOTP()
         {
+            var appKey = EncryptionUtils.RsaEncrypt(GSTNConstants.GetAppKeyBytes(), basePath);
             OTPRequestModel model = new OTPRequestModel
             {
                 action = "OTPREQUEST",
                 username = userid,
-                app_key = EncryptionUtils.RsaEncrypt(GSTNConstants.GetAppKeyBytes(),basePath)
+                app_key = appKey
             };
-            return await PostAsync<OTPRequestModel, OTPResponseModel>(model);
+            return (await PostAsync<OTPRequestModel, OTPResponseModel>(model), appKey);
         }
 
-        public async Task<GSTNResult<TokenResponseModel>> RequestToken(string otp)
+        public async Task<GSTNResult<TokenResponseModel>> RequestToken(string otp,string appKey)
         {
             TokenRequestModel model = new TokenRequestModel
             {
                 action = "AUTHTOKEN",
-                username = userid
+                username = userid,
+                app_key = appKey
             };
-            model.app_key = EncryptionUtils.RsaEncrypt(GSTNConstants.GetAppKeyBytes(), basePath);
             byte[] dataToEncrypt = UTF8Encoding.UTF8.GetBytes(otp);
             model.otp = EncryptionUtils.AesEncrypt(dataToEncrypt, GSTNConstants.GetAppKeyBytes());
             return await PostAsync<TokenRequestModel, TokenResponseModel>(model);

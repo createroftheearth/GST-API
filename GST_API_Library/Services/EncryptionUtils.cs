@@ -121,10 +121,8 @@ namespace GST_API_Library.Services
         public static string RsaEncrypt(byte[] bytesToBeEncrypted,string basePath)
         {
             X509Certificate2 certificate = getPublicKey(basePath);
-            RSA RSA = certificate.GetRSAPublicKey();
-
-
-            byte[] bytesEncrypted = RSA.Encrypt(bytesToBeEncrypted, RSAEncryptionPadding.Pkcs1);
+            RSA rsa = certificate.GetRSAPublicKey();
+            byte[] bytesEncrypted = rsa.Encrypt(bytesToBeEncrypted,RSAEncryptionPadding.Pkcs1);
 
             string result = Convert.ToBase64String(bytesEncrypted);
             return result;

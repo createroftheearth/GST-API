@@ -32,7 +32,8 @@ builder.Services.AddIdentityCore<User>(options =>
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequireUppercase = false;
     options.Password.RequireLowercase = false;
-}).AddEntityFrameworkStores<ApplicationDbContext>()
+}).AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
 

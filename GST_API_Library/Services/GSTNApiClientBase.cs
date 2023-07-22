@@ -25,8 +25,22 @@ namespace GST_API_Library.Services
         {
             this.path = path;
             this.gstin = gstin;
+            GSTNConstants.publicip = getPublicIp();
             url2 = GSTNConstants.base_url + path;
         }
+
+        private string getPublicIp()
+        {
+            try
+            {
+                return new WebClient().DownloadString("http://ipinfo.io/ip").Trim();
+            }
+            catch (Exception)
+            {
+                return GSTNConstants.publicip;
+            }
+        }
+
         public TimeSpan RequestTimeout
         {
             get { return timeout; }
@@ -79,9 +93,8 @@ namespace GST_API_Library.Services
                 // if(data)
                 //--http://devapi.gstsystem.co.in/taxpayerapi/v0.3/returns/gstr1?gstin=33GSPTN0231G1ZM&action=RETFILE&ret_period=042017
                 //Change by amit
-                http://devapi.gstsystem.co.in/taxpayerapi/v2.2/returns/gstr1?gstin=33GSPTN0231G1ZM&action=RETFILE&ret_period=022023
+                //--http://devapi.gstsystem.co.in/taxpayerapi/v2.2/returns/gstr1?gstin=33GSPTN0231G1ZM&action=RETFILE&ret_period=022023
                     response = await client.PostAsJsonAsync(url2, data);
-                    //response = await client.PostAsJsonAsync(pathSub, data);
                 }
                 return BuildResponse<TOutput>(response);
             }
@@ -154,13 +167,8 @@ namespace GST_API_Library.Services
                 }
                 else
                 {
-                    var result = JsonConvert.DeserializeObject<TOutput>(str1);
-                    resultInfo.Data = result;
+                    resultInfo.Data = JsonConvert.DeserializeObject<TOutput>(str1);
                 }
-            }
-            else
-            {
-                resultInfo.Message = str1;
             }
             return resultInfo;
         }
