@@ -18,7 +18,7 @@ namespace GST_API.Controllers
     [Route("api/auth")]
     [ApiController]
     [Authorize]
-    public class AuthenticationController : ControllerBase
+    public class AuthenticationController : BaseController
     {
         private readonly ILogger<AuthenticationController> _logger;
         private readonly UserManager<User> _userManager;
@@ -67,16 +67,16 @@ namespace GST_API.Controllers
                 };
             }
             GSTNAuthClient client = new GSTNAuthClient(user.GSTNNo, user.GSTINUsername, basePath);
-            var (result,appKey) = await client.RequestOTP();
-            if (result.Data?.status_cd == "1" && !string.IsNullOrEmpty(appKey))
+            var (result,baseAppKey) = await client.RequestOTP();
+            if (result.Data?.status_cd == "1" && !string.IsNullOrEmpty(baseAppKey))
             {
                 return new ResponseModel
                 {
                     isSuccess = true,
-                    message = "success",
+                    message = "OTP Sent, Please use request-token API to get 'GSTIN-Token'",
                     data = new
                     {
-                        token = _tokenService.CreateToken(user,appKey)
+                        token = _tokenService.CreateToken(user,baseAppKey)
                     }
                 };
             } else
@@ -85,25 +85,11 @@ namespace GST_API.Controllers
             }
         }
 
-        //[HttpPost("request-otp")]
-        //public async Task<GSTNResult<OTPResponseModel>> RequestOTP()
-        //{
-        //    var gstnUsername = this.User.Claims.FirstOrDefault(z => z.Type == "GSTNUsername")?.Value;
-        //    var gstin = this.User.Claims.FirstOrDefault(z => z.Type == "GSTN")?.Value;
-
-        
-        //    _logger.LogInformation(JsonConvert.SerializeObject(result));
-        //    return result;
-        //}
-
         [HttpPost("{otp}/request-token")]
         public async Task<GSTNResult<TokenResponseModel>> RequestToken(string otp)
         {
-            var userId = this.User.Claims.FirstOrDefault(z => z.Type == "GSTNUsername")?.Value;
-            var gstin = this.User.Claims.FirstOrDefault(z => z.Type == "GSTN")?.Value;
-            var appKey = this.User.Claims.FirstOrDefault(z => z.Type == "AppKey")?.Value;
-            GSTNAuthClient client = new GSTNAuthClient(gstin, userId, basePath);
-            var result = await client.RequestToken(otp,appKey);
+            GSTNAuthClient client = new GSTNAuthClient(gstin, gstinUsername, basePath);
+            var result = await client.RequestToken(otp);
             _logger.LogInformation(JsonConvert.SerializeObject(result));
             return result;
         }
@@ -111,9 +97,7 @@ namespace GST_API.Controllers
         [HttpPost("refresh-token")]
         public async Task<GSTNResult<TokenResponseModel>> RefreshToken()
         {
-            var userId = this.User.Claims.FirstOrDefault(z => z.Type == "GSTNUsername")?.Value;
-            var gstin = this.User.Claims.FirstOrDefault(z => z.Type == "GSTN")?.Value;
-            GSTNAuthClient client = new GSTNAuthClient(gstin, userId, basePath);
+            GSTNAuthClient client = new GSTNAuthClient(gstin, gstinUsername, basePath);
             var result = await client.RefreshToken();
             _logger.LogInformation(JsonConvert.SerializeObject(result));
             return result;
@@ -123,9 +107,7 @@ namespace GST_API.Controllers
         [HttpPost("logout")]
         public async Task<GSTNResult<LogoutResponseModel>> Logout()
         {
-            var userId = this.User.Claims.FirstOrDefault(z => z.Type == "GSTNUsername")?.Value;
-            var gstin = this.User.Claims.FirstOrDefault(z => z.Type == "GSTN")?.Value;
-            GSTNAuthClient client = new GSTNAuthClient(gstin, userId, basePath);
+            GSTNAuthClient client = new GSTNAuthClient(gstin, gstinUsername, basePath);
             var result = await client.RequestLogout();
             _logger.LogInformation(JsonConvert.SerializeObject(result));
             return result;

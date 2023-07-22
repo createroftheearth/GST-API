@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
+using GST_API.Services;
+using GST_API.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,7 +42,10 @@ builder.Services.AddIdentityCore<User>(options =>
 builder.Services.AddRepositories();
 builder.Services.AddServices();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(config =>
+{
+    config.Filters.Add(new ControllerActionFilter());
+});
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(option=>

@@ -48,23 +48,24 @@ namespace GST_API_Library.Services
 
         public async Task<(GSTNResult<OTPResponseModel>,string)> RequestOTP()
         {
-            var appKey = EncryptionUtils.RsaEncrypt(GSTNConstants.GetAppKeyBytes(), basePath);
+            var baseAppKey = GSTNConstants.GetAppKeyBytes();
+            var appKey = EncryptionUtils.RsaEncrypt(baseAppKey, basePath);
             OTPRequestModel model = new OTPRequestModel
             {
                 action = "OTPREQUEST",
                 username = userid,
                 app_key = appKey
             };
-            return (await PostAsync<OTPRequestModel, OTPResponseModel>(model), appKey);
+            return (await PostAsync<OTPRequestModel, OTPResponseModel>(model), Convert.ToBase64String(baseAppKey));
         }
 
-        public async Task<GSTNResult<TokenResponseModel>> RequestToken(string otp,string appKey)
+        public async Task<GSTNResult<TokenResponseModel>> RequestToken(string otp)
         {
             TokenRequestModel model = new TokenRequestModel
             {
                 action = "AUTHTOKEN",
                 username = userid,
-                app_key = appKey
+                app_key = EncryptionUtils.RsaEncrypt(GSTNConstants.GetAppKeyBytes(), basePath)
             };
             byte[] dataToEncrypt = UTF8Encoding.UTF8.GetBytes(otp);
             model.otp = EncryptionUtils.AesEncrypt(dataToEncrypt, GSTNConstants.GetAppKeyBytes());
