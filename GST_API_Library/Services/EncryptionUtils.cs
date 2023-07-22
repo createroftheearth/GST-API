@@ -19,12 +19,12 @@ namespace GST_API_Library.Services
     public class EncryptionUtils
     {
 
-        public static X509Certificate2 getPublicKey(string basePath)
+        public static X509Certificate2 getPublicKey()
 
         {
             RSACryptoServiceProvider RSA = new RSACryptoServiceProvider();
 
-            X509Certificate2 cert2 = new X509Certificate2(basePath + @"\GST_API_Library\Resource\GSTN_G2B_SANDBOX_UAT_public.cer");//System.IO.Path.Combine(GSTNConstants.base_path, "Resources\\GSTN_G2A_SANDBOX_UAT_public.cer"));
+            X509Certificate2 cert2 = new X509Certificate2(GSTNConstants.base_path + @"\GST_API_Library\Resource\GSTN_G2B_SANDBOX_UAT_public.cer");//System.IO.Path.Combine(GSTNConstants.base_path, "Resources\\GSTN_G2A_SANDBOX_UAT_public.cer"));
 
             return cert2;
         }
@@ -95,7 +95,7 @@ namespace GST_API_Library.Services
         public static string RSAEncrypt(string input,string basePath)
         {
             byte[] bytesToBeEncrypted = Encoding.ASCII.GetBytes(input);
-            return RsaEncrypt(bytesToBeEncrypted,basePath);
+            return RsaEncrypt(bytesToBeEncrypted);
         }
 
         private static readonly byte[] Salt = new byte[] {
@@ -118,9 +118,9 @@ namespace GST_API_Library.Services
             return key;
         }
 
-        public static string RsaEncrypt(byte[] bytesToBeEncrypted,string basePath)
+        public static string RsaEncrypt(byte[] bytesToBeEncrypted)
         {
-            X509Certificate2 certificate = getPublicKey(basePath);
+            X509Certificate2 certificate = getPublicKey();
             RSA rsa = certificate.GetRSAPublicKey();
             byte[] bytesEncrypted = rsa.Encrypt(bytesToBeEncrypted,RSAEncryptionPadding.Pkcs1);
 

@@ -1,9 +1,12 @@
 ﻿using GST_API.Controllers;
+using GST_API_DAL.Models;
 using GST_API_Library.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Primitives;
 using Microsoft.Identity.Client;
+using Org.BouncyCastle.Bcpg;
+using System.Reflection.PortableExecutable;
 using System.Security.Claims;
 
 namespace GST_API.Filters
@@ -13,26 +16,35 @@ namespace GST_API.Filters
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
+            getBaseControllerData(context);
+            await next();
+        }
 
-            StringValues sek = "", gstinToken = "";
-            HttpRequest Request = context.HttpContext.Request;
-            ClaimsPrincipal User = context.HttpContext.User;
+        private string getHeaderValues(ActionExecutingContext context,string key) {
+            StringValues value="";
+            IHeaderDictionary headers = context.HttpContext.Request?.Headers;
             try
             {
-                if (Request != null)
+                if (headers != null)
                 {
-                    Request.Headers.TryGetValue("GSTIN-Sek", out sek);
-                    Request.Headers.TryGetValue("GSTIN-Token", out gstinToken);
+                    headers.TryGetValue(key, out value);
                 }
             }
             finally
             {
-                if (string.IsNullOrEmpty(sek) || string.IsNullOrEmpty(gstinToken))
+                if (string.IsNullOrEmpty(value))
                 {
-                    sek = "";
-                    gstinToken = "";
+                    value= "";
                 }
             }
+            return value;
+        }
+
+        private void getBaseControllerData(ActionExecutingContext context)
+        {
+            string gstinToken = getHeaderValues(context,"GSTIN-Token");
+            string sek = getHeaderValues(context, "GSTIN-Sek");
+            ClaimsPrincipal User = context.HttpContext.User;
             if (User != null)
             {
                 var baseAppKey = User.Claims.FirstOrDefault(z => z.Type == "BaseAppKey")?.Value;
@@ -47,7 +59,6 @@ namespace GST_API.Filters
                 baseController.GSTINSek = sek;
                 baseController.GSTINToken = gstinToken;
             }
-            await next();
         }
     }
 

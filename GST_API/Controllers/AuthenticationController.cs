@@ -24,25 +24,13 @@ namespace GST_API.Controllers
         private readonly UserManager<User> _userManager;
         private readonly TokenService _tokenService;
         private readonly IConfiguration _configuration;
-        private readonly string basePath;
         public AuthenticationController(ILogger<AuthenticationController> logger,
             UserManager<User> userManager,
-            IConfiguration configuration,
             TokenService tokenService)
         {
             _logger = logger;
             _userManager = userManager;
             _tokenService = tokenService;
-            _configuration = configuration;
-            var baseProjectPath = _configuration.GetValue<string>(WebHostDefaults.ContentRootKey);
-            if (string.IsNullOrEmpty(baseProjectPath))
-            {
-                basePath = "";
-            }
-            else
-            {
-                basePath = baseProjectPath.Substring(0, baseProjectPath.LastIndexOf('\\'));
-            }
         }
 
         [HttpPost]
@@ -66,7 +54,7 @@ namespace GST_API.Controllers
                     message = "Invalid password"
                 };
             }
-            GSTNAuthClient client = new GSTNAuthClient(user.GSTNNo, user.GSTINUsername, basePath);
+            GSTNAuthClient client = new GSTNAuthClient(user.GSTNNo, user.GSTINUsername);
             var (result,baseAppKey) = await client.RequestOTP();
             if (result.Data?.status_cd == "1" && !string.IsNullOrEmpty(baseAppKey))
             {
@@ -88,7 +76,7 @@ namespace GST_API.Controllers
         [HttpPost("{otp}/request-token")]
         public async Task<GSTNResult<TokenResponseModel>> RequestToken(string otp)
         {
-            GSTNAuthClient client = new GSTNAuthClient(gstin, gstinUsername, basePath);
+            GSTNAuthClient client = new GSTNAuthClient(gstin, gstinUsername);
             var result = await client.RequestToken(otp);
             _logger.LogInformation(JsonConvert.SerializeObject(result));
             return result;
@@ -97,7 +85,7 @@ namespace GST_API.Controllers
         [HttpPost("refresh-token")]
         public async Task<GSTNResult<TokenResponseModel>> RefreshToken()
         {
-            GSTNAuthClient client = new GSTNAuthClient(gstin, gstinUsername, basePath);
+            GSTNAuthClient client = new GSTNAuthClient(gstin, gstinUsername);
             var result = await client.RefreshToken();
             _logger.LogInformation(JsonConvert.SerializeObject(result));
             return result;
@@ -107,7 +95,7 @@ namespace GST_API.Controllers
         [HttpPost("logout")]
         public async Task<GSTNResult<LogoutResponseModel>> Logout()
         {
-            GSTNAuthClient client = new GSTNAuthClient(gstin, gstinUsername, basePath);
+            GSTNAuthClient client = new GSTNAuthClient(gstin, gstinUsername);
             var result = await client.RequestLogout();
             _logger.LogInformation(JsonConvert.SerializeObject(result));
             return result;

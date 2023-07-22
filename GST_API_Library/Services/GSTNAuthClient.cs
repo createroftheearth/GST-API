@@ -14,16 +14,14 @@ namespace GST_API_Library.Services
         public string AuthToken { get; set; }
         public byte[] DecryptedKey { get; set; }
         public string userid { get; set; }
-        public string basePath { get; set; }
         string IGSTNAuthProvider.Username
         {
             get { return userid; }
             set { userid = value; }
         }
-        public GSTNAuthClient(string gstin, string userid,string basePath) : base("/taxpayerapi/v1.0/authenticate", gstin)
+        public GSTNAuthClient(string gstin, string userid) : base("/taxpayerapi/v1.0/authenticate", gstin)
         {
             this.userid = userid;
-            this.basePath = basePath;
         }
         protected internal override void BuildHeaders(HttpClient client)
         {
@@ -39,7 +37,7 @@ namespace GST_API_Library.Services
             {
                 action = "LOGOUT",
                 username = userid,
-                app_key = EncryptionUtils.RsaEncrypt(GSTNConstants.GetAppKeyBytes(),basePath),
+                app_key = EncryptionUtils.RsaEncrypt(GSTNConstants.GetAppKeyBytes()),
                 auth_token = token.auth_token
 
             };
@@ -49,7 +47,7 @@ namespace GST_API_Library.Services
         public async Task<(GSTNResult<OTPResponseModel>,string)> RequestOTP()
         {
             var baseAppKey = GSTNConstants.GetAppKeyBytes();
-            var appKey = EncryptionUtils.RsaEncrypt(baseAppKey, basePath);
+            var appKey = EncryptionUtils.RsaEncrypt(baseAppKey);
             OTPRequestModel model = new OTPRequestModel
             {
                 action = "OTPREQUEST",
@@ -65,7 +63,7 @@ namespace GST_API_Library.Services
             {
                 action = "AUTHTOKEN",
                 username = userid,
-                app_key = EncryptionUtils.RsaEncrypt(GSTNConstants.GetAppKeyBytes(), basePath)
+                app_key = EncryptionUtils.RsaEncrypt(GSTNConstants.GetAppKeyBytes())
             };
             byte[] dataToEncrypt = UTF8Encoding.UTF8.GetBytes(otp);
             model.otp = EncryptionUtils.AesEncrypt(dataToEncrypt, GSTNConstants.GetAppKeyBytes());

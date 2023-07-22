@@ -16,21 +16,9 @@ namespace GST_API.Controllers
     public class GSTR1Controller : BaseController
     {
         private readonly ILogger<AuthenticationController> _logger;
-        private readonly IConfiguration _configuration;
-        private readonly string basePath;
-        public GSTR1Controller(ILogger<AuthenticationController> logger, IConfiguration configuration)
+        public GSTR1Controller(ILogger<AuthenticationController> logger)
         {
             _logger = logger;
-            _configuration = configuration;
-            var baseProjectPath = _configuration.GetValue<string>(WebHostDefaults.ContentRootKey);
-            if (string.IsNullOrEmpty(baseProjectPath))
-            {
-                basePath = "";
-            }
-            else
-            {
-                basePath = baseProjectPath.Substring(0, baseProjectPath.LastIndexOf('\\'));
-            }
         }
 
         [HttpPut("save")]
@@ -44,7 +32,7 @@ namespace GST_API.Controllers
                     message = "Please send 'GSTIN-Token' or 'GSTIN-Sek' in headers"
                 };
             }
-            GSTNAuthClient client = new GSTNAuthClient(gstin, this.gstinUsername, basePath)
+            GSTNAuthClient client = new GSTNAuthClient(gstin, this.gstinUsername)
             {
                 AuthToken = this.GSTINToken,
                 DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, GSTNConstants.GetAppKeyBytes())

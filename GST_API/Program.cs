@@ -11,19 +11,22 @@ using System.Text;
 using Microsoft.OpenApi.Models;
 using GST_API.Services;
 using GST_API.Filters;
+using Microsoft.Extensions.Configuration;
+using GST_API_Library.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var configuration = builder.Configuration;
-if(configuration==null)
+if (configuration == null)
 {
     throw new Exception("unable to find configuration");
 }
 builder.Services.AddDbContext<ApplicationDbContext>(
     options => options.UseSqlServer(configuration.GetConnectionString("Default"),
-    builder => {
-    builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null);
-}));
+    builder =>
+    {
+        builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null);
+    }));
 
 builder.Services.AddIdentityCore<User>(options =>
 {
@@ -38,6 +41,15 @@ builder.Services.AddIdentityCore<User>(options =>
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
+var baseProjectPath = configuration.GetValue<string>(WebHostDefaults.ContentRootKey);
+if (string.IsNullOrEmpty(baseProjectPath))
+{
+    GSTNConstants.base_path = "";
+}
+else
+{
+    GSTNConstants.base_path = baseProjectPath.Substring(0, baseProjectPath.LastIndexOf('\\'));
+}
 
 builder.Services.AddRepositories();
 builder.Services.AddServices();
@@ -48,7 +60,7 @@ builder.Services.AddControllers(config =>
 });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(option=>
+builder.Services.AddSwaggerGen(option =>
 {
     option.SwaggerDoc("v1", new OpenApiInfo { Title = "GST API", Version = "v1" });
     option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
