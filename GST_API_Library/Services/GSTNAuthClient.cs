@@ -41,18 +41,20 @@ namespace GST_API_Library.Services
                 auth_token = token.auth_token
 
             };
-            return await Post<LogoutRequestModel, LogoutResponseModel>(model);
+            return await PostAsync<LogoutRequestModel, LogoutResponseModel>(model);
         }
 
-        public async Task<GSTNResult<OTPResponseModel>> RequestOTP()
+        public async Task<(GSTNResult<OTPResponseModel>,string)> RequestOTP()
         {
+            var baseAppKey = GSTNConstants.GetAppKeyBytes();
+            var appKey = EncryptionUtils.RsaEncrypt(baseAppKey);
             OTPRequestModel model = new OTPRequestModel
             {
                 action = "OTPREQUEST",
                 username = userid,
-                app_key = EncryptionUtils.RsaEncrypt(GSTNConstants.GetAppKeyBytes())
+                app_key = appKey
             };
-            return await Post<OTPRequestModel, OTPResponseModel>(model);
+            return (await PostAsync<OTPRequestModel, OTPResponseModel>(model), Convert.ToBase64String(baseAppKey));
         }
 
         public async Task<GSTNResult<TokenResponseModel>> RequestToken(string otp)
@@ -60,12 +62,12 @@ namespace GST_API_Library.Services
             TokenRequestModel model = new TokenRequestModel
             {
                 action = "AUTHTOKEN",
-                username = userid
+                username = userid,
+                app_key = EncryptionUtils.RsaEncrypt(GSTNConstants.GetAppKeyBytes())
             };
-            model.app_key = EncryptionUtils.RsaEncrypt(GSTNConstants.GetAppKeyBytes());
             byte[] dataToEncrypt = UTF8Encoding.UTF8.GetBytes(otp);
             model.otp = EncryptionUtils.AesEncrypt(dataToEncrypt, GSTNConstants.GetAppKeyBytes());
-            return await Post<TokenRequestModel, TokenResponseModel>(model);
+            return await PostAsync<TokenRequestModel, TokenResponseModel>(model);
         }
 
         public async Task<GSTNResult<TokenResponseModel>> RefreshToken()
@@ -76,7 +78,7 @@ namespace GST_API_Library.Services
                 username = userid
             };
             model.app_key = EncryptionUtils.AesEncrypt(GSTNConstants.GetAppKeyBytes(), this.DecryptedKey);
-            return await Post<RefreshTokenModel, TokenResponseModel>(model);
+            return await PostAsync<RefreshTokenModel, TokenResponseModel>(model);
         }
 
     }

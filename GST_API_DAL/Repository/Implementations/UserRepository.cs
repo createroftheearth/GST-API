@@ -15,5 +15,15 @@ namespace GST_API_DAL.Repository.Implementations
         {
             return await this.AnyAsync(user => user.GSTNNo == GSTIN);
         }
+        
+        public async Task<bool> IsUsernameExists(string Username)
+        {
+            return await this.AnyAsync(user => user.UserName == Username);
+        }
+        
+        public async Task<bool> IsGSTNUsernameExists(string GSTNUsername)
+        {
+            return await this.AnyAsync(user => user.Email == GSTNUsername);
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using GST_API_DAL;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace GST_API.Middlewares
@@ -22,30 +23,41 @@ namespace GST_API.Middlewares
                 return;
             }
 
-            // If action is not decorated with TransactionAttribute then skip opening transaction
-            var endpoint = httpContext.Features.Get<IEndpointFeature>()?.Endpoint;
-            IDbContextTransaction transaction = null;
-
-            try
+            if (await dbContext.Database.CanConnectAsync())
             {
-                transaction = await dbContext.Database.BeginTransactionAsync();
 
+                // If action is not decorated with TransactionAttribute then skip opening transaction
+                IDbContextTransaction transaction = null;
+                var executionStrategy = dbContext.Database.CreateExecutionStrategy();
+                await executionStrategy.ExecuteAsync(async () =>
+                {
+                    try
+                    {
+                        transaction = await dbContext.Database.BeginTransactionAsync();
+
+                        await _next(httpContext);
+
+                        await transaction.CommitAsync();
+                    }
+                    catch (Exception ex)
+                    {
+                        if (transaction != null)
+                            await transaction.RollbackAsync();
+
+                        throw;
+                    }
+                    finally
+                    {
+                        if (transaction != null)
+                            await transaction.DisposeAsync();
+                    }
+                });
+            }
+            else
+            {
                 await _next(httpContext);
+            }
 
-                await transaction.CommitAsync();
-            }
-            catch (Exception)
-            {
-                if (transaction != null)
-                    await transaction.RollbackAsync();
-
-                throw;
-            }
-            finally
-            {
-                if (transaction != null)
-                    await transaction.DisposeAsync();
-            }
         }
     }
 }

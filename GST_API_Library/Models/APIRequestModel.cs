@@ -6,6 +6,18 @@ using System.Threading.Tasks;
 
 namespace GST_API_Library.Models
 {
+    public class ErrorModel
+    {
+        public string message { get; set; }
+        public string error_cd { get; set; }
+    }
+
+    public class BaseResponseModel
+    {
+        public string status_cd { get; set; }
+        public ErrorModel error { get; set; }
+    }
+
     public class OTPRequestModel
     {
         public string action { get; set; }
@@ -17,9 +29,9 @@ namespace GST_API_Library.Models
         public string otp { get; set; }
     }
 
-    public class OTPResponseModel
+    public class OTPResponseModel: BaseResponseModel
     {
-        public string status_cd { get; set; }
+
     }
     public class LogoutRequestModel
     {
@@ -30,9 +42,8 @@ namespace GST_API_Library.Models
 
     }
 
-    public class LogoutResponseModel
+    public class LogoutResponseModel: BaseResponseModel
     {
-        public string status_cd { get; set; }
     }
     public class TokenResponseModel : OTPResponseModel
     {
