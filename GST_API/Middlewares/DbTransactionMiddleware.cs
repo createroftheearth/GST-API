@@ -23,32 +23,41 @@ namespace GST_API.Middlewares
                 return;
             }
 
-            // If action is not decorated with TransactionAttribute then skip opening transaction
-            var endpoint = httpContext.Features.Get<IEndpointFeature>()?.Endpoint;
-            IDbContextTransaction transaction = null;
-            var executionStrategy = dbContext.Database.CreateExecutionStrategy();
-            await executionStrategy.ExecuteAsync(async () => {
-                try
-                {
-                    transaction = await dbContext.Database.BeginTransactionAsync();
+            if (await dbContext.Database.CanConnectAsync())
+            {
 
-                    await _next(httpContext);
-
-                    await transaction.CommitAsync();
-                }
-                catch (Exception ex)
+                // If action is not decorated with TransactionAttribute then skip opening transaction
+                IDbContextTransaction transaction = null;
+                var executionStrategy = dbContext.Database.CreateExecutionStrategy();
+                await executionStrategy.ExecuteAsync(async () =>
                 {
-                    if (transaction != null)
-                        await transaction.RollbackAsync();
+                    try
+                    {
+                        transaction = await dbContext.Database.BeginTransactionAsync();
 
-                    throw;
-                }
-                finally
-                {
-                    if (transaction != null)
-                        await transaction.DisposeAsync();
-                }
-            });
+                        await _next(httpContext);
+
+                        await transaction.CommitAsync();
+                    }
+                    catch (Exception ex)
+                    {
+                        if (transaction != null)
+                            await transaction.RollbackAsync();
+
+                        throw;
+                    }
+                    finally
+                    {
+                        if (transaction != null)
+                            await transaction.DisposeAsync();
+                    }
+                });
+            }
+            else
+            {
+                await _next(httpContext);
+            }
+
         }
     }
 }
