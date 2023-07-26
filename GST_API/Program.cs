@@ -9,9 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
-using GST_API.Services;
 using GST_API.Filters;
-using Microsoft.Extensions.Configuration;
 using GST_API_Library.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,7 +23,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(
     options => options.UseSqlServer(configuration.GetConnectionString("Default"),
     builder =>
     {
-        builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null);
+        builder.EnableRetryOnFailure(10, TimeSpan.FromSeconds(60), null);
     }));
 
 builder.Services.AddIdentityCore<User>(options =>
@@ -53,6 +51,36 @@ else
 
 builder.Services.AddRepositories();
 builder.Services.AddServices();
+
+builder.Services.AddCors(option =>
+{
+    option.AddDefaultPolicy(builder =>
+    {
+        builder
+        .AllowAnyOrigin()
+        .AllowAnyMethod()
+        .AllowAnyHeader();
+    });
+});
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(o =>
+{
+    o.TokenValidationParameters = new TokenValidationParameters
+    {
+        ClockSkew = TimeSpan.Zero,
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = configuration["Jwt:Issuer"],
+        ValidAudience = configuration["Jwt:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"])),
+    };
+});
+
+
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
+
 
 builder.Services.AddControllers(config =>
 {
@@ -88,62 +116,32 @@ builder.Services.AddSwaggerGen(option =>
     });
 });
 
-builder.Services.AddAutoMapper(typeof(Program).Assembly);
-
 var logger = new LoggerConfiguration()
     .WriteTo.File(builder.Environment.ContentRootPath + "Logs" + "\\ApiLogs-.log", rollingInterval: RollingInterval.Day).CreateLogger();
 
 builder.Logging.AddSerilog(logger);
 
-builder.Services.AddControllersWithViews();
-builder.Services.AddCors(option =>
-{
-    option.AddDefaultPolicy(builder =>
-    {
-        builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
-    });
-});
-
 builder.Services.Configure<ApiBehaviorOptions>(options
     => options.SuppressModelStateInvalidFilter = true);
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(o =>
-{
-    o.TokenValidationParameters = new TokenValidationParameters
-    {
-        ClockSkew = TimeSpan.Zero,
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = configuration["Jwt:Issuer"],
-        ValidAudience = configuration["Jwt:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"])),
-    };
-});
-
-
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
+//// Configure the HTTP request pipeline.
+//if (app.Environment.IsDevelopment())
+//{
     app.UseSwagger();
     app.UseSwaggerUI();
-    app.UseHttpsRedirection();
-}
+    //app.UseHttpsRedirection();
+//}
 
 app.UseAuthentication();
+
 app.UseAuthorization();
 
 app.UseDbTransaction();
 
-app.MapControllers();
-
 app.UseCors();
 
-app.UseAuthentication();
-
-//app.UseAuthorization();
+app.MapControllers();
 
 app.Run();
