@@ -9,5 +9,6 @@ namespace GST_API.Controllers
         public string baseAppKey;
         public string GSTINToken;
         public string GSTINSek;
+        public byte[] appKey;
     }
 }

@@ -14,14 +14,18 @@ namespace GST_API_Library.Services
         public string AuthToken { get; set; }
         public byte[] DecryptedKey { get; set; }
         public string userid { get; set; }
+
+        private byte[] appKey;
+
         string IGSTNAuthProvider.Username
         {
             get { return userid; }
             set { userid = value; }
         }
-        public GSTNAuthClient(string gstin, string userid) : base("/taxpayerapi/v1.0/authenticate", gstin)
+        public GSTNAuthClient(string gstin, string userid, byte[] appKey) : base("/taxpayerapi/v1.0/authenticate", gstin)
         {
             this.userid = userid;
+            this.appKey = appKey;
         }
         protected internal override void BuildHeaders(HttpClient client)
         {
@@ -37,24 +41,23 @@ namespace GST_API_Library.Services
             {
                 action = "LOGOUT",
                 username = userid,
-                app_key = EncryptionUtils.RsaEncrypt(GSTNConstants.GetAppKeyBytes()),
+                app_key = EncryptionUtils.RsaEncrypt(appKey),
                 auth_token = token.auth_token
 
             };
             return await PostAsync<LogoutRequestModel, LogoutResponseModel>(model);
         }
 
-        public async Task<(GSTNResult<OTPResponseModel>,string)> RequestOTP()
+        public async Task<GSTNResult<OTPResponseModel>> RequestOTP()
         {
-            var baseAppKey = GSTNConstants.GetAppKeyBytes();
-            var appKey = EncryptionUtils.RsaEncrypt(baseAppKey);
+            var appKey = EncryptionUtils.RsaEncrypt(this.appKey);
             OTPRequestModel model = new OTPRequestModel
             {
                 action = "OTPREQUEST",
                 username = userid,
                 app_key = appKey
             };
-            return (await PostAsync<OTPRequestModel, OTPResponseModel>(model), Convert.ToBase64String(baseAppKey));
+            return await PostAsync<OTPRequestModel, OTPResponseModel>(model);
         }
 
         public async Task<GSTNResult<TokenResponseModel>> RequestToken(string otp)

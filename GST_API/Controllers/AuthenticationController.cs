@@ -55,9 +55,10 @@ namespace GST_API.Controllers
                     message = "Invalid password"
                 };
             }
-            GSTNAuthClient client = new GSTNAuthClient(user.GSTNNo, user.GSTINUsername);
-            var (result,baseAppKey) = await client.RequestOTP();
-            if (result.Data?.status_cd == "1" && !string.IsNullOrEmpty(baseAppKey))
+            byte[] appKey = GSTNConstants.GetAppKeyBytes();
+            GSTNAuthClient client = new GSTNAuthClient(user.GSTNNo, user.GSTINUsername,appKey);
+            var result = await client.RequestOTP();
+            if (result.Data?.status_cd == "1")
             {
                 return new ResponseModel
                 {
@@ -65,7 +66,7 @@ namespace GST_API.Controllers
                     message = "OTP Sent, Please use request-token API to get 'GSTIN-Token'",
                     data = new
                     {
-                        token = _tokenService.CreateToken(user,baseAppKey)
+                        token = _tokenService.CreateToken(user,Convert.ToBase64String(appKey))
                     }
                 };
             } else
@@ -77,7 +78,7 @@ namespace GST_API.Controllers
         [HttpPost("{otp}/request-token")]
         public async Task<GSTNResult<TokenResponseModel>> RequestToken(string otp)
         {
-            GSTNAuthClient client = new GSTNAuthClient(gstin, gstinUsername);
+            GSTNAuthClient client = new GSTNAuthClient(gstin, gstinUsername,appKey);
             var result = await client.RequestToken(otp);
             _logger.LogInformation(JsonConvert.SerializeObject(result));
             return result;
@@ -86,7 +87,7 @@ namespace GST_API.Controllers
         [HttpPost("refresh-token")]
         public async Task<GSTNResult<TokenResponseModel>> RefreshToken()
         {
-            GSTNAuthClient client = new GSTNAuthClient(gstin, gstinUsername);
+            GSTNAuthClient client = new GSTNAuthClient(gstin, gstinUsername,appKey);
             var result = await client.RefreshToken();
             _logger.LogInformation(JsonConvert.SerializeObject(result));
             return result;
@@ -96,7 +97,7 @@ namespace GST_API.Controllers
         [HttpPost("logout")]
         public async Task<GSTNResult<LogoutResponseModel>> Logout()
         {
-            GSTNAuthClient client = new GSTNAuthClient(gstin, gstinUsername);
+            GSTNAuthClient client = new GSTNAuthClient(gstin, gstinUsername, appKey);
             var result = await client.RequestLogout();
             _logger.LogInformation(JsonConvert.SerializeObject(result));
             return result;

@@ -32,7 +32,7 @@ namespace GST_API.Controllers
                     message = "Please send 'GSTIN-Token' or 'GSTIN-Sek' in headers"
                 };
             }
-            GSTNAuthClient client = new GSTNAuthClient(gstin, this.gstinUsername)
+            GSTNAuthClient client = new GSTNAuthClient(gstin, this.gstinUsername,appKey)
             {
                 AuthToken = this.GSTINToken,
                 DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, GSTNConstants.GetAppKeyBytes())
