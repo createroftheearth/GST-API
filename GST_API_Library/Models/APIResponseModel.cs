@@ -14,6 +14,13 @@ namespace GST_API_Library.Models
         public error_report error_report { get; set; }
     }
 
+    public class Procedtofile
+    {
+        public string reference_id { get; set; }
+        public string isSync { get; set; }
+    }
+
+
     public class error_report
     {
         public string error_cd { get; set; }
@@ -38,7 +45,7 @@ namespace GST_API_Library.Models
         //change by amit as per version 2.2
         public string gstin { get; set; }
         public string ret_period { get; set; }
-        //public string generate_summary { get; set; }
+        public string isnil { get; set; }
 
         public string action { get; set; }
     }

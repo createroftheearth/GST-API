@@ -18,6 +18,21 @@ namespace GST_API_Library.Services
         {
         }
 
+        public async Task<GSTNResult<SaveInfo>> Save(GSTR1Total data)
+        {
+            var model = this.Encrypt(data);
+            model.action = "RETSAVE";
+            var info = await this.PutAsync<UnsignedDataInfo, ResponseDataInfo>(model);
+            if (info == null)
+            {
+                throw new Exception("Unable to get the details from server");
+            }
+            var output = this.Decrypt<SaveInfo>(info.Data);
+            var model2 = this.BuildResult<SaveInfo>(info, output);
+            return model2;
+        }
+
+
         ////API call for getting all B2B invoices for a return period.
         //public GSTNResult<List<B2bOutward>> GetB2B(string action_required)
         //{
@@ -416,28 +431,6 @@ namespace GST_API_Library.Services
 
         //}
         //This API Is used To save entire GSTR1 invoices
-        public async Task<GSTNResult<SaveInfo>> Save(GSTR1Total data)
-        {
-            var model = this.Encrypt(data);
-            model.action = "RETSAVE";
-            var info = await this.PutAsync<UnsignedDataInfo, ResponseDataInfo>(model);
-            if(info==null)
-            {
-                throw new Exception("Unable to get the details from server");
-            }
-            var output = this.Decrypt<SaveInfo>(info.Data);
-            var model2 = this.BuildResult<SaveInfo>(info, output);
-            return model2;
-        }
-        ////This API Is used To submit GSTR1 return
-        //public GSTNResult<FileInfo> File(SummaryOutward data, string sign, string st, string sid, string fp)
-        //{
-        //    var model = this.Encrypt(data);
-        //    var model2 = this.SignFile(model, sign, st, sid, fp);
-        //    return model2;
-        //}
-
-
 
     }
 }

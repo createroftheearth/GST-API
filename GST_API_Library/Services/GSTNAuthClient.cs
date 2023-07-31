@@ -31,14 +31,14 @@ namespace GST_API_Library.Services
             client.DefaultRequestHeaders.Add("state-cd", this.gstin.Substring(0, 2));
             client.DefaultRequestHeaders.Add("txn", "LAPN24235325555");
         }
-        public async Task<GSTNResult<LogoutResponseModel>> RequestLogout()
+        public async Task<GSTNResult<LogoutResponseModel>> RequestLogout(string authToken)
         {
             LogoutRequestModel model = new LogoutRequestModel
             {
                 action = "LOGOUT",
                 username = userid,
                 app_key = EncryptionUtils.RsaEncrypt(GSTNConstants.GetAppKeyBytes()),
-                auth_token = token.auth_token
+                auth_token = authToken
 
             };
             return await PostAsync<LogoutRequestModel, LogoutResponseModel>(model);
@@ -70,16 +70,31 @@ namespace GST_API_Library.Services
             return await PostAsync<TokenRequestModel, TokenResponseModel>(model);
         }
 
-        public async Task<GSTNResult<TokenResponseModel>> RefreshToken()
+        public async Task<GSTNResult<TokenResponseModel>> RefreshToken(string authToken)
         {
             RefreshTokenModel model = new RefreshTokenModel
             {
                 action = "REFRESHTOKEN",
-                username = userid
+                username = userid,
+                auth_token = authToken
             };
             model.app_key = EncryptionUtils.AesEncrypt(GSTNConstants.GetAppKeyBytes(), this.DecryptedKey);
             return await PostAsync<RefreshTokenModel, TokenResponseModel>(model);
         }
+
+        //need to ask with himanshu
+        //public async Task<(GSTNResult<OTPResponseModel>, string)> InitiateOTP_EVC()
+        //{
+        //    var baseAppKey = GSTNConstants.GetAppKeyBytes();
+        //    var appKey = EncryptionUtils.RsaEncrypt(baseAppKey);
+        //    OTPRequestModel model = new OTPRequestModel
+        //    {
+        //        action = "EVCOTP",
+        //        username = userid,
+        //        app_key = appKey
+        //    };
+        //    return (await PostAsync<OTPRequestModel, OTPResponseModel>(model), Convert.ToBase64String(baseAppKey));
+        //}
 
     }
     public interface IGSTNAuthProvider
