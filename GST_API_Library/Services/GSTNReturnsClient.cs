@@ -151,5 +151,21 @@ namespace GST_API_Library.Services
             return model;
         }
 
+        public async Task<GSTNResult<Procedtofile>> NewProceedtoFile(string fp)
+        {
+            GenerateRequestInfo model = new GenerateRequestInfo()
+            {
+                gstin = gstin,
+                ret_period = fp,
+                isnil = "Y",
+            };
+            var data = this.Encrypt(model);
+            data.action = "RETNEWPTF";
+            var info = this.PostAsync<UnsignedDataInfo, ResponseDataInfo>(data);
+            var output = this.Decrypt<Procedtofile>(info.Result.Data);
+            var model2 = this.BuildResult<Procedtofile>(info.Result, output);
+            return model2;
+        }
+
     }
 }
