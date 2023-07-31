@@ -11,6 +11,7 @@ namespace GST_API.Controllers
     [Route("api/registration")]
     [ApiController]
     [AllowAnonymous]
+    [ApiExplorerSettings(IgnoreApi = true)]// Hide from Swagger UI
     public class RegistrationController : ControllerBase
     {
 
@@ -28,6 +29,7 @@ namespace GST_API.Controllers
         }
 
         [HttpPost]
+        
         public async Task<ResponseModel> Register([FromBody] RegistrationModel model)
         {
             if (!ModelState.IsValid)

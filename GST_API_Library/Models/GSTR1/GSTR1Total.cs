@@ -28,7 +28,7 @@ namespace GST_API_Library.Models.GSTR1
         [Required]
         [Display(Name = "Gross Turnover of the taxpayer in the previous FY")]
         public double gt { get; set; }
-        //public List<B2bOutward> b2b { get; set; }
+        public List<B2bOutward> b2b { get; set; }
         //public List<B2bAOutward> b2ba { get; set; }
         //public List<B2clOutward> b2cl { get; set; }
         //public List<B2clAOutward> b2cla { get; set; }

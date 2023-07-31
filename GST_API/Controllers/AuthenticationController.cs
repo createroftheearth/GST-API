@@ -88,7 +88,7 @@ namespace GST_API.Controllers
         public async Task<GSTNResult<TokenResponseModel>> RefreshToken()
         {
             GSTNAuthClient client = new GSTNAuthClient(gstin, gstinUsername,appKey);
-            var result = await client.RefreshToken();
+            var result = await client.RefreshToken(GSTINToken);
             _logger.LogInformation(JsonConvert.SerializeObject(result));
             return result;
         }
@@ -98,7 +98,7 @@ namespace GST_API.Controllers
         public async Task<GSTNResult<LogoutResponseModel>> Logout()
         {
             GSTNAuthClient client = new GSTNAuthClient(gstin, gstinUsername, appKey);
-            var result = await client.RequestLogout();
+            var result = await client.RequestLogout(GSTINToken);
             _logger.LogInformation(JsonConvert.SerializeObject(result));
             return result;
         }
