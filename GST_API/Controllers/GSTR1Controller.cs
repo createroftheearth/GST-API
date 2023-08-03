@@ -1,17 +1,10 @@
 ﻿using GST_API.APIModels;
 using GST_API.Services;
-using GST_API_Library.Models;
 using GST_API_Library.Models.GSTR1;
 using GST_API_Library.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using Org.BouncyCastle.Asn1.Crmf;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace GST_API.Controllers
 {
@@ -34,19 +27,10 @@ namespace GST_API.Controllers
         [HttpPut("save")]
         public async Task<ResponseModel> save([FromBody] GSTR1Total data)
         {
-            //if (string.IsNullOrEmpty(this.GSTINToken) || string.IsNullOrEmpty(this.GSTINSek))
-            //{
-            //    return new ResponseModel
-            //    {
-            //        isSuccess = false,
-            //        message = "Please send 'GSTIN-Token' or 'GSTIN-Sek' in headers"
-            //    };
-            //}
-            GSTNAuthClient client = new GSTNAuthClient(gstin, this.gstinUsername)
-            {
+            GSTNAuthClient client = new GSTNAuthClient(gstin, this.gstinUsername, appKey)
+            { 
                 AuthToken = this.GSTINToken,
-                DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, GSTNConstants.GetAppKeyBytes())
-
+                DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, appKey)
             };
             GSTR1ApiClient client2 = new GSTR1ApiClient(client, data.gstin, data.fp, Constants.GSTR1_SAVE_URL);
             var info = await client2.Save(data);
@@ -68,19 +52,18 @@ namespace GST_API.Controllers
         [HttpGet("{ret_prd}/{reference_id}/ReturnStatus")]
         public async Task<ResponseModel> ReturnStatus(string ret_prd, string reference_id)
         {
-            //if (string.IsNullOrEmpty(this.GSTINToken) || string.IsNullOrEmpty(this.GSTINSek))
-            //{
-            //    return new ResponseModel
-            //    {
-            //        isSuccess = false,
-            //        message = "Please send 'GSTIN-Token' or 'GSTIN-Sek' in headers"
-            //    };
-            //}
-            GSTNAuthClient client = new GSTNAuthClient(gstin, this.gstinUsername)
+            if (string.IsNullOrEmpty(this.GSTINToken) || string.IsNullOrEmpty(this.GSTINSek))
+            {
+                return new ResponseModel
+                {
+                    isSuccess = false,
+                    message = "Please send 'GSTIN-Token' or 'GSTIN-Sek' in headers"
+                };
+            }
+            GSTNAuthClient client = new GSTNAuthClient(gstin, this.gstinUsername,appKey)
             {
                 AuthToken = this.GSTINToken,
-                DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, GSTNConstants.GetAppKeyBytes())
-
+                DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, appKey)
             };
             GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, ret_prd, Constants.GSTR1_ReturnStatus_URL);
             var info = await client2.GetStatus(ret_prd, reference_id);
@@ -102,18 +85,18 @@ namespace GST_API.Controllers
         [HttpGet("{ret_period}/{action_required}/GetB2BInvoices")]
         public async Task<ResponseModel> GetB2BInvoices(string action_required,string ret_period)
         {
-            //if (string.IsNullOrEmpty(this.GSTINToken) || string.IsNullOrEmpty(this.GSTINSek))
-            //{
-            //    return new ResponseModel
-            //    {
-            //        isSuccess = false,
-            //        message = "Please send 'GSTIN-Token' or 'GSTIN-Sek' in headers"
-            //    };
-            //}
-            GSTNAuthClient client = new GSTNAuthClient(gstin, this.gstinUsername)
+            if (string.IsNullOrEmpty(this.GSTINToken) || string.IsNullOrEmpty(this.GSTINSek))
+            {
+                return new ResponseModel
+                {
+                    isSuccess = false,
+                    message = "Please send 'GSTIN-Token' or 'GSTIN-Sek' in headers"
+                };
+            }
+            GSTNAuthClient client = new GSTNAuthClient(gstin, this.gstinUsername, this.appKey)
             {
                 AuthToken = this.GSTINToken,
-                DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, GSTNConstants.GetAppKeyBytes())
+                DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, this.appKey)
 
             };
             GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin,ret_period, Constants.GSTR1_GetB2B_URL);
@@ -136,18 +119,18 @@ namespace GST_API.Controllers
         [HttpGet("{ret_period}/{action_required}/GetB2BAInvoices")]
         public async Task<ResponseModel> GetB2BAInvoices(string action_required, string ret_period)
         {
-            //if (string.IsNullOrEmpty(this.GSTINToken) || string.IsNullOrEmpty(this.GSTINSek))
-            //{
-            //    return new ResponseModel
-            //    {
-            //        isSuccess = false,
-            //        message = "Please send 'GSTIN-Token' or 'GSTIN-Sek' in headers"
-            //    };
-            //}
-            GSTNAuthClient client = new GSTNAuthClient(gstin, this.gstinUsername)
+            if (string.IsNullOrEmpty(this.GSTINToken) || string.IsNullOrEmpty(this.GSTINSek))
+            {
+                return new ResponseModel
+                {
+                    isSuccess = false,
+                    message = "Please send 'GSTIN-Token' or 'GSTIN-Sek' in headers"
+                };
+            }
+            GSTNAuthClient client = new GSTNAuthClient(gstin, this.gstinUsername, this.appKey)
             {
                 AuthToken = this.GSTINToken,
-                DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, GSTNConstants.GetAppKeyBytes())
+                DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, this.appKey)
 
             };
             GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, ret_period, Constants.GSTR1_GetB2B_URL);
@@ -170,18 +153,18 @@ namespace GST_API.Controllers
         [HttpGet("{ret_prd}/{state_cd}/GetB2CLInvoices")]
         public async Task<ResponseModel> GetB2CLInvoices(string state_cd,string ret_prd)
         {
-            //if (string.IsNullOrEmpty(this.GSTINToken) || string.IsNullOrEmpty(this.GSTINSek))
-            //{
-            //    return new ResponseModel
-            //    {
-            //        isSuccess = false,
-            //        message = "Please send 'GSTIN-Token' or 'GSTIN-Sek' in headers"
-            //    };
-            //}
-            GSTNAuthClient client = new GSTNAuthClient(gstin, this.gstinUsername)
+            if (string.IsNullOrEmpty(this.GSTINToken) || string.IsNullOrEmpty(this.GSTINSek))
+            {
+                return new ResponseModel
+                {
+                    isSuccess = false,
+                    message = "Please send 'GSTIN-Token' or 'GSTIN-Sek' in headers"
+                };
+            }
+            GSTNAuthClient client = new GSTNAuthClient(gstin, this.gstinUsername, this.appKey)
             {
                 AuthToken = this.GSTINToken,
-                DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, GSTNConstants.GetAppKeyBytes())
+                DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, this.appKey)
 
             };
             GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, ret_prd, Constants.GSTR1_GetB2B_URL);
@@ -206,18 +189,18 @@ namespace GST_API.Controllers
         [HttpPost("{ret_prd}/NewProceedToFile")]
         public async Task<ResponseModel> NewProceedToFile(string ret_prd)
         {
-            //if (string.IsNullOrEmpty(this.GSTINToken) || string.IsNullOrEmpty(this.GSTINSek))
-            //{
-            //    return new ResponseModel
-            //    {
-            //        isSuccess = false,
-            //        message = "Please send 'GSTIN-Token' or 'GSTIN-Sek' in headers"
-            //    };
-            //}
-            GSTNAuthClient client = new GSTNAuthClient(gstin, this.gstinUsername)
+            if (string.IsNullOrEmpty(this.GSTINToken) || string.IsNullOrEmpty(this.GSTINSek))
+            {
+                return new ResponseModel
+                {
+                    isSuccess = false,
+                    message = "Please send 'GSTIN-Token' or 'GSTIN-Sek' in headers"
+                };
+            }
+            GSTNAuthClient client = new GSTNAuthClient(gstin, this.gstinUsername, this.appKey)
             {
                 AuthToken = this.GSTINToken,
-                DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, GSTNConstants.GetAppKeyBytes())
+                DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, this.appKey)
 
             };
             GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, ret_prd, Constants.GSTR1_NewProceedToFile_URL);
