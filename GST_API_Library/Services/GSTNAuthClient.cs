@@ -38,7 +38,7 @@ namespace GST_API_Library.Services
                 action = "LOGOUT",
                 username = userid,
                 app_key = EncryptionUtils.RsaEncrypt(GSTNConstants.GetAppKeyBytes()),
-                auth_token = authToken
+                auth_token = "d0fa249856c1415aa4bc4592438a6bde"//authToken
 
             };
             return await PostAsync<LogoutRequestModel, LogoutResponseModel>(model);

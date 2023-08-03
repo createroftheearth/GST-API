@@ -1,12 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace GST_API_Library.Models
 {
-    public class StatusInfoGSTR2
+
+
+
+    public class ReturnStatusInfo
     {
         public string form_typ { get; set; }
         public string status_cd { get; set; }
@@ -14,10 +19,30 @@ namespace GST_API_Library.Models
         public error_report error_report { get; set; }
     }
 
-    public class Procedtofile
+    public class NewProceedToFile
     {
         public string reference_id { get; set; }
         public string isSync { get; set; }
+    }
+    public class HeaderData
+    {
+
+        public string clientid { get; set; }
+        public string client_secret { get; set; }
+        [DisplayName ("ip-usr")]
+        public string ip_usr { get; set; }
+        public string state_cd { get; set; }
+        public string gstin { get; set; }
+        public string ret_period { get; set; }
+        public string txn { get; set; }
+        public string username { get; set; }
+        public string auth_token { get; set; }
+        public string rtn_typ { get; set; }
+        public string userrole { get; set; }
+        public string api_version { get; set; }
+
+
+
     }
 
 
@@ -48,6 +73,17 @@ namespace GST_API_Library.Models
         public string isnil { get; set; }
 
         public string action { get; set; }
+        public string hdr { get; set; }
+    }
+    public class RequestPTF
+    {
+        //change by amit as per version 2.2
+        
+
+        public string action { get; set; }
+        public string data { get; set; }
+        public string hmac { get; set; }
+        public string hdr { get; set; }
     }
     public class GenerateResponseInfo
     {
@@ -78,6 +114,7 @@ namespace GST_API_Library.Models
     public class UnsignedDataInfo
     {
         public string data { get; set; }
+        public string hdr { get; set; }
         public string action { get; set; }
         public string hmac { get; set; }
     }

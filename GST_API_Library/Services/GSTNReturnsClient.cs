@@ -123,7 +123,7 @@ namespace GST_API_Library.Services
 
         //}
         //This API Is To Get status of return
-        public async Task<GSTNResult<StatusInfo>> GetStatus(string ret_prd, string reference_id)
+        public async Task<GSTNResult<ReturnStatusInfo>> GetStatus(string ret_prd, string reference_id)
         {
             this.PrepareQueryStringGSTR(new Dictionary<string, string> {
             {"gstin",gstin},
@@ -132,39 +132,53 @@ namespace GST_API_Library.Services
             {"ref_id" ,reference_id}
             });//trans_id--ref_id
             var info = await this.GetAsync<ResponseDataInfo>();
-            var output = this.Decrypt<StatusInfo>(info.Data);
-            var model = this.BuildResult<StatusInfo>(info, output);
+            var output = this.Decrypt<ReturnStatusInfo>(info.Data);
+            var model = this.BuildResult<ReturnStatusInfo>(info, output);
             return model;
         }
 
-        public async Task<GSTNResult<StatusInfoGSTR2>> GetStatusGSTR2(string ret_prd, string reference_id)
+        public async Task<GSTNResult<NewProceedToFile>> NewProceedToFile_GSTR1(string ret_prd)
         {
-            this.PrepareQueryStringGSTR(new Dictionary<string, string> {
-            {"gstin",gstin},
-            {"action","RETSTATUS"},
-            {"ret_period",ret_prd},
-            {"ref_id" ,reference_id}
-            });//trans_id--ref_id
-            var info = await this.GetAsync<ResponseDataInfo>();
-            var output = this.Decrypt<StatusInfoGSTR2>(info.Data);
-            var model = this.BuildResult<StatusInfoGSTR2>(info, output);
-            return model;
-        }
 
-        public async Task<GSTNResult<Procedtofile>> NewProceedtoFile(string fp)
-        {
             GenerateRequestInfo model = new GenerateRequestInfo()
             {
                 gstin = gstin,
-                ret_period = fp,
+                ret_period = ret_prd,
                 isnil = "Y",
+
             };
+            //This Json is send by GST= "{\r\n\r\n    \"state-cd\": \"33\",\r\n\r\n    \"txn\": \"4285433270\",\r\n\r\n    \"username\": \"balaji.tn.1\",\r\n\r\n    \"auth-token\": \"d0fa249856c1415aa4bc4592438a6bde\",\r\n\r\n    \"gstin\": \"33GSPTN0231G1ZM\",\r\n\r\n    \"ret_period\": \"082017\",\r\n\r\n    \"clientid\": \"l7xx0f3fb7ee24624626ab7bxxxxxxxxxx\",\r\n\r\n    \"ip-usr\": \"127.0.2.x\",\r\n\r\n    \"rtn_typ\": \"GSTR1\",\r\n\r\n    \"api_version\": \"1.1\",\r\n\r\n    \"userrole\": \"GSTR1\"\r\n\r\n  }";
+
+            HeaderData hdrdata = new HeaderData();
+            hdrdata.clientid = GSTNConstants.client_id;
+            hdrdata.ip_usr = GSTNConstants.publicip;
+            hdrdata.state_cd = this.gstin.Substring(0, 2);
+            hdrdata.gstin = this.gstin;
+            hdrdata.ret_period = this.ret_period;
+            hdrdata.rtn_typ = "GSTR1";
+            hdrdata.api_version = "1.1";
+            hdrdata.txn = "LAPN24235325555";//System.Guid.NewGuid().ToString().Replace("-", "");
+            hdrdata.username = provider.Username;
+            hdrdata.userrole = "GSTR1";
+            hdrdata.auth_token = provider.AuthToken;
+
+            string finalJson = JsonConvert.SerializeObject(hdrdata, Newtonsoft.Json.Formatting.Indented,
+                            new JsonSerializerSettings
+                            {
+                                NullValueHandling = NullValueHandling.Ignore
+                            });
+
             var data = this.Encrypt(model);
+            data.hdr = finalJson;
             data.action = "RETNEWPTF";
-            var info = this.PostAsync<UnsignedDataInfo, ResponseDataInfo>(data);
-            var output = this.Decrypt<Procedtofile>(info.Result.Data);
-            var model2 = this.BuildResult<Procedtofile>(info.Result, output);
-            return model2;
+            var info = await this.PostAsync<UnsignedDataInfo, ResponseDataInfo>(data);
+            if (info == null)
+            {
+                throw new Exception("Unable to get the details from server");
+            }
+            //var output = this.Decrypt<NewProceedToFile>(info.reference_id);
+            //var model1 = this.BuildResult<NewProceedToFile>(info, output);
+            return null;
         }
 
     }

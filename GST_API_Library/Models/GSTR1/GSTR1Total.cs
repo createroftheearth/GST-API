@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Integrated.API.GSTN.GSTR1;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -29,20 +30,20 @@ namespace GST_API_Library.Models.GSTR1
         [Display(Name = "Gross Turnover of the taxpayer in the previous FY")]
         public double gt { get; set; }
         public List<B2bOutward> b2b { get; set; }
-        //public List<B2bAOutward> b2ba { get; set; }
-        //public List<B2clOutward> b2cl { get; set; }
-        //public List<B2clAOutward> b2cla { get; set; }
-        //public List<B2csOutward> b2cs { get; set; }
-        //public List<B2CSAOutward> b2csa { get; set; }
-        //public NilRatedOutward nil { get; set; }
-        //public List<Exp> exp { get; set; }
-        //public List<ExpA> expa { get; set; }
-        //public List<CDNAOutward> cdna { get; set; }
-        //public List<AtOutward> at { get; set; }
-        //public List<AtAOutward> ata { get; set; }
-        //public List<CdnOutward> cdn { get; set; }
-        //public List<TxpOutward> txpd { get; set; }
-        //public List<EComOutward> ecom_invocies { get; set; }
+        public List<B2bAOutward> b2ba { get; set; }
+        public List<B2clOutward> b2cl { get; set; }
+        public List<B2clAOutward> b2cla { get; set; }
+        public List<B2csOutward> b2cs { get; set; }
+        public List<B2CSAOutward> b2csa { get; set; }
+        public NilRatedOutward nil { get; set; }
+        public List<Exp> exp { get; set; }
+        public List<ExpA> expa { get; set; }
+        public List<CDNAOutward> cdna { get; set; }
+        public List<AtOutward> at { get; set; }
+        public List<AtAOutward> ata { get; set; }
+        public List<CdnOutward> cdn { get; set; }
+        public List<TxpOutward> txpd { get; set; }
+        public List<EComOutward> ecom_invocies { get; set; }
 
     }
 }
