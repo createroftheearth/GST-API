@@ -147,32 +147,40 @@ namespace GST_API_Library.Services
                 isnil = "Y",
 
             };
-            //This Json is send by GST= "{\r\n\r\n    \"state-cd\": \"33\",\r\n\r\n    \"txn\": \"4285433270\",\r\n\r\n    \"username\": \"balaji.tn.1\",\r\n\r\n    \"auth-token\": \"d0fa249856c1415aa4bc4592438a6bde\",\r\n\r\n    \"gstin\": \"33GSPTN0231G1ZM\",\r\n\r\n    \"ret_period\": \"082017\",\r\n\r\n    \"clientid\": \"l7xx0f3fb7ee24624626ab7bxxxxxxxxxx\",\r\n\r\n    \"ip-usr\": \"127.0.2.x\",\r\n\r\n    \"rtn_typ\": \"GSTR1\",\r\n\r\n    \"api_version\": \"1.1\",\r\n\r\n    \"userrole\": \"GSTR1\"\r\n\r\n  }";
+            //This Json is send by GST= "{\r\n\r\n
+            //\"state-cd\": \"33\",\r\n\r\n
+            //\"txn\": \"4285433270\",\r\n\r\n
+            //\"username\": \"balaji.tn.1\",\r\n\r\n
+            //\"auth-token\": \"d0fa249856c1415aa4bc4592438a6bde\",\r\n\r\n
+            //\"gstin\": \"33GSPTN0231G1ZM\",\r\n\r\n
+            //\"ret_period\": \"082017\",\r\n\r\n
+            //\"clientid\": \"l7xx0f3fb7ee24624626ab7bxxxxxxxxxx\",\r\n\r\n
+            //\"ip-usr\": \"127.0.2.x\",\r\n\r\n
+            //\"rtn_typ\": \"GSTR1\",\r\n\r\n
+            //\"api_version\": \"1.1\",\r\n\r\n
+            //\"userrole\": \"GSTR1\"\r\n\r\n  }";
 
             HeaderData hdrdata = new HeaderData
             {
-                clientid = GSTNConstants.client_id,
-                ip_usr = GSTNConstants.publicip,
                 state_cd = this.gstin.Substring(0, 2),
-                gstin = this.gstin,
-                ret_period = this.ret_period,
-                rtn_typ = "GSTR1",
-                api_version = "1.1",
                 txn = "LAPN24235325555",//System.Guid.NewGuid().ToString().Replace("-", "");
                 username = provider.Username,
+                auth_token = provider.AuthToken,
+                gstin = this.gstin, 
+                ret_period = this.ret_period,
+                clientid = GSTNConstants.client_id,
+                ip_usr = GSTNConstants.publicip,
+                rtn_typ = "GSTR1",
+                api_version = "1.1",
                 userrole = "GSTR1",
-                auth_token = provider.AuthToken
             };
 
-            string finalJson = JsonConvert.SerializeObject(hdrdata, Newtonsoft.Json.Formatting.Indented,
-                            new JsonSerializerSettings
-                            {
-                                NullValueHandling = NullValueHandling.Ignore
-                            });
+            string finalJson = JsonConvert.SerializeObject(hdrdata);
 
             var data = this.Encrypt(model);
-            data.hdr = hdrdata;
+            data.hdr = finalJson;
             data.action = "RETNEWPTF";
+
             var info = await this.PostAsync<UnsignedDataInfo, ResponseDataInfo>(data);
             if (info == null)
             {

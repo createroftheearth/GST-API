@@ -154,8 +154,10 @@ namespace GST_API_Library.Services
         protected virtual GSTNResult<TOutput> BuildResponse<TOutput>(HttpResponseMessage response)
         {
             //This function can be used to convert simple API result to ResultInfo based API result
-            GSTNResult<TOutput> resultInfo = new GSTNResult<TOutput>();
-            resultInfo.HttpStatusCode = Convert.ToInt32(response.StatusCode.ToString("D"));
+            GSTNResult<TOutput> resultInfo = new GSTNResult<TOutput>
+            {
+                HttpStatusCode = Convert.ToInt32(response.StatusCode.ToString("D"))
+            };
             var str1 = response.Content.ReadAsStringAsync().Result;
             System.Console.WriteLine("Obtained Result:" + str1 + System.Environment.NewLine);
             if (resultInfo.HttpStatusCode == (int)HttpStatusCode.OK)

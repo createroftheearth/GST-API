@@ -1,9 +1,11 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace GST_API_Library.Models
@@ -28,14 +30,15 @@ namespace GST_API_Library.Models
     {
 
         public string clientid { get; set; }
-        public string client_secret { get; set; }
-        [DisplayName ("ip-usr")]
+        [JsonProperty (PropertyName = "ip-usr")]
         public string ip_usr { get; set; }
+        [JsonProperty(PropertyName = "state-cd")]
         public string state_cd { get; set; }
         public string gstin { get; set; }
         public string ret_period { get; set; }
         public string txn { get; set; }
         public string username { get; set; }
+        [JsonProperty(PropertyName = "auth-token")]
         public string auth_token { get; set; }
         public string rtn_typ { get; set; }
         public string userrole { get; set; }
@@ -114,7 +117,7 @@ namespace GST_API_Library.Models
     public class UnsignedDataInfo
     {
         public string data { get; set; }
-        public HeaderData hdr { get; set; }
+        public string hdr { get; set; }
         public string action { get; set; }
         public string hmac { get; set; }
     }
