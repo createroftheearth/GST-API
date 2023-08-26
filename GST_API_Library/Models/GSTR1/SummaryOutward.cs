@@ -48,6 +48,9 @@ namespace Integrated.API.GSTN.GSTR1
         [Required]
         [Display(Name = "total CGST amount")]
         public double ttl_cgst { get; set; }
+        [Required]
+        [Display(Name = "Trade Name")]
+        public string trade_name { get; set; }
     }
 
     public class SecSum
@@ -115,6 +118,7 @@ namespace Integrated.API.GSTN.GSTR1
         [Display(Name = "Invoice Check sum value")]
         [MaxLength(15)]
         public string chksum { get; set; }
+        public bool newSumFlag { get; set; }
 
         public string summ_typ { get; set; }
 

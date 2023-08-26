@@ -1,9 +1,11 @@
 ﻿using GST_API_Library.Models;
 using Newtonsoft.Json;
+using Org.BouncyCastle.Asn1.Ocsp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using FileInfo = GST_API_Library.Models.FileInfo;
@@ -144,22 +146,49 @@ namespace GST_API_Library.Services
             {
                 gstin = gstin,
                 ret_period = ret_prd,
-                isnil = "Y",
+                isnil = "N"
 
             };
-            //This Json is send by GST= "{\r\n\r\n
-            //\"state-cd\": \"33\",\r\n\r\n
-            //\"txn\": \"4285433270\",\r\n\r\n
-            //\"username\": \"balaji.tn.1\",\r\n\r\n
-            //\"auth-token\": \"d0fa249856c1415aa4bc4592438a6bde\",\r\n\r\n
-            //\"gstin\": \"33GSPTN0231G1ZM\",\r\n\r\n
-            //\"ret_period\": \"082017\",\r\n\r\n
-            //\"clientid\": \"l7xx0f3fb7ee24624626ab7bxxxxxxxxxx\",\r\n\r\n
-            //\"ip-usr\": \"127.0.2.x\",\r\n\r\n
-            //\"rtn_typ\": \"GSTR1\",\r\n\r\n
-            //\"api_version\": \"1.1\",\r\n\r\n
-            //\"userrole\": \"GSTR1\"\r\n\r\n  }";
+            //This Json is send by GST
+            //Request payload:-
+            //{
+            //"action": "RETNEWPTF",
+            //"data": "xxXdH8NnDgzNkWiBEcHpIlAY+aR9gakQmavQgOtocBg54X0X8cNcGWeqeqQ9VtgEKxHKIOPJoJ2Kk0Qp6tso33ou+xC3BXdbymDDYanhehNIjjJiKFq1UU0QtT8QPvPb",
+            //"hmac": "gG61JgBtW/QMKorEPPA2r680bk2W9Yysmv6AakjD/eQ=",
+            //"hdr": {
+            //            "state-cd": "33",
+            //            "txn": "4285433270",
+            //            "username": "balaji.tn.1",
+            //            "auth-token": "34eacc5ff534b03ae36462c9b3216c2",
+            //            "gstin": "33GSPTN0231G1ZM",
+            //            "ret_period": "082017",
+            //            "clientid": "l7xx0f3fb7ee24624626ab7bxxxxxxxxxx",
+            //            "ip-usr": "127.0.2.x",
+            //            "rtn_typ": "GSTR1",
+            //            "api_version": "1.1",
+            //            "userrole": "GSTR1"
+            //        }
+            //}
 
+
+  //          {
+  //              "action": "RETNEWPTF",
+  //"data": "uhOvGVTnibcqiRY6zV5hczZRj106F8soL5MP8RY57KMxfUXE0a8DedFzjNK1vEOygcjlX9izEKqsfYvOLvW4OZoX/V8PtgfLLk1T5jSOlUk=",
+  //"hmac": "lkvBUqMju0yi8oifySvNiO+PLrkhLNozJN55vI84mj4=",
+  //"hdr": {
+  //                  "clientid": "<client id>",
+  //  "username": "<user>",
+  //  "state-cd": "27",
+  //  "ip-usr": "14.97.69.62",
+  //  "txn": "LAPN24235325556",
+  //  "api_version": "1.0",
+  //  "userrole": "GSTR1",
+  //  "rtn_typ": "GSTR1",
+  //  "ret_period": "022019",
+  //  "gstin": "27GSPMH0122G1Z1",
+  //  "auth-token": "7090df1a03ad440d9a8954f93cb14c36",
+  //}
+  //          }
             HeaderData hdrdata = new HeaderData
             {
                 state_cd = this.gstin.Substring(0, 2),
@@ -179,8 +208,8 @@ namespace GST_API_Library.Services
 
             var data = this.Encrypt(model);
             data.hdr = finalJson;
+            data.hmac = "pzu1iuHCSgQ2BjcZiwSw5t1b1O8Iu/UZgiigOhWXRTE=";
             data.action = "RETNEWPTF";
-
             var info = await this.PostAsync<UnsignedDataInfo, ResponseDataInfo>(data);
             if (info == null)
             {

@@ -79,6 +79,7 @@ namespace GST_API.Controllers
         public async Task<GSTNResult<TokenResponseModel>> RequestToken(string otp)
         {
             GSTNAuthClient client = new GSTNAuthClient(gstin, gstinUsername,appKey);
+             //GSTNAuthClient client = new GSTNAuthClient(gstin, gstinUsername, GSTNConstants.GetAppKeyBytes());
             var result = await client.RequestToken(otp);
             _logger.LogInformation(JsonConvert.SerializeObject(result));
             return result;

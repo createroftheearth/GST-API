@@ -69,6 +69,7 @@ namespace GST_API_Library.Services
             using (var client = GetHttpClient())
             {
                 //url2 to url3 amit
+                System.Console.WriteLine("GET:" + "https://devapi.gst.gov.in/taxpayerapi/v4.0/returns/gstr1?gstin=33GSPTN0231G1ZM&ret_period=072023&action=B2B&action_required=Y\r\n");
 
                 System.Console.WriteLine("GET:" + url2);
                 HttpResponseMessage response = await client.GetAsync(url2);
@@ -90,10 +91,6 @@ namespace GST_API_Library.Services
                 }
                 else
                 {
-                // if(data)
-                //--http://devapi.gstsystem.co.in/taxpayerapi/v0.3/returns/gstr1?gstin=33GSPTN0231G1ZM&action=RETFILE&ret_period=042017
-                //Change by amit
-                //--http://devapi.gstsystem.co.in/taxpayerapi/v2.2/returns/gstr1?gstin=33GSPTN0231G1ZM&action=RETFILE&ret_period=022023
                     response = await client.PostAsJsonAsync(url2, data);
                 }
                 return BuildResponse<TOutput>(response);

@@ -41,8 +41,8 @@ namespace GST_API_Library.Services
             {
                 action = "LOGOUT",
                 username = userid,
-                app_key = EncryptionUtils.RsaEncrypt(GSTNConstants.GetAppKeyBytes()),
-                auth_token = "d0fa249856c1415aa4bc4592438a6bde"//authToken
+                app_key = EncryptionUtils.RsaEncrypt(this.appKey),
+                auth_token = authToken
 
             };
             return await PostAsync<LogoutRequestModel, LogoutResponseModel>(model);
@@ -66,10 +66,10 @@ namespace GST_API_Library.Services
             {
                 action = "AUTHTOKEN",
                 username = userid,
-                app_key = EncryptionUtils.RsaEncrypt(GSTNConstants.GetAppKeyBytes())
+                app_key = EncryptionUtils.RsaEncrypt(this.appKey)
             };
             byte[] dataToEncrypt = UTF8Encoding.UTF8.GetBytes(otp);
-            model.otp = EncryptionUtils.AesEncrypt(dataToEncrypt, GSTNConstants.GetAppKeyBytes());
+            model.otp = EncryptionUtils.AesEncrypt(dataToEncrypt, this.appKey);
             return await PostAsync<TokenRequestModel, TokenResponseModel>(model);
         }
 
@@ -81,14 +81,14 @@ namespace GST_API_Library.Services
                 username = userid,
                 auth_token = authToken
             };
-            model.app_key = EncryptionUtils.AesEncrypt(GSTNConstants.GetAppKeyBytes(), this.DecryptedKey);
+            model.app_key = EncryptionUtils.AesEncrypt(this.appKey, this.DecryptedKey);
             return await PostAsync<RefreshTokenModel, TokenResponseModel>(model);
         }
 
         //need to ask with himanshu
         //public async Task<(GSTNResult<OTPResponseModel>, string)> InitiateOTP_EVC()
         //{
-        //    var baseAppKey = GSTNConstants.GetAppKeyBytes();
+        //    var baseAppKey = this.appKey;
         //    var appKey = EncryptionUtils.RsaEncrypt(baseAppKey);
         //    OTPRequestModel model = new OTPRequestModel
         //    {

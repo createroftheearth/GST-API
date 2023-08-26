@@ -45,6 +45,7 @@ namespace GST_API_Library.Services
             this.PrepareQueryString(dic);
             var info = await this.GetAsync<ResponseDataInfo>();
             var output = this.Decrypt<GSTR1Total>(info.Data);
+            //var output = this.Decrypt<ReturnStatusInfo>(info.Data);
             var model = this.BuildResult<List<B2bOutward>>(info, output.b2b);
             return model;
         }
@@ -409,7 +410,7 @@ namespace GST_API_Library.Services
 
         //This API Is To Get the table wise summary Of GSTR1 data
         
-        public async Task<GSTNResult<SummaryOutward>> GetSummary(string ret_prd)
+        public async Task<GSTNResult<SummaryOutward>> GetGSTR1Summary(string ret_prd)
         {
             this.PrepareQueryString(new Dictionary<string, string> {
                 {
