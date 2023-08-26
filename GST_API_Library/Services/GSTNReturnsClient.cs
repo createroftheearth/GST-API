@@ -51,7 +51,7 @@ namespace GST_API_Library.Services
                 string base64Payload = UTF8Encoding.UTF8.GetString(jsonData);
                 byte[] decodeJson = Convert.FromBase64String(base64Payload);
                 string finalJson = Encoding.UTF8.GetString(decodeJson);
-                model = Newtonsoft.Json.JsonConvert.DeserializeObject<T>(finalJson);
+                model = JsonConvert.DeserializeObject<T>(finalJson);
                 LastJson = finalJson;
             }
             return model;

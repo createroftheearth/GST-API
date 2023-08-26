@@ -69,8 +69,6 @@ namespace GST_API_Library.Services
             using (var client = GetHttpClient())
             {
                 //url2 to url3 amit
-                System.Console.WriteLine("GET:" + "https://devapi.gst.gov.in/taxpayerapi/v4.0/returns/gstr1?gstin=33GSPTN0231G1ZM&ret_period=072023&action=B2B&action_required=Y\r\n");
-
                 System.Console.WriteLine("GET:" + url2);
                 HttpResponseMessage response = await client.GetAsync(url2);
                 return BuildResponse<TOutput>(response);

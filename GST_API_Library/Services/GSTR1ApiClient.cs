@@ -6,7 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using GST_API_Library.Models.GSTR1;
-using Integrated.API.GSTN.GSTR1;
+using GST_API_Library.Models.GSTR1;
+using System.Globalization;
 
 namespace GST_API_Library.Services
 {
@@ -35,19 +36,46 @@ namespace GST_API_Library.Services
 
 
         //API call for getting all B2B invoices for a return period.
-        public async Task<GSTNResult<List<B2bOutward>>> GetB2B(string action_required)
+        public async Task<GSTNResult<List<B2bOutward>>> GetB2B(APIRequestParameters apiRequestParameters)
         {
-            var dic = new Dictionary<string, string>();
-            dic.Add("gstin", this.gstin);
-            dic.Add("ret_period", this.ret_period);
-            dic.Add("action", "B2B");
-            if (!string.IsNullOrEmpty(action_required)) dic.Add("action_required", action_required);
+            Dictionary<string, string> dic = this.prepareB2BDictionary(apiRequestParameters);            
             this.PrepareQueryString(dic);
             var info = await this.GetAsync<ResponseDataInfo>();
             var output = this.Decrypt<GSTR1Total>(info.Data);
             //var output = this.Decrypt<ReturnStatusInfo>(info.Data);
             var model = this.BuildResult<List<B2bOutward>>(info, output.b2b);
             return model;
+        }
+
+        private Dictionary<string, string> prepareB2BDictionary(APIRequestParameters apiRequestParameters)
+        {
+            if (apiRequestParameters == null || string.IsNullOrEmpty(apiRequestParameters.gstin) || string.IsNullOrEmpty(apiRequestParameters.ret_period))
+            {
+                throw new Exception("gstin and ret_period is required");
+            }
+            var dic = new Dictionary<string, string>
+            {
+                { "gstin", apiRequestParameters.gstin },
+                { "ret_period", apiRequestParameters.ret_period },
+                { "action", "B2B" }
+            };
+            if (!string.IsNullOrEmpty(apiRequestParameters.action_required))
+            {
+                dic.Add("action_required", apiRequestParameters.action_required);
+            }
+            if (!string.IsNullOrEmpty(apiRequestParameters.ctin))
+            {
+                dic.Add("ctin", apiRequestParameters.ctin);
+            }
+            if (!string.IsNullOrEmpty(apiRequestParameters.from_time))
+            {
+                if(!DateTime.TryParseExact(apiRequestParameters.from_time, "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime date))
+                { 
+                    throw new Exception("Date Should be provided in dd-MM-yyyy format only");
+                }
+                dic.Add("action_required", apiRequestParameters.from_time);
+            }
+            return dic;
         }
         //API call  for getting all B2B amended invoices for a return period.
         public async Task<GSTNResult<List<B2bAOutward>>> GetB2BA(string action_required)

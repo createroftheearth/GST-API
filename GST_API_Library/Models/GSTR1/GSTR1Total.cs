@@ -1,4 +1,4 @@
-﻿using Integrated.API.GSTN.GSTR1;
+﻿using GST_API_Library.Models.GSTR1;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

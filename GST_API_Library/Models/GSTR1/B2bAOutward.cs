@@ -4,7 +4,7 @@ using System.Linq;
 using System.ComponentModel.DataAnnotations;
 using GST_API_Library.Models.GSTR1;
 
-namespace Integrated.API.GSTN.GSTR1
+namespace GST_API_Library.Models.GSTR1
 {
 
     public class B2BAInv : B2BInv

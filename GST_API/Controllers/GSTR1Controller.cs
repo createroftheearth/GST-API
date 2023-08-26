@@ -70,8 +70,8 @@ namespace GST_API.Controllers
             };
         }
 
-        [HttpGet("{ret_period}/{action_required}/GetB2BInvoices")]
-        public async Task<ResponseModel> GetB2BInvoices(string action_required, string ret_period)
+        [HttpGet("GetB2BInvoices")]
+        public async Task<ResponseModel> GetB2BInvoices([FromQuery] APIRequestParameters model)
         {
             if (string.IsNullOrEmpty(this.GSTINToken) || string.IsNullOrEmpty(this.GSTINSek))
             {
@@ -87,15 +87,24 @@ namespace GST_API.Controllers
                 DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, this.appKey)
 
             };
-            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, ret_period, Constants.GSTR1_GetB2B_URL);
-            var info = await client2.GetB2B(action_required);
-            return new ResponseModel
+            try
             {
-                data = info,
-
-                isSuccess = true,
-                message = "success"
-            };
+                GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, model.ret_period, Constants.GSTR1_GetB2B_URL);
+                var info = await client2.GetB2B(model);
+                return new ResponseModel
+                {
+                    data = info,
+                    isSuccess = true,
+                    message = "success"
+                };
+            } catch(Exception ex)
+            {
+                return new ResponseModel
+                {
+                    isSuccess = false,
+                    message = ex.Message
+                };
+            }
         }
 
         [HttpGet("{ret_period}/{action_required}/GetB2BAInvoices")]
@@ -264,7 +273,7 @@ namespace GST_API.Controllers
                 message = "success"
             };
         }
-        
+
         [HttpGet("{ret_prd}/{action_required}/GetCDNRAInvoices")]
         public async Task<ResponseModel> GetCDNRAInvoices(string action_required, string ret_prd)
         {
