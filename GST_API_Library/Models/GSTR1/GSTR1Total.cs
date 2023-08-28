@@ -1,4 +1,5 @@
 ﻿using GST_API_Library.Models.GSTR1;
+using Integrated.API.GSTN.GSTR1;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -39,11 +40,16 @@ namespace GST_API_Library.Models.GSTR1
         public List<Exp> exp { get; set; }
         public List<ExpA> expa { get; set; }
         public List<CDNAOutward> cdna { get; set; }
+        public List<CDNUR> cdnur { get; set; }
+        public List<CDNURA> cdnura { get; set; }
         public List<AtOutward> at { get; set; }
         public List<AtAOutward> ata { get; set; }
         public List<CdnOutward> cdn { get; set; }
         public List<TxpOutward> txpd { get; set; }
+        //Amit 
         public List<EComOutward> ecom_invocies { get; set; }
+        public List<SummaryOutward> summaryoutwards { get; set; }
+
 
     }
 }
