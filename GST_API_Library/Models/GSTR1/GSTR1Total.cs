@@ -1,5 +1,4 @@
 ﻿using GST_API_Library.Models.GSTR1;
-using Integrated.API.GSTN.GSTR1;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -48,6 +47,8 @@ namespace GST_API_Library.Models.GSTR1
         public List<TxpOutward> txpd { get; set; }
         //Amit 
         public List<EComOutward> ecom_invocies { get; set; }
+        public List<DocIssued> doc_issued { get; set; }
+
         public List<SummaryOutward> summaryoutwards { get; set; }
 
 

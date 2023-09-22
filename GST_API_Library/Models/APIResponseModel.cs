@@ -74,9 +74,6 @@ namespace GST_API_Library.Models
         public string gstin { get; set; }
         public string ret_period { get; set; }
         public string isnil { get; set; }
-
-        public string action { get; set; }
-        public string hdr { get; set; }
     }
     public class RequestPTF
     {
@@ -117,7 +114,7 @@ namespace GST_API_Library.Models
     public class UnsignedDataInfo
     {
         public string data { get; set; }
-        public string hdr { get; set; }
+        public HeaderData hdr { get; set; }
         public string action { get; set; }
         public string hmac { get; set; }
     }

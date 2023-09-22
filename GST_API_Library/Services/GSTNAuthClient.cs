@@ -33,7 +33,7 @@ namespace GST_API_Library.Services
             client.DefaultRequestHeaders.Add("client-secret", GSTNConstants.client_secret);
             client.DefaultRequestHeaders.Add("ip-usr", GSTNConstants.publicip);
             client.DefaultRequestHeaders.Add("state-cd", this.gstin.Substring(0, 2));
-            client.DefaultRequestHeaders.Add("txn", "LAPN24235325555");
+            client.DefaultRequestHeaders.Add("txn", GSTNConstants.txn);
         }
         public async Task<GSTNResult<LogoutResponseModel>> RequestLogout(string authToken)
         {

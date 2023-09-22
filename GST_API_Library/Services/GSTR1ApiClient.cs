@@ -1,14 +1,6 @@
 ﻿using GST_API_Library.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using GST_API_Library.Models.GSTR1;
 using GST_API_Library.Models.GSTR1;
 using System.Globalization;
-using Integrated.API.GSTN.GSTR1;
 
 namespace GST_API_Library.Services
 {
@@ -34,7 +26,7 @@ namespace GST_API_Library.Services
             var model2 = this.BuildResult<SaveInfo>(info, output);
             return model2;
         }
-       
+
         /// <summary>
         /// 
         /// </summary>
@@ -118,7 +110,7 @@ namespace GST_API_Library.Services
         }
         public async Task<GSTNResult<List<AtAOutward>>> GetATA(APIRequestParameters apiRequestParameters)
         {
-            
+
             Dictionary<string, string> dic = this.prepareATADictionary(apiRequestParameters);
             this.PrepareQueryString(dic);
             var info = await this.GetAsync<ResponseDataInfo>();
@@ -161,7 +153,7 @@ namespace GST_API_Library.Services
         }
         public async Task<GSTNResult<List<B2bOutward>>> GetB2B(APIRequestParameters apiRequestParameters)
         {
-            Dictionary<string, string> dic = this.prepareB2BDictionary(apiRequestParameters);            
+            Dictionary<string, string> dic = this.prepareB2BDictionary(apiRequestParameters);
             this.PrepareQueryString(dic);
             var info = await this.GetAsync<ResponseDataInfo>();
             var output = this.Decrypt<GSTR1Total>(info.Data);
@@ -591,6 +583,48 @@ namespace GST_API_Library.Services
 
         }
 
+        //This API calls to get Documents issued during the tax period.DocIssued
+        private Dictionary<string, string> prepareDocIssuedDictionary(APIRequestParameters apiRequestParameters)
+        {
+            if (apiRequestParameters == null || string.IsNullOrEmpty(apiRequestParameters.gstin) || string.IsNullOrEmpty(apiRequestParameters.ret_period))
+            {
+                throw new Exception("gstin and ret_period is required");
+            }
+            var dic = new Dictionary<string, string>
+            {
+                { "gstin", apiRequestParameters.gstin },
+                { "ret_period", apiRequestParameters.ret_period },
+                { "action", "DOCISS" }
+            };
+            if (!string.IsNullOrEmpty(apiRequestParameters.action_required))
+            {
+                dic.Add("action_required", apiRequestParameters.action_required);
+            }
+            if (!string.IsNullOrEmpty(apiRequestParameters.ctin))
+            {
+                dic.Add("ctin", apiRequestParameters.ctin);
+            }
+            if (!string.IsNullOrEmpty(apiRequestParameters.from_time))
+            {
+                if (!DateTime.TryParseExact(apiRequestParameters.from_time, "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime date))
+                {
+                    throw new Exception("Date Should be provided in dd-MM-yyyy format only");
+                }
+                dic.Add("action_required", apiRequestParameters.from_time);
+            }
+            return dic;
+        }
+        public async Task<GSTNResult<List<DocIssued>>> GetDocIssued(APIRequestParameters apiRequestParameters)
+        {
+            Dictionary<string, string> dic = this.prepareDocIssuedDictionary(apiRequestParameters);
+            this.PrepareQueryString(dic);
+            var info = await this.GetAsync<ResponseDataInfo>();
+            var output = this.Decrypt<GSTR1Total>(info.Data);
+            var model = this.BuildResult<List<DocIssued>>(info, output.doc_issued);
+            return model;
+
+        }
+
         //API call  for getting invoices related to supplies exported  for a return period.
         private Dictionary<string, string> prepareEXPDictionary(APIRequestParameters apiRequestParameters)
         {
@@ -760,33 +794,36 @@ namespace GST_API_Library.Services
 
         }
 
-        //API call  for getting tax paid details for a return period.
-        public async Task<GSTNResult<List<TxpOutward>>> GetTXPD(string ret_prd)
-        {
-            this.PrepareQueryString(new Dictionary<string, string> {
-                {
-                    "gstin",
-                    gstin
-                },
-                {
-                    "action",
-                    "TXP"
-                },
-                {
-                    "ret_period",
-                    ret_prd
-                }
-            });
-            var info = await this.GetAsync<ResponseDataInfo>();
-            var output = this.Decrypt<GSTR1Total>(info.Data);
-            var model = this.BuildResult<List<TxpOutward>>(info, output.txpd);
-            return model;
+        ////need to discusse with Himanshu on model & Error
+        ////API call  for getting tax paid details for a return period.
+        //private Dictionary<string, string> prepareTaxDictionary(APIRequestParameters apiRequestParameters)
+        //{
+        //    if (apiRequestParameters == null || string.IsNullOrEmpty(apiRequestParameters.gstin) || string.IsNullOrEmpty(apiRequestParameters.ret_period))
+        //    {
+        //        throw new Exception("gstin and ret_period is required");
+        //    }
+        //    var dic = new Dictionary<string, string>
+        //    {
+        //        { "gstin", apiRequestParameters.gstin },
+        //        { "ret_period", apiRequestParameters.ret_period },
+        //        { "action", "TXP" }
+        //    };
+        //    if (!string.IsNullOrEmpty(apiRequestParameters.action_required))
+        //    {
+        //        dic.Add("action_required", apiRequestParameters.action_required);
+        //    }
+        //    return dic;
+        //}
+        //public async Task<GSTNResult<TxpOutward>> GetTAX(APIRequestParameters apiRequestParameters)
+        //{
+        //    Dictionary<string, string> dic = this.prepareTaxDictionary(apiRequestParameters);
+        //    this.PrepareQueryString(dic);
+        //    var info = await this.GetAsync<ResponseDataInfo>();
+        //    var output = this.Decrypt<GSTR1Total>(info.Data);
+        //    var model = this.BuildResult<TxpOutward>(info, output.txpd);
+        //    return model;
 
-        }
-
-       
-
-        
+        //}
 
     }
 }

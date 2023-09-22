@@ -19,6 +19,7 @@ namespace GST_API_Library.Services
         public static string filename = "";
         public static string ctin = "27GSPMH0231G1ZZ";
         public static string etin = "33GSPTN0231G1ZM";
+        public static string txn = "LAPN24235325555";
 
         public static byte[] GetAppKeyBytes()
         {

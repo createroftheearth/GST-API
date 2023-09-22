@@ -139,16 +139,8 @@ namespace GST_API_Library.Services
             return model;
         }
 
-        public async Task<GSTNResult<NewProceedToFile>> NewProceedToFile_GSTR1(string ret_prd)
+        public async Task<GSTNResult<NewProceedToFile>> NewProceedToFile_GSTR1(GenerateRequestInfo model)
         {
-
-            GenerateRequestInfo model = new GenerateRequestInfo()
-            {
-                gstin = gstin,
-                ret_period = ret_prd,
-                isnil = "N"
-
-            };
             //This Json is send by GST
             //Request payload:-
             //{
@@ -191,24 +183,22 @@ namespace GST_API_Library.Services
   //          }
             HeaderData hdrdata = new HeaderData
             {
-                state_cd = this.gstin.Substring(0, 2),
-                txn = "LAPN24235325555",//System.Guid.NewGuid().ToString().Replace("-", "");
+                clientid = GSTNConstants.client_id,
                 username = provider.Username,
+                state_cd = this.gstin.Substring(0, 2),
+                txn = GSTNConstants.txn,//System.Guid.NewGuid().ToString().Replace("-", "");
                 auth_token = provider.AuthToken,
                 gstin = this.gstin, 
                 ret_period = this.ret_period,
-                clientid = GSTNConstants.client_id,
                 ip_usr = GSTNConstants.publicip,
                 rtn_typ = "GSTR1",
                 api_version = "1.1",
                 userrole = "GSTR1",
             };
 
-            string finalJson = JsonConvert.SerializeObject(hdrdata);
 
             var data = this.Encrypt(model);
-            data.hdr = finalJson;
-            data.hmac = "pzu1iuHCSgQ2BjcZiwSw5t1b1O8Iu/UZgiigOhWXRTE=";
+            data.hdr = hdrdata;
             data.action = "RETNEWPTF";
             var info = await this.PostAsync<UnsignedDataInfo, ResponseDataInfo>(data);
             if (info == null)

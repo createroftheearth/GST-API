@@ -6,7 +6,8 @@
         public string gstin { get; set; }
         public string? action_required { get; set; }
         public string? ctin { get; set; }
-        public string? from_time { get; set; }  
+        public string? from_time { get; set; }
         public string? state_cd { get; set; }
+        public string? file_num { get; set; }
     }
 }
