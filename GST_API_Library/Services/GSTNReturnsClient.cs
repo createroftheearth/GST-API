@@ -34,7 +34,7 @@ namespace GST_API_Library.Services
             client.DefaultRequestHeaders.Add("state-cd", this.gstin.Substring(0, 2));
             client.DefaultRequestHeaders.Add("gstin", this.gstin);
             if (!string.IsNullOrEmpty(this.ret_period)) client.DefaultRequestHeaders.Add("ret_period", this.ret_period);
-            client.DefaultRequestHeaders.Add("txn", System.Guid.NewGuid().ToString().Replace("-", ""));
+            client.DefaultRequestHeaders.Add("txn", GSTNConstants.txn);
             client.DefaultRequestHeaders.Add("username", provider.Username);
             client.DefaultRequestHeaders.Add("auth-token", provider.AuthToken);
         }
