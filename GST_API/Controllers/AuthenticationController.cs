@@ -4,20 +4,15 @@ using GST_API_DAL.Models;
 using GST_API_Library.Models;
 using GST_API_Library.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 
 namespace GST_API.Controllers
 {
     [Route("api/auth")]
     [ApiController]
-    [Authorize]
+    [Authorize(Roles ="APIUser")]
     public class AuthenticationController : BaseController
     {
         private readonly ILogger<AuthenticationController> _logger;
@@ -70,6 +65,49 @@ namespace GST_API.Controllers
                     }
                 };
             } else
+            {
+                return result;
+            }
+        }
+
+
+        [HttpPost("public")]
+        [AllowAnonymous]
+        public async Task<object> PublicAuthentication([FromBody] PublicAuthenticateModel model)
+        {
+            var user = await _userManager.FindByNameAsync(model.username);
+            if (user == null)
+            {
+                return new ResponseModel
+                {
+                    isSuccess = false,
+                    message = "Invalid username"
+                };
+            }
+            if (!await _userManager.CheckPasswordAsync(user, model.password))
+            {
+                return new ResponseModel
+                {
+                    isSuccess = false,
+                    message = "Invalid password"
+                };
+            }
+            byte[] appKey = GSTNConstants.GetAppKeyBytes();
+            GSTNPublicAuthClient client = new GSTNPublicAuthClient(appKey);
+            var result = await client.RequestToken(model.gstnUsername,model.gstnPassword);
+            if (result.Data?.status_cd == "1")
+            {
+                return new ResponseModel
+                {
+                    isSuccess = true,
+                    message = "OTP Sent, Please use request-token API to get 'GSTIN-Token'",
+                    data = new
+                    {
+                        token = _tokenService.CreateToken(user, Convert.ToBase64String(appKey))
+                    }
+                };
+            }
+            else
             {
                 return result;
             }

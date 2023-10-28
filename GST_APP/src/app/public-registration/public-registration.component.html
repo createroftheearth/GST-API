@@ -1,0 +1,87 @@
+<div class="m-5">
+  <form [formGroup]="contactDetailsFormGroup" class="mt-2">
+    <ng-template matStepLabel>Contact Details</ng-template>
+    <div class="row mt-5">
+      <div class="col-md-6">
+        <mat-form-field appearance="outline">
+          <mat-label>First Name</mat-label>
+          <input matInput formControlName="FirstName" />
+          <mat-error *ngIf="getErrorMessage('FirstName')">{{
+            getErrorMessage("FirstName")
+          }}</mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-md-6">
+        <mat-form-field appearance="outline">
+          <mat-label>Last Name</mat-label>
+          <input matInput formControlName="LastName" />
+          <mat-error *ngIf="getErrorMessage('LastName')">{{
+            getErrorMessage("LastName")
+          }}</mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <mat-form-field appearance="outline">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="Email" />
+          <mat-error *ngIf="getErrorMessage('Email')">{{
+            getErrorMessage("Email")
+          }}</mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-md-6">
+        <mat-form-field appearance="outline">
+          <mat-label>Phone No</mat-label>
+          <span matPrefix> &nbsp; +91 &nbsp;</span>
+          <input matInput formControlName="PhoneNumber" />
+          <mat-error *ngIf="getErrorMessage('PhoneNumber')">{{
+            getErrorMessage("PhoneNumber")
+          }}</mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <mat-form-field appearance="outline">
+          <mat-label>Username</mat-label>
+          <input matInput formControlName="Username" />
+          <mat-error *ngIf="getErrorMessage('Username')">{{
+            getErrorMessage("Username")
+          }}</mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-md-6">
+        <mat-form-field appearance="outline">
+          <mat-label>Password</mat-label>
+          <input type="password" matInput formControlName="Password" />
+          <mat-error *ngIf="getErrorMessage('Password')">{{
+            getErrorMessage("Password")
+          }}</mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <mat-form-field appearance="outline">
+          <mat-label>Confirm Password</mat-label>
+          <input type="password" matInput formControlName="ConfirmPassword" />
+          <mat-error *ngIf="getErrorMessage('ConfirmPassword')">{{
+            getErrorMessage("ConfirmPassword")
+          }}</mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="text-center">
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="register()"
+        [disabled]="contactDetailsFormGroup.invalid"
+       >
+        Register
+      </button>
+    </div>
+  </form>
+</div>

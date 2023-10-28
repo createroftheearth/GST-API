@@ -1,8 +1,6 @@
 ﻿
 
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization;
 
 public class RegistrationModel
 {
@@ -89,3 +87,41 @@ public class RegistrationModel
     [Display(Name = "Organization PAN")]
     public string Organization_PAN { get; set; }
 }
+
+public class PublicRegistrationModel
+{
+    [Required(ErrorMessage = "Password is mandatory.")]
+    [StringLength(18, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
+    [RegularExpression(@"^((?=.*[a-z])(?=.*[A-Z])(?=.*\d)).+$")]
+    [DataType(DataType.Password)]
+    [Display(Name = "Password")]
+    public string Password { get; set; }
+
+    [Required(ErrorMessage = "First Name is mandatory.")]
+    [MaxLength(100, ErrorMessage = "First Name cannot exceed 100 characters.")]
+    [Display(Name = "First Name")]
+    public string FirstName { get; set; }
+    [Required(ErrorMessage = "Last Name is mandatory.")]
+    [Display(Name = "Last Name")]
+    [MaxLength(100, ErrorMessage = "Last Name cannot exceed 100 characters.")]
+    public string LastName { get; set; }
+
+    [StringLength(255, ErrorMessage = "Email cannot exceed 255 character.")]
+    [Display(Name = "Email ID")]
+    [Required(ErrorMessage = "Email ID is mandatory.")]
+    [EmailAddress(ErrorMessage = "Not a valid EmailID")]
+    public string Email { get; set; }
+
+    [Display(Name = "Phone No")]
+    [Required(ErrorMessage = "Phone No is mandatory.")]
+    [RegularExpression(@"^[0-9]{10}$", ErrorMessage = "Not a valid phone number")]
+    public string PhoneNumber { get; set; }
+
+
+    [Display(Name = "Username")]
+    [MaxLength(50)]
+    [Required(ErrorMessage = "Username is mandatory.")]
+    [RegularExpression("^[a-z0-9_-]{3,15}$", ErrorMessage = "Username should be between 3 to 15 characters and it can contain (-) or (_) or lower Case alphanumeric keywords.")]
+    public string Username { get; set; }
+}
+

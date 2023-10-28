@@ -2,10 +2,15 @@
 using GST_API.Services;
 using GST_API_Library.Models.GSTR3B;
 using GST_API_Library.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 namespace GST_API.Controllers
 {
+    [Route("api/gstr3b")]
+    [ApiController]
+    [Authorize(Roles = "APIUser")]
     public class GSTR3BController : BaseController
     {
         private readonly ILogger<AuthenticationController> _logger;

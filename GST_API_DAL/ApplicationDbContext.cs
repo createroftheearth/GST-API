@@ -23,6 +23,10 @@ namespace GST_API_DAL
                 (
                     new IdentityRole() { Name = "APIUser", ConcurrencyStamp = "1", NormalizedName = "APIUser" }
                 );
+            builder.Entity<IdentityRole>().HasData
+        (
+            new IdentityRole() { Name = "PublicUser", ConcurrencyStamp = "1", NormalizedName = "PublicUser" }
+        );
         }
     }
 }

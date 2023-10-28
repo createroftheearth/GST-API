@@ -16,9 +16,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { HttpClientModule } from '@angular/common/http';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatIconModule } from '@angular/material/icon';
+import { PublicRegistrationComponent } from './public-registration/public-registration.component';
 
 @NgModule({
-  declarations: [AppComponent, RegistrationComponent],
+  declarations: [AppComponent, RegistrationComponent,PublicRegistrationComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,

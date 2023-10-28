@@ -8,7 +8,7 @@ namespace GST_API.Controllers
 {
     [Route("api/gstr2b")]
     [ApiController]
-    [Authorize]
+    [Authorize(Roles = "APIUser")]
     public class GSTR2BController : BaseController
     {
         private readonly ILogger<AuthenticationController> _logger;

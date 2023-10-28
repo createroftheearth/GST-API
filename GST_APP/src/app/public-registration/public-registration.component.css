@@ -1,0 +1,33 @@
+mat-form-field{
+    width: 100%;
+}
+.img-circle {
+    position: relative;
+    z-index: 9999;
+    height: 128px;
+    width: 128px;
+    border-radius: 50%;
+}
+
+.selectPhoto {
+    cursor: pointer;
+    font-size: 30px !important;
+    position: absolute;
+    right: 48.8%;
+    z-index: 99999;
+    top: 35%;
+    color: black;
+    opacity: 0.9;
+}
+
+#user_profilePicture {
+    display: none;
+}
+
+.user-details .selectPhoto{
+    display: none;
+}
+
+.isVisible{
+    display: block !important;
+}
