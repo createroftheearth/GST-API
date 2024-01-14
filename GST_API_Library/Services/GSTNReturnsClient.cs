@@ -1,7 +1,14 @@
 ﻿using GST_API_Library.Models;
 using Newtonsoft.Json;
+using Org.BouncyCastle.Asn1.Ocsp;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
+using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
+using FileInfo = GST_API_Library.Models.FileInfo;
 
 namespace GST_API_Library.Services
 {
@@ -44,6 +51,10 @@ namespace GST_API_Library.Services
         protected internal T Decrypt<T>(ResponseDataInfo output)
         {
             T model = default(T);
+            if(output == null)
+            {
+                return model;
+            }
             if (output.status_cd != "0")
             {
                 byte[] decryptREK = EncryptionUtils.AesDecrypt(output.rek, provider.DecryptedKey);
