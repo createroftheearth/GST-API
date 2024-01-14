@@ -76,21 +76,12 @@ namespace GST_API_Library.Services
 
         }
 
-        public async Task<GSTNResult<TOutput>> PostAsync<TInput, TOutput>(TInput data)
+        public async Task<GSTNResult<TOutput>> PostAsync<TInput, TOutput>(TInput data, string? returnType = null, string? apiVersion = null)
         {
-            using (var client = GetHttpClient())
+            using (var client = GetHttpClient(returnType, apiVersion))
             {
                 System.Console.WriteLine("POST:" + url2);
-                HttpResponseMessage response;
-                if (typeof(TInput) == typeof(string))
-                {
-                    var content = new StringContent((string)(object)data, System.Text.Encoding.UTF8, "text/plain");
-                    response = await client.PostAsync(url2, content);
-                }
-                else
-                {
-                    response = await client.PostAsJsonAsync(url2, data);
-                }
+                HttpResponseMessage response = await client.PostAsJsonAsync(url2, data);
                 return BuildResponse<TOutput>(response);
             }
 
@@ -133,18 +124,18 @@ namespace GST_API_Library.Services
 
 
 
-        protected HttpClient GetHttpClient()
+        protected HttpClient GetHttpClient(string? returnType = null, string? apiVersion = null)
         {
             var client = new HttpClient();
             client.Timeout = timeout;
-            BuildHeaders(client);
+            BuildHeaders(client, returnType, apiVersion);
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             return client;
         }
 
-        protected internal abstract void BuildHeaders(HttpClient client);
+        protected internal abstract void BuildHeaders(HttpClient client, string? returnType, string? apiVersion);
 
         protected virtual GSTNResult<TOutput> BuildResponse<TOutput>(HttpResponseMessage response)
         {

@@ -27,7 +27,7 @@ namespace GST_API_Library.Services
             this.userid = userid;
             this.appKey = appKey;
         }
-        protected internal override void BuildHeaders(HttpClient client)
+        protected internal override void BuildHeaders(HttpClient client,string? returnType = null,string? apiVersion= null)
         {
             client.DefaultRequestHeaders.Add("clientid", GSTNConstants.client_id);
             client.DefaultRequestHeaders.Add("client-secret", GSTNConstants.client_secret);

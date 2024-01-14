@@ -10,10 +10,7 @@ using System.Threading.Tasks;
 
 namespace GST_API_Library.Models
 {
-
-
-
-    public class ReturnStatusInfo
+    public class ReturnStatusInfo : BaseErrorData
     {
         public string form_typ { get; set; }
         public string status_cd { get; set; }
@@ -21,7 +18,7 @@ namespace GST_API_Library.Models
         public error_report error_report { get; set; }
     }
 
-    public class NewProceedToFile
+    public class NewProceedToFile : BaseErrorData
     {
         public string reference_id { get; set; }
         public string isSync { get; set; }
@@ -56,26 +53,26 @@ namespace GST_API_Library.Models
     }
 
 
-    public class StatusInfo
+    public class StatusInfo : BaseErrorData
     {
         public string status_cd { get; set; }
         public string errorCd { get; set; }
         public string error_msg { get; set; }
         public string error_report { get; set; }
     }
-    public class SaveInfo
+    public class SaveInfo : BaseErrorData
     {
         public string trans_id { get; set; }
         public string reference_id { get; set; }
     }
-    public class GenerateRequestInfo
+    public class GenerateRequestInfo : BaseErrorData
     {
         //change by amit as per version 2.2
         public string gstin { get; set; }
         public string ret_period { get; set; }
         public string isnil { get; set; }
     }
-    public class RequestPTF
+    public class RequestPTF : BaseErrorData
     {
         //change by amit as per version 2.2
         
@@ -85,24 +82,35 @@ namespace GST_API_Library.Models
         public string hmac { get; set; }
         public string hdr { get; set; }
     }
-    public class GenerateResponseInfo
+    public class GenerateResponseInfo : BaseErrorData
     {
         public string status { get; set; }
         public string trans_id { get; set; }
     }
-    public class FileInfo
+    public class FileInfo : BaseErrorData
     {
         public string status { get; set; }
         public string ack_num { get; set; }
     }
 
-    public class ResponseDataInfo
+    public class ResponseDataInfo :BaseErrorData
     {
         public string data { get; set; }
         public string status_cd { get; set; }
         public string rek { get; set; }
         public string hmac { get; set; }
         public string ack_num { get; set; }
+    }
+
+    public class BaseErrorData
+    {
+        public ErrorData? error { get; set; }
+    }
+
+    public class ErrorData
+    {
+        public string message { get; set; }
+        public string error_cd { get; set; }
     }
 
     //Created By Himanshu
@@ -126,7 +134,7 @@ namespace GST_API_Library.Models
         public string st { get; set; }
         public string sid { get; set; }
     }
-    public class GSTNResult<T>
+    public class GSTNResult<T>: BaseErrorData
     {
         public int HttpStatusCode { get; set; }
 

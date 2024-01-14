@@ -63,7 +63,6 @@ namespace GST_API.Controllers
             return new ResponseModel
             {
                 data = info,
-
                 isSuccess = true,
                 message = "success"
             };
