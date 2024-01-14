@@ -133,4 +133,24 @@ namespace GST_API_Library.Models
         public T Data { get; set; }
 
     }
+    //Garima
+    public class GSTR9CHashGenerate
+    {
+        public string hash { get; set; }
+    }
+
+    public class SavePreference
+    {
+        public string status_cd { get; set; }
+    }
+
+    public class UploadDocumentResp
+    {
+        public string doc_id { get; set; }
+    }
+
+    public class CreateNotificationResp
+    {
+        public string notify_id { get; set; }
+    }
 }
