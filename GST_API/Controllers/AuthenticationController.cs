@@ -10,9 +10,9 @@ using Newtonsoft.Json;
 
 namespace GST_API.Controllers
 {
-    [Route("api/auth")]
+    [Authorize(Roles = "APIUser")]
     [ApiController]
-    [Authorize(Roles ="APIUser")]
+    [Route("api/auth")]
     public class AuthenticationController : BaseController
     {
         private readonly ILogger<AuthenticationController> _logger;
@@ -55,13 +55,14 @@ namespace GST_API.Controllers
             var result = await client.RequestOTP();
             if (result.Data?.status_cd == "1")
             {
+                var roles = await _userManager.GetRolesAsync(user);
                 return new ResponseModel
                 {
                     isSuccess = true,
                     message = "OTP Sent, Please use request-token API to get 'GSTIN-Token'",
                     data = new
                     {
-                        token = _tokenService.CreateToken(user,Convert.ToBase64String(appKey))
+                        token = _tokenService.CreateToken(user,Convert.ToBase64String(appKey),roles)
                     }
                 };
             } else
@@ -97,13 +98,14 @@ namespace GST_API.Controllers
             var result = await client.RequestToken(model.gstnUsername,model.gstnPassword);
             if (result.Data?.status_cd == "1")
             {
+                var roles = await _userManager.GetRolesAsync(user);
                 return new ResponseModel
                 {
                     isSuccess = true,
                     message = "OTP Sent, Please use request-token API to get 'GSTIN-Token'",
                     data = new
                     {
-                        token = _tokenService.CreateToken(user, Convert.ToBase64String(appKey))
+                        token = _tokenService.CreateToken(user, Convert.ToBase64String(appKey), roles)
                     }
                 };
             }
