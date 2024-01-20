@@ -1,9 +1,11 @@
 ﻿using GST_API.APIModels;
 using GST_API.Services;
+using GST_API_DAL.Models;
 using GST_API_Library.Models;
 using GST_API_Library.Models.GSTR1;
 using GST_API_Library.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GST_API.Controllers
@@ -14,9 +16,12 @@ namespace GST_API.Controllers
     public class GSTR1Controller : BaseController
     {
         private readonly ILogger<AuthenticationController> _logger;
-        public GSTR1Controller(ILogger<AuthenticationController> logger)
+        private readonly UserManager<User> _userManager;
+
+        public GSTR1Controller(ILogger<AuthenticationController> logger, UserManager<User> userManager)
         {
             _logger = logger;
+            _userManager = userManager;
         }
 
         /// <summary>
@@ -34,6 +39,35 @@ namespace GST_API.Controllers
             };
             GSTR1ApiClient client2 = new GSTR1ApiClient(client, data.gstin, data.fp, Constants.GSTR1_SAVE_URL);
             var info = await client2.Save(data);
+            return new ResponseModel
+            {
+                data = info,
+                isSuccess = true,
+                message = "success"
+            };
+        }
+
+
+        [HttpPut("{otp}/file")]
+        public async Task<ResponseModel> file([FromBody] SummaryOutward data,string otp)
+        {
+            GSTNAuthClient client = new GSTNAuthClient(gstin, this.gstinUsername, appKey)
+            {
+                AuthToken = this.GSTINToken,
+                DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, appKey)
+            };
+            GSTR1ApiClient client2 = new GSTR1ApiClient(client, data.gstin, data.ret_period, Constants.GSTR1_V4_RETURN_URL);
+            string userId = User.Claims.FirstOrDefault(z => z.Type == "Id")?.Value;
+            if (string.IsNullOrEmpty(userId))
+            {
+                return new ResponseModel
+                {
+                    isSuccess = false,
+                    message = "Invalid user Request"
+                };
+            }
+            string PAN = (await _userManager.FindByIdAsync(userId))?.Organization_PAN;
+            var info = await client2.file(data,otp,PAN);
             return new ResponseModel
             {
                 data = info,
@@ -87,7 +121,7 @@ namespace GST_API.Controllers
             };
             try
             {
-                GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, model.ret_period, Constants.GSTR1_GetB2B_URL);
+                GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, model.ret_period, Constants.GSTR1_V4_RETURN_URL);
                 var info = await client2.GetB2B(model);
                 return new ResponseModel
                 {
@@ -122,7 +156,7 @@ namespace GST_API.Controllers
                 DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, this.appKey)
 
             };
-            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, model.ret_period, Constants.GSTR1_GetB2B_URL);
+            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, model.ret_period, Constants.GSTR1_V4_RETURN_URL);
             var info = await client2.GetB2BA(model);
             return new ResponseModel
             {
@@ -150,7 +184,7 @@ namespace GST_API.Controllers
                 DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, this.appKey)
 
             };
-            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, model.ret_period, Constants.GSTR1_GetB2B_URL);
+            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, model.ret_period, Constants.GSTR1_V4_RETURN_URL);
             var info = await client2.GetB2CL(model);
             return new ResponseModel
             {
@@ -178,7 +212,7 @@ namespace GST_API.Controllers
                 DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, this.appKey)
 
             };
-            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, model.ret_period, Constants.GSTR1_GetB2B_URL);
+            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, model.ret_period, Constants.GSTR1_V4_RETURN_URL);
             var info = await client2.GetB2CLA(model);
             return new ResponseModel
             {
@@ -206,7 +240,7 @@ namespace GST_API.Controllers
                 DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, this.appKey)
 
             };
-            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, model.ret_period, Constants.GSTR1_GetB2B_URL);
+            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, model.ret_period, Constants.GSTR1_V4_RETURN_URL);
             var info = await client2.GetB2Cs(model);
             return new ResponseModel
             {
@@ -233,7 +267,7 @@ namespace GST_API.Controllers
                 DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, this.appKey)
 
             };
-            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, model.ret_period, Constants.GSTR1_GetB2B_URL);
+            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, model.ret_period, Constants.GSTR1_V4_RETURN_URL);
             var info = await client2.GetB2CsA(model);
             return new ResponseModel
             {
@@ -261,7 +295,7 @@ namespace GST_API.Controllers
                 DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, this.appKey)
 
             };
-            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, model.ret_period, Constants.GSTR1_GetB2B_URL);
+            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, model.ret_period, Constants.GSTR1_V4_RETURN_URL);
             var info = await client2.GetCDNR(model);
             return new ResponseModel
             {
@@ -289,7 +323,7 @@ namespace GST_API.Controllers
                 DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, this.appKey)
 
             };
-            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, model.ret_period, Constants.GSTR1_GetB2B_URL);
+            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, model.ret_period, Constants.GSTR1_V4_RETURN_URL);
             var info = await client2.GetCDNA(model);
             return new ResponseModel
             {
@@ -318,7 +352,7 @@ namespace GST_API.Controllers
                 DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, this.appKey)
 
             };
-            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, model.ret_period, Constants.GSTR1_GetB2B_URL);
+            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, model.ret_period, Constants.GSTR1_V4_RETURN_URL);
             var info = await client2.GetCDNUR(model);
             return new ResponseModel
             {
@@ -346,7 +380,7 @@ namespace GST_API.Controllers
                 DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, this.appKey)
 
             };
-            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, model.ret_period, Constants.GSTR1_GetB2B_URL);
+            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, model.ret_period, Constants.GSTR1_V4_RETURN_URL);
             var info = await client2.GetCDNURA(model);
             return new ResponseModel
             {
@@ -375,7 +409,7 @@ namespace GST_API.Controllers
                 DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, this.appKey)
 
             };
-            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, model.ret_period, Constants.GSTR1_GetB2B_URL);
+            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, model.ret_period, Constants.GSTR1_V4_RETURN_URL);
             var info = await client2.GetNilRated(model);
             return new ResponseModel
             {
@@ -403,7 +437,7 @@ namespace GST_API.Controllers
                 DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, this.appKey)
 
             };
-            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, model.ret_period, Constants.GSTR1_GetB2B_URL);
+            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, model.ret_period, Constants.GSTR1_V4_RETURN_URL);
             var info = await client2.GetExp(model);
             return new ResponseModel
             {
@@ -431,7 +465,7 @@ namespace GST_API.Controllers
                 DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, this.appKey)
 
             };
-            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, model.ret_period, Constants.GSTR1_GetB2B_URL);
+            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, model.ret_period, Constants.GSTR1_V4_RETURN_URL);
             var info = await client2.GetExpA(model);
             return new ResponseModel
             {
@@ -459,7 +493,7 @@ namespace GST_API.Controllers
                 DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, this.appKey)
 
             };
-            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, model.ret_period, Constants.GSTR1_GetB2B_URL);
+            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, model.ret_period, Constants.GSTR1_V4_RETURN_URL);
             var info = await client2.GetAT(model);
             return new ResponseModel
             {
@@ -487,7 +521,7 @@ namespace GST_API.Controllers
                 DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, this.appKey)
 
             };
-            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, model.ret_period, Constants.GSTR1_GetB2B_URL);
+            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, model.ret_period, Constants.GSTR1_V4_RETURN_URL);
             var info = await client2.GetATA(model);
             return new ResponseModel
             {
@@ -515,7 +549,7 @@ namespace GST_API.Controllers
                 DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, this.appKey)
 
             };
-            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, model.ret_period, Constants.GSTR1_GetB2B_URL);
+            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, model.ret_period, Constants.GSTR1_V4_RETURN_URL);
             var info = await client2.GetDocIssued(model);
             return new ResponseModel
             {
@@ -572,7 +606,7 @@ namespace GST_API.Controllers
                 DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, this.appKey)
 
             };
-            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, model.ret_period, Constants.GSTR1_GetB2B_URL);
+            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, model.ret_period, Constants.GSTR1_V4_RETURN_URL);
             var info = await client2.GetECOM(model);
             return new ResponseModel
             {
@@ -600,12 +634,11 @@ namespace GST_API.Controllers
                 DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, this.appKey)
 
             };
-            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, model.ret_period, Constants.GSTR1_GetB2B_URL);
+            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, model.ret_period, Constants.GSTR1_V4_RETURN_URL);
             var info = await client2.GetGSTR1Summary(model);
             return new ResponseModel
             {
                 data = info,
-
                 isSuccess = true,
                 message = "success"
             };
@@ -645,6 +678,38 @@ namespace GST_API.Controllers
             };
         }
 
+
+        /// <summary>
+        /// NewProceedToFile
+        /// </summary>
+        /// <param name="ret_prd"></param>
+        /// <returns></returns>
+        [HttpPost("GenerateSummary")]
+        public async Task<ResponseModel> GenerateSummary()
+        {
+            if (string.IsNullOrEmpty(this.GSTINToken) || string.IsNullOrEmpty(this.GSTINSek))
+            {
+                return new ResponseModel
+                {
+                    isSuccess = false,
+                    message = "Please send 'GSTIN-Token' or 'GSTIN-Sek' in headers"
+                };
+            }
+            GSTNAuthClient client = new GSTNAuthClient(gstin, this.gstinUsername, this.appKey)
+            {
+                AuthToken = this.GSTINToken,
+                DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, this.appKey)
+
+            };
+            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, "", Constants.CommomAPISavePreference_URL+"/gstr1");
+            var info = await client2.GenerateSummary();
+            return new ResponseModel
+            {
+                data = info,
+                isSuccess = true,
+                message = "success"
+            };
+        }
     }
 }
 

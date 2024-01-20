@@ -189,5 +189,22 @@ namespace GST_API_Library.Services
             return result;
         }
 
+        public async Task<GSTNResult<dynamic>> GenerateSummary()
+        {
+            var data =
+            new
+            {
+                action = "GENSUM"
+            };
+           var info=  await this.PostAsync<object, dynamic>(data);
+            if (info == null)
+            {
+                throw new Exception("Unable to get the details from server");
+            }
+            //var output = this.Decrypt<NewProceedToFile>(info.Data);
+            //var result = this.BuildResult(info, output);
+            return info;
+        }
+
     }
 }

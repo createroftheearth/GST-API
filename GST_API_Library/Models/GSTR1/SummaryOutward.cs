@@ -99,7 +99,7 @@ namespace GST_API_Library.Models.GSTR1
         public List<CptySum> cpty_sum { get; set; }
     }
 
-    public class SummaryOutward
+    public class SummaryOutward: BaseErrorData
     {
 
         [Required]

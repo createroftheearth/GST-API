@@ -1,4 +1,6 @@
 ﻿using GST_API_Library.Models;
+using GST_API_Library.Models.GSTR1;
+using Org.BouncyCastle.Crypto.Tls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +16,7 @@ namespace GST_API_Library.Services
         public string AuthToken { get; set; }
         public byte[] DecryptedKey { get; set; }
         public string userid { get; set; }
+        private string gstin { get; set; }
 
         private byte[] appKey;
 
@@ -26,8 +29,9 @@ namespace GST_API_Library.Services
         {
             this.userid = userid;
             this.appKey = appKey;
+            this.gstin = gstin; 
         }
-        protected internal override void BuildHeaders(HttpClient client,string? returnType = null,string? apiVersion= null)
+        protected internal override void BuildHeaders(HttpClient client, string? returnType = null, string? apiVersion = null)
         {
             client.DefaultRequestHeaders.Add("clientid", GSTNConstants.client_id);
             client.DefaultRequestHeaders.Add("client-secret", GSTNConstants.client_secret);
@@ -83,6 +87,28 @@ namespace GST_API_Library.Services
             };
             model.app_key = EncryptionUtils.AesEncrypt(this.appKey, this.DecryptedKey);
             return await PostAsync<RefreshTokenModel, TokenResponseModel>(model);
+        }
+
+        public async Task<GSTNResult<BaseResponseModel>> RequestOTPForEVC(EVCAuthenticationModel model,string gstinToken)
+        {
+            Dictionary<string, string> dic = new Dictionary<string, string>
+            {
+                {"gstin",model.gstin },
+                { "pan",model.pan},
+                { "form_type",model.form_type},
+                {"action","EVCOTP" }
+            };
+            this.PrepareQueryString(dic);
+            using (var client = GetHttpClient())
+            {
+                client.DefaultRequestHeaders.Add("auth-token",gstinToken );
+                client.DefaultRequestHeaders.Add("username", userid);
+                client.DefaultRequestHeaders.Add("gstin", gstin);
+                //url2 to url3 amit
+                System.Console.WriteLine("GET:" + url2);
+                HttpResponseMessage response = await client.GetAsync(url2);
+                return BuildResponse<BaseResponseModel>(response);
+            }
         }
 
         //need to ask with himanshu

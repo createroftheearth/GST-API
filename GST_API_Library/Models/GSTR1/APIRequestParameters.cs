@@ -9,5 +9,6 @@
         public string? from_time { get; set; }
         public string? state_cd { get; set; }
         public string? file_num { get; set; }
+        public string? smrytyp { get; set; }
     }
 }

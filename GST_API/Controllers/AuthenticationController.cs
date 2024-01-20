@@ -144,5 +144,31 @@ namespace GST_API.Controllers
             return result;
         }
 
+        [HttpGet("otp-evc-request")]
+        public async Task<ResponseModel> InitiateRequestOTPForEVC([FromQuery]EVCAuthenticationModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                GSTNAuthClient client = new GSTNAuthClient(gstin, gstinUsername, appKey);
+                var result = await client.RequestOTPForEVC(model,GSTINToken);
+                _logger.LogInformation(JsonConvert.SerializeObject(result));
+                return new ResponseModel
+                {
+                    isSuccess = true,
+                    data = result,
+                    message = "Success"
+                };
+            }
+            else
+            {
+                return new ResponseModel
+                {
+                    data = null,
+                    isSuccess = false,
+                    message = string.Join(", ", ModelState.Values.SelectMany(v => v.Errors))
+                };
+            }
+
+        }
     }
 }

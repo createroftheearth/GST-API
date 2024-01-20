@@ -1,6 +1,8 @@
 ﻿using GST_API_Library.Models;
 using GST_API_Library.Models.GSTR1;
+using Newtonsoft.Json;
 using System.Globalization;
+using System.Text;
 
 namespace GST_API_Library.Services
 {
@@ -722,34 +724,20 @@ namespace GST_API_Library.Services
                 { "ret_period", apiRequestParameters.ret_period },
                 { "action", "RETSUM" }
             };
-            if (!string.IsNullOrEmpty(apiRequestParameters.action_required))
+            if (!string.IsNullOrEmpty(apiRequestParameters.smrytyp))
             {
-                dic.Add("action_required", apiRequestParameters.action_required);
-            }
-            if (!string.IsNullOrEmpty(apiRequestParameters.ctin))
-            {
-                dic.Add("ctin", apiRequestParameters.ctin);
-            }
-            if (!string.IsNullOrEmpty(apiRequestParameters.from_time))
-            {
-                if (!DateTime.TryParseExact(apiRequestParameters.from_time, "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime date))
-                {
-                    throw new Exception("Date Should be provided in dd-MM-yyyy format only");
-                }
-                dic.Add("action_required", apiRequestParameters.from_time);
+                dic.Add("smrytyp", apiRequestParameters.smrytyp);
             }
             return dic;
         }
         public async Task<GSTNResult<SummaryOutward>> GetGSTR1Summary(APIRequestParameters apiRequestParameters)
         {
-            Dictionary<string, string> dic = this.prepareEXPADictionary(apiRequestParameters);
+            Dictionary<string, string> dic = this.prepareGSTR1SummaryDictionary(apiRequestParameters);
             this.PrepareQueryString(dic);
             var info = await this.GetAsync<ResponseDataInfo>();
             var output = this.Decrypt<SummaryOutward>(info.Data);
             var model = this.BuildResult<SummaryOutward>(info, output);
-            model.Data.sec_sum.RemoveAll(x => x.cpty_sum == null);
             return model;
-
         }
 
         //API call  NIL for getting  liabilities such as 'Nil Rated’, ‘Exempted’, and ‘Non GST’ supplies for a return period
@@ -792,6 +780,35 @@ namespace GST_API_Library.Services
             var model = this.BuildResult<NilRatedOutward>(info, output.nil);
             return model;
 
+        }
+
+        public async Task<GSTNResult<SaveInfo>> file(SummaryOutward data, string OTP, string? PAN)
+        {
+            var encryptedData = this.Encrypt(data);
+            string finalJson = JsonConvert.SerializeObject(data, Newtonsoft.Json.Formatting.Indented,
+                          new JsonSerializerSettings
+                          {
+                              NullValueHandling = NullValueHandling.Ignore
+                          });
+            byte[] encodeJson = UTF8Encoding.UTF8.GetBytes(finalJson);
+            string base64Payload = Convert.ToBase64String(encodeJson);
+            var model = new
+            {
+                data = encryptedData,
+                action = "RETFILE",
+                st = "EVC",
+                sign = EncryptionUtils.GenerateHMAC(PAN + OTP,base64Payload),
+                sid = PAN + "|" + OTP,
+            };
+
+            var info = await this.PutAsync<object, ResponseDataInfo>(model);
+            if (info == null)
+            {
+                throw new Exception("Unable to get the details from server");
+            }
+            var output = this.Decrypt<SaveInfo>(info.Data);
+            var model2 = this.BuildResult(info, output);
+            return model2;
         }
 
         ////need to discusse with Himanshu on model & Error

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -60,5 +61,15 @@ namespace GST_API_Library.Models
     {
         public string data { get; set; }
         public string sign { get; set; }
+    }
+
+    public class EVCAuthenticationModel
+    {
+        [Required(ErrorMessage = "GSTIN is required")]
+        public string gstin { get; set; }
+        [Required(ErrorMessage = "PAN is required")]
+        public string pan { get; set; }
+        [Required(ErrorMessage = "Form Type is required")]
+        public string form_type { get; set; }
     }
 }

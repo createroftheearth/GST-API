@@ -1,4 +1,6 @@
-﻿namespace GST_API.APIModels
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace GST_API.APIModels
 {
     public class AuthenticateModel
     {
