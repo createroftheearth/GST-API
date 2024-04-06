@@ -10,5 +10,11 @@
         public string? state_cd { get; set; }
         public string? file_num { get; set; }
         public string? smrytyp { get; set; }
+
+        //Garima 19 March 2024
+
+        public string? sub_section { get; set; }
+        public string? rtin { get; set; }
+        public string sec { get; set; }
     }
 }

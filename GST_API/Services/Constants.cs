@@ -30,5 +30,11 @@
         public static string CommonAPISaveUserMaster_URL = "/taxpayerapi/v1.0/usermasters/";
         public static string CommomAPIUploadDoc_URL = "/taxpayerapi/v1.1/document";
         public static string CommomAPICreateNoti_URL = "/taxpayerapi/v1.0/ccapi";
+
+        //Garima 19 March 2024
+
+        public static string GSTR1_GetB2B_URL = "/taxpayerapi/v4.0/returns/gstr1";
+        public static string GSTR1_ResetGSTR1_URL = "/taxpayerapi/v4.0/returns/gstr1";
+        public static string GSTR1_Einvoice = "/taxpayerapi/v1.0/returns/einvoice";
     }
 }

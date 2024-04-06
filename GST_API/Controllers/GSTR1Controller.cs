@@ -12,7 +12,7 @@ namespace GST_API.Controllers
 {
     [Route("api/gstr1")]
     [ApiController]
-    [Authorize(Roles ="APIUser")]
+    [Authorize(Roles = "APIUser")]
     public class GSTR1Controller : BaseController
     {
         private readonly ILogger<AuthenticationController> _logger;
@@ -47,9 +47,8 @@ namespace GST_API.Controllers
             };
         }
 
-
         [HttpPut("{otp}/file")]
-        public async Task<ResponseModel> file([FromBody] SummaryOutward data,string otp)
+        public async Task<ResponseModel> file([FromBody] SummaryOutward data, string otp)
         {
             GSTNAuthClient client = new GSTNAuthClient(gstin, this.gstinUsername, appKey)
             {
@@ -67,7 +66,7 @@ namespace GST_API.Controllers
                 };
             }
             string PAN = (await _userManager.FindByIdAsync(userId))?.Organization_PAN;
-            var info = await client2.file(data,otp,PAN);
+            var info = await client2.file(data, otp, PAN);
             return new ResponseModel
             {
                 data = info,
@@ -75,6 +74,7 @@ namespace GST_API.Controllers
                 message = "success"
             };
         }
+
 
         [HttpGet("{ret_prd}/{reference_id}/ReturnStatus")]
         public async Task<ResponseModel> ReturnStatus(string ret_prd, string reference_id)
@@ -129,7 +129,8 @@ namespace GST_API.Controllers
                     isSuccess = true,
                     message = "success"
                 };
-            } catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return new ResponseModel
                 {
@@ -559,7 +560,7 @@ namespace GST_API.Controllers
                 message = "success"
             };
         }
-        
+
         //Pending
         //[HttpGet("{ret_prd}/GetTXPDInvoices")]
         //public async Task<ResponseModel> GetTXPDInvoices(string ret_prd)
@@ -578,7 +579,7 @@ namespace GST_API.Controllers
         //        DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, this.appKey)
 
         //    };
-        //    GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, ret_prd, Constants.GSTR1_GetB2B_URL);
+        //    GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, ret_prd, Constants.GSTR1_V4_RETURN_URL);
         //    var info = await client2.GetTXPD(ret_prd);
         //    return new ResponseModel
         //    {
@@ -677,10 +678,8 @@ namespace GST_API.Controllers
                 message = "success"
             };
         }
-
-
         /// <summary>
-        /// NewProceedToFile
+        /// Generate Summary
         /// </summary>
         /// <param name="ret_prd"></param>
         /// <returns></returns>
@@ -701,7 +700,7 @@ namespace GST_API.Controllers
                 DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, this.appKey)
 
             };
-            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, "", Constants.CommomAPISavePreference_URL+"/gstr1");
+            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, "", Constants.CommomAPISavePreference_URL + "/gstr1");
             var info = await client2.GenerateSummary();
             return new ResponseModel
             {
@@ -710,6 +709,259 @@ namespace GST_API.Controllers
                 message = "success"
             };
         }
+        //Garima 19 March 2024
+
+        [HttpPost("ResetGSTR1")]
+        public async Task<ResponseModel> ResetGSTR1([FromBody] GenerateRequestInfo model)
+        {
+            if (string.IsNullOrEmpty(this.GSTINToken) || string.IsNullOrEmpty(this.GSTINSek))
+            {
+                return new ResponseModel
+                {
+                    isSuccess = false,
+                    message = "Please send 'GSTIN-Token' or 'GSTIN-Sek' in headers"
+                };
+            }
+            GSTNAuthClient client = new GSTNAuthClient(gstin, this.gstinUsername, this.appKey)
+            {
+                AuthToken = this.GSTINToken,
+                DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, this.appKey)
+
+            };
+            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, model.ret_period, Constants.GSTR1_V4_RETURN_URL);
+            var info = await client2.Reset_GSTR1(model);
+            return new ResponseModel
+            {
+                data = info,
+                isSuccess = true,
+                message = "success"
+            };
+        }
+
+        [HttpGet("GetValidateHSNSummary")]
+        public async Task<ResponseModel> GetValidateHSNSummary([FromQuery] APIRequestParameters model)
+        {
+            if (string.IsNullOrEmpty(this.GSTINToken) || string.IsNullOrEmpty(this.GSTINSek))
+            {
+                return new ResponseModel
+                {
+                    isSuccess = false,
+                    message = "Please send 'GSTIN-Token' or 'GSTIN-Sek' in headers"
+                };
+            }
+            GSTNAuthClient client = new GSTNAuthClient(gstin, this.gstinUsername, this.appKey)
+            {
+                AuthToken = this.GSTINToken,
+                DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, this.appKey)
+
+            };
+            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, model.ret_period, Constants.GSTR1_V4_RETURN_URL);
+            var info = await client2.GetValidateHSNSummary(model);
+            return new ResponseModel
+            {
+                data = info,
+
+                isSuccess = true,
+                message = "success"
+            };
+        }
+
+        [HttpGet("GetSUPECO")]
+        public async Task<ResponseModel> GetSUPECO([FromQuery] APIRequestParameters model)
+        {
+            if (string.IsNullOrEmpty(this.GSTINToken) || string.IsNullOrEmpty(this.GSTINSek))
+            {
+                return new ResponseModel
+                {
+                    isSuccess = false,
+                    message = "Please send 'GSTIN-Token' or 'GSTIN-Sek' in headers"
+                };
+            }
+            GSTNAuthClient client = new GSTNAuthClient(gstin, this.gstinUsername, this.appKey)
+            {
+                AuthToken = this.GSTINToken,
+                DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, this.appKey)
+
+            };
+            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, model.ret_period, Constants.GSTR1_V4_RETURN_URL);
+            var info = await client2.GetSUPECO(model);
+            return new ResponseModel
+            {
+                data = info,
+
+                isSuccess = true,
+                message = "success"
+            };
+        }
+
+        [HttpGet("GetSUPECOA")]
+        public async Task<ResponseModel> GetSUPECOA([FromQuery] APIRequestParameters model)
+        {
+            if (string.IsNullOrEmpty(this.GSTINToken) || string.IsNullOrEmpty(this.GSTINSek))
+            {
+                return new ResponseModel
+                {
+                    isSuccess = false,
+                    message = "Please send 'GSTIN-Token' or 'GSTIN-Sek' in headers"
+                };
+            }
+            GSTNAuthClient client = new GSTNAuthClient(gstin, this.gstinUsername, this.appKey)
+            {
+                AuthToken = this.GSTINToken,
+                DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, this.appKey)
+
+            };
+            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, model.ret_period, Constants.GSTR1_V4_RETURN_URL);
+            var info = await client2.GetSUPECOA(model);
+            return new ResponseModel
+            {
+                data = info,
+
+                isSuccess = true,
+                message = "success"
+            };
+        }
+
+        [HttpGet("GetHSNDetails")]
+        public async Task<ResponseModel> GetHSNDetails([FromQuery] APIRequestParameters model)
+        {
+            if (string.IsNullOrEmpty(this.GSTINToken) || string.IsNullOrEmpty(this.GSTINSek))
+            {
+                return new ResponseModel
+                {
+                    isSuccess = false,
+                    message = "Please send 'GSTIN-Token' or 'GSTIN-Sek' in headers"
+                };
+            }
+            GSTNAuthClient client = new GSTNAuthClient(gstin, this.gstinUsername, this.appKey)
+            {
+                AuthToken = this.GSTINToken,
+                DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, this.appKey)
+
+            };
+            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, model.ret_period, Constants.GSTR1_V4_RETURN_URL);
+            var info = await client2.GetHSNDtl(model);
+            return new ResponseModel
+            {
+                data = info,
+
+                isSuccess = true,
+                message = "success"
+            };
+        }
+
+        [HttpGet("GetEcomA")]
+        public async Task<ResponseModel> GetEcomA([FromQuery] APIRequestParameters model)
+        {
+            if (string.IsNullOrEmpty(this.GSTINToken) || string.IsNullOrEmpty(this.GSTINSek))
+            {
+                return new ResponseModel
+                {
+                    isSuccess = false,
+                    message = "Please send 'GSTIN-Token' or 'GSTIN-Sek' in headers"
+                };
+            }
+            GSTNAuthClient client = new GSTNAuthClient(gstin, this.gstinUsername, this.appKey)
+            {
+                AuthToken = this.GSTINToken,
+                DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, this.appKey)
+
+            };
+            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, model.ret_period, Constants.GSTR1_V4_RETURN_URL);
+            var info = await client2.GetECOMA(model);
+            return new ResponseModel
+            {
+                data = info,
+
+                isSuccess = true,
+                message = "success"
+            };
+        }
+
+        [HttpGet("GetEinvoice")]
+        public async Task<ResponseModel> GetEinvoice([FromQuery] APIRequestParameters model)
+        {
+            if (string.IsNullOrEmpty(this.GSTINToken) || string.IsNullOrEmpty(this.GSTINSek))
+            {
+                return new ResponseModel
+                {
+                    isSuccess = false,
+                    message = "Please send 'GSTIN-Token' or 'GSTIN-Sek' in headers"
+                };
+            }
+            GSTNAuthClient client = new GSTNAuthClient(gstin, this.gstinUsername, this.appKey)
+            {
+                AuthToken = this.GSTINToken,
+                DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, this.appKey)
+
+            };
+            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, model.ret_period, Constants.GSTR1_Einvoice);
+            var info = await client2.GetEinvoice(model);
+            return new ResponseModel
+            {
+                data = info,
+
+                isSuccess = true,
+                message = "success"
+            };
+        }
+
+        [HttpGet("GetTXP")]
+        public async Task<ResponseModel> GetTXP([FromQuery] APIRequestParameters model)
+        {
+            if (string.IsNullOrEmpty(this.GSTINToken) || string.IsNullOrEmpty(this.GSTINSek))
+            {
+                return new ResponseModel
+                {
+                    isSuccess = false,
+                    message = "Please send 'GSTIN-Token' or 'GSTIN-Sek' in headers"
+                };
+            }
+            GSTNAuthClient client = new GSTNAuthClient(gstin, this.gstinUsername, this.appKey)
+            {
+                AuthToken = this.GSTINToken,
+                DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, this.appKey)
+
+            };
+            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, model.ret_period, Constants.GSTR1_V4_RETURN_URL);
+            var info = await client2.GetTXP(model);
+            return new ResponseModel
+            {
+                data = info,
+
+                isSuccess = true,
+                message = "success"
+            };
+        }
+
+        [HttpGet("GetTXPA")]
+        public async Task<ResponseModel> GetTXPA([FromQuery] APIRequestParameters model)
+        {
+            if (string.IsNullOrEmpty(this.GSTINToken) || string.IsNullOrEmpty(this.GSTINSek))
+            {
+                return new ResponseModel
+                {
+                    isSuccess = false,
+                    message = "Please send 'GSTIN-Token' or 'GSTIN-Sek' in headers"
+                };
+            }
+            GSTNAuthClient client = new GSTNAuthClient(gstin, this.gstinUsername, this.appKey)
+            {
+                AuthToken = this.GSTINToken,
+                DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, this.appKey)
+
+            };
+            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, model.ret_period, Constants.GSTR1_V4_RETURN_URL);
+            var info = await client2.GetTXPA(model);
+            return new ResponseModel
+            {
+                data = info,
+
+                isSuccess = true,
+                message = "success"
+            };
+        }
+
     }
 }
 

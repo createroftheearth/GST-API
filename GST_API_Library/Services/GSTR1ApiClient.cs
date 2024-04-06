@@ -1,8 +1,10 @@
 ﻿using GST_API_Library.Models;
 using GST_API_Library.Models.GSTR1;
+using Integrated.API.GSTN.GSTR1;
 using Newtonsoft.Json;
 using System.Globalization;
 using System.Text;
+using FileInfo = GST_API_Library.Models.FileInfo;
 
 namespace GST_API_Library.Services
 {
@@ -781,8 +783,8 @@ namespace GST_API_Library.Services
             return model;
 
         }
-
-        public async Task<GSTNResult<SaveInfo>> file(SummaryOutward data, string OTP, string? PAN)
+       //File 03/04/2024
+         public async Task<GSTNResult<SaveInfo>> file(SummaryOutward data, string OTP, string? PAN)
         {
             var encryptedData = this.Encrypt(data);
             string finalJson = JsonConvert.SerializeObject(data, Newtonsoft.Json.Formatting.Indented,
@@ -811,36 +813,302 @@ namespace GST_API_Library.Services
             return model2;
         }
 
-        ////need to discusse with Himanshu on model & Error
-        ////API call  for getting tax paid details for a return period.
-        //private Dictionary<string, string> prepareTaxDictionary(APIRequestParameters apiRequestParameters)
-        //{
-        //    if (apiRequestParameters == null || string.IsNullOrEmpty(apiRequestParameters.gstin) || string.IsNullOrEmpty(apiRequestParameters.ret_period))
-        //    {
-        //        throw new Exception("gstin and ret_period is required");
-        //    }
-        //    var dic = new Dictionary<string, string>
-        //    {
-        //        { "gstin", apiRequestParameters.gstin },
-        //        { "ret_period", apiRequestParameters.ret_period },
-        //        { "action", "TXP" }
-        //    };
-        //    if (!string.IsNullOrEmpty(apiRequestParameters.action_required))
-        //    {
-        //        dic.Add("action_required", apiRequestParameters.action_required);
-        //    }
-        //    return dic;
-        //}
-        //public async Task<GSTNResult<TxpOutward>> GetTAX(APIRequestParameters apiRequestParameters)
-        //{
-        //    Dictionary<string, string> dic = this.prepareTaxDictionary(apiRequestParameters);
-        //    this.PrepareQueryString(dic);
-        //    var info = await this.GetAsync<ResponseDataInfo>();
-        //    var output = this.Decrypt<GSTR1Total>(info.Data);
-        //    var model = this.BuildResult<TxpOutward>(info, output.txpd);
-        //    return model;
+        //Garima 19 March 2024
 
-        //}
+        //This API will be used by G2B to Validate the HSN Summary details against GSTIN and Return Period
+        private Dictionary<string, string> preparevalidHSNSummDictionary(APIRequestParameters apiRequestParameters)
+        {
+            if (apiRequestParameters == null || string.IsNullOrEmpty(apiRequestParameters.gstin) || string.IsNullOrEmpty(apiRequestParameters.ret_period))
+            {
+                throw new Exception("gstin and ret_period is required");
+            }
+            var dic = new Dictionary<string, string>
+            {
+                { "gstin", apiRequestParameters.gstin },
+                { "ret_period", apiRequestParameters.ret_period },
+                { "action", "VALIDATEHSNSUM" }
+            };
+            return dic;
+        }
+        public async Task<GSTNResult<List<ValidateHSNSummary>>> GetValidateHSNSummary(APIRequestParameters apiRequestParameters)
+        {
+
+            Dictionary<string, string> dic = this.preparevalidHSNSummDictionary(apiRequestParameters);
+            this.PrepareQueryString(dic);
+            var info = await this.GetAsync<ResponseDataInfo>();
+            var output = this.Decrypt<GSTR1Total>(info.Data);
+            var model = this.BuildResult<List<ValidateHSNSummary>>(info, output.validateHSNSummary);
+            return model;
+
+        }
+
+
+        //API call  for getting details of e-commerce supply for a return period
+        private Dictionary<string, string> prepareSUPECODictionary(APIRequestParameters apiRequestParameters)
+        {
+            if (apiRequestParameters == null || string.IsNullOrEmpty(apiRequestParameters.gstin) || string.IsNullOrEmpty(apiRequestParameters.ret_period))
+            {
+                throw new Exception("gstin and ret_period is required");
+            }
+            var dic = new Dictionary<string, string>
+            {
+                { "gstin", apiRequestParameters.gstin },
+                { "ret_period", apiRequestParameters.ret_period },
+                //{ "sub_section", apiRequestParameters.sub_section },
+                //{ "from_time", apiRequestParameters.from_time },
+                { "action", "SUPECO" }
+            };
+            if (!string.IsNullOrEmpty(apiRequestParameters.action_required))
+            {
+                dic.Add("action_required", apiRequestParameters.action_required);
+            }
+            if (!string.IsNullOrEmpty(apiRequestParameters.from_time))
+            {
+                if (!DateTime.TryParseExact(apiRequestParameters.from_time, "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime date))
+                {
+                    throw new Exception("Date Should be provided in dd-MM-yyyy format only");
+                }
+                dic.Add("action_required", apiRequestParameters.from_time);
+            }
+            return dic;
+        }
+        public async Task<GSTNResult<List<GetSUPECO>>> GetSUPECO(APIRequestParameters apiRequestParameters)
+        {
+            Dictionary<string, string> dic = this.prepareSUPECODictionary(apiRequestParameters);
+            this.PrepareQueryString(dic);
+            var info = await this.GetAsync<ResponseDataInfo>();
+            var output = this.Decrypt<GSTR1Total>(info.Data);
+            var model = this.BuildResult<List<GetSUPECO>>(info, output.Supeco);
+            return model;
+
+        }
+
+        //This API is to get Supplier ECOA Details
+        private Dictionary<string, string> prepareSUPECOADictionary(APIRequestParameters apiRequestParameters)
+        {
+            if (apiRequestParameters == null || string.IsNullOrEmpty(apiRequestParameters.gstin) || string.IsNullOrEmpty(apiRequestParameters.ret_period))
+            {
+                throw new Exception("gstin and ret_period is required");
+            }
+            var dic = new Dictionary<string, string>
+            {
+                { "gstin", apiRequestParameters.gstin },
+                { "ret_period", apiRequestParameters.ret_period },
+                //{ "sub_section", apiRequestParameters.sub_section },
+                { "action", "SUPECOA" }
+            };
+            if (!string.IsNullOrEmpty(apiRequestParameters.action_required))
+            {
+                dic.Add("action_required", apiRequestParameters.action_required);
+            }
+            return dic;
+        }
+        public async Task<GSTNResult<List<GetSUPECOA>>> GetSUPECOA(APIRequestParameters apiRequestParameters)
+        {
+            Dictionary<string, string> dic = this.prepareSUPECOADictionary(apiRequestParameters);
+            this.PrepareQueryString(dic);
+            var info = await this.GetAsync<ResponseDataInfo>();
+            var output = this.Decrypt<GSTR1Total>(info.Data);
+            var model = this.BuildResult<List<GetSUPECOA>>(info, output.Supecoa);
+            return model;
+
+        }
+
+        private Dictionary<string, string> prepareHSNDetailsDictionary(APIRequestParameters apiRequestParameters)
+        {
+            if (apiRequestParameters == null || string.IsNullOrEmpty(apiRequestParameters.gstin) || string.IsNullOrEmpty(apiRequestParameters.ret_period))
+            {
+                throw new Exception("gstin and ret_period is required");
+            }
+            var dic = new Dictionary<string, string>
+            {
+                { "gstin", apiRequestParameters.gstin },
+                { "ret_period", apiRequestParameters.ret_period },
+                //{ "sub_section", apiRequestParameters.sub_section },
+                { "action", "HSNSUM" }
+            };
+            if (!string.IsNullOrEmpty(apiRequestParameters.action_required))
+            {
+                dic.Add("action_required", apiRequestParameters.action_required);
+            }
+            return dic;
+        }
+        public async Task<GSTNResult<List<HSNDetails>>> GetHSNDtl(APIRequestParameters apiRequestParameters)
+        {
+            Dictionary<string, string> dic = this.prepareHSNDetailsDictionary(apiRequestParameters);
+            this.PrepareQueryString(dic);
+            var info = await this.GetAsync<ResponseDataInfo>();
+            var output = this.Decrypt<GSTR1Total>(info.Data);
+            var model = this.BuildResult<List<HSNDetails>>(info, output.HsnDetails);
+            return model;
+
+        }
+
+        private Dictionary<string, string> prepareECOMADictionary(APIRequestParameters apiRequestParameters)
+        {
+            if (apiRequestParameters == null || string.IsNullOrEmpty(apiRequestParameters.gstin) || string.IsNullOrEmpty(apiRequestParameters.ret_period))
+            {
+                throw new Exception("gstin and ret_period is required");
+            }
+            var dic = new Dictionary<string, string>
+            {
+                { "gstin", apiRequestParameters.gstin },
+                { "ret_period", apiRequestParameters.ret_period },
+                { "action", "ECOMA" }
+            };
+            if (!string.IsNullOrEmpty(apiRequestParameters.action_required))
+            {
+                dic.Add("action_required", apiRequestParameters.action_required);
+            }
+            if (!string.IsNullOrEmpty(apiRequestParameters.ctin))
+            {
+                dic.Add("ctin", apiRequestParameters.ctin);
+            }
+            if (!string.IsNullOrEmpty(apiRequestParameters.from_time))
+            {
+                if (!DateTime.TryParseExact(apiRequestParameters.from_time, "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime date))
+                {
+                    throw new Exception("Date Should be provided in dd-MM-yyyy format only");
+                }
+                dic.Add("action_required", apiRequestParameters.from_time);
+            }
+            return dic;
+        }
+        public async Task<GSTNResult<List<EComA>>> GetECOMA(APIRequestParameters apiRequestParameters)
+        {
+            Dictionary<string, string> dic = this.prepareECOMADictionary(apiRequestParameters);
+            this.PrepareQueryString(dic);
+            var info = await this.GetAsync<ResponseDataInfo>();
+            var output = this.Decrypt<GSTR1Total>(info.Data);
+            var model = this.BuildResult<List<EComA>>(info, output.ecoma);
+            return model;
+
+        }
+
+        private Dictionary<string, string> prepareEinvoiceDictionary(APIRequestParameters apiRequestParameters)
+        {
+            if (apiRequestParameters == null || string.IsNullOrEmpty(apiRequestParameters.gstin) || string.IsNullOrEmpty(apiRequestParameters.ret_period) || string.IsNullOrEmpty(apiRequestParameters.sec))
+            {
+                throw new Exception("gstin and ret_period is required");
+            }
+            var dic = new Dictionary<string, string>
+            {
+                { "gstin", apiRequestParameters.gstin },
+                { "ret_period", apiRequestParameters.ret_period },
+                {"sec",apiRequestParameters.sec },
+                { "action", "EINV" }
+            };
+            if (!string.IsNullOrEmpty(apiRequestParameters.action_required))
+            {
+                dic.Add("action_required", apiRequestParameters.action_required);
+            }
+            if (!string.IsNullOrEmpty(apiRequestParameters.ctin))
+            {
+                dic.Add("ctin", apiRequestParameters.ctin);
+            }
+            if (!string.IsNullOrEmpty(apiRequestParameters.from_time))
+            {
+                if (!DateTime.TryParseExact(apiRequestParameters.from_time, "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime date))
+                {
+                    throw new Exception("Date Should be provided in dd-MM-yyyy format only");
+                }
+                dic.Add("action_required", apiRequestParameters.from_time);
+            }
+            return dic;
+        }
+        public async Task<GSTNResult<List<Einvoice>>> GetEinvoice(APIRequestParameters apiRequestParameters)
+        {
+            Dictionary<string, string> dic = this.prepareEinvoiceDictionary(apiRequestParameters);
+            this.PrepareQueryString(dic);
+            var info = await this.GetAsync<ResponseDataInfo>();
+            var output = this.Decrypt<GSTR1Total>(info.Data);
+            var model = this.BuildResult<List<Einvoice>>(info, output.einvoice);
+            return model;
+
+        }
+
+        private Dictionary<string, string> prepareTxpDictionary(APIRequestParameters apiRequestParameters)
+        {
+            if (apiRequestParameters == null || string.IsNullOrEmpty(apiRequestParameters.gstin) || string.IsNullOrEmpty(apiRequestParameters.ret_period))
+            {
+                throw new Exception("gstin and ret_period is required");
+            }
+            var dic = new Dictionary<string, string>
+            {
+                { "gstin", apiRequestParameters.gstin },
+                { "ret_period", apiRequestParameters.ret_period },
+                { "action", "TXP" }
+            };
+            if (!string.IsNullOrEmpty(apiRequestParameters.action_required))
+            {
+                dic.Add("action_required", apiRequestParameters.action_required);
+            }
+            if (!string.IsNullOrEmpty(apiRequestParameters.ctin))
+            {
+                dic.Add("ctin", apiRequestParameters.ctin);
+            }
+            if (!string.IsNullOrEmpty(apiRequestParameters.from_time))
+            {
+                if (!DateTime.TryParseExact(apiRequestParameters.from_time, "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime date))
+                {
+                    throw new Exception("Date Should be provided in dd-MM-yyyy format only");
+                }
+                dic.Add("action_required", apiRequestParameters.from_time);
+            }
+            return dic;
+        }
+        public async Task<GSTNResult<List<TXP>>> GetTXP(APIRequestParameters apiRequestParameters)
+        {
+            Dictionary<string, string> dic = this.prepareTxpDictionary(apiRequestParameters);
+            this.PrepareQueryString(dic);
+            var info = await this.GetAsync<ResponseDataInfo>();
+            var output = this.Decrypt<GSTR1Total>(info.Data);
+            var model = this.BuildResult<List<TXP>>(info, output.txp);
+            return model;
+
+        }
+
+        private Dictionary<string, string> prepareTXPADictionary(APIRequestParameters apiRequestParameters)
+        {
+            if (apiRequestParameters == null || string.IsNullOrEmpty(apiRequestParameters.gstin) || string.IsNullOrEmpty(apiRequestParameters.ret_period))
+            {
+                throw new Exception("gstin and ret_period is required");
+            }
+            var dic = new Dictionary<string, string>
+            {
+                { "gstin", apiRequestParameters.gstin },
+                { "ret_period", apiRequestParameters.ret_period },
+                { "action", "TXPA" }
+            };
+            if (!string.IsNullOrEmpty(apiRequestParameters.action_required))
+            {
+                dic.Add("action_required", apiRequestParameters.action_required);
+            }
+            if (!string.IsNullOrEmpty(apiRequestParameters.ctin))
+            {
+                dic.Add("ctin", apiRequestParameters.ctin);
+            }
+            if (!string.IsNullOrEmpty(apiRequestParameters.from_time))
+            {
+                if (!DateTime.TryParseExact(apiRequestParameters.from_time, "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime date))
+                {
+                    throw new Exception("Date Should be provided in dd-MM-yyyy format only");
+                }
+                dic.Add("action_required", apiRequestParameters.from_time);
+            }
+            return dic;
+        }
+        public async Task<GSTNResult<List<TXPA>>> GetTXPA(APIRequestParameters apiRequestParameters)
+        {
+            Dictionary<string, string> dic = this.prepareTXPADictionary(apiRequestParameters);
+            this.PrepareQueryString(dic);
+            var info = await this.GetAsync<ResponseDataInfo>();
+            var output = this.Decrypt<GSTR1Total>(info.Data);
+            var model = this.BuildResult<List<TXPA>>(info, output.txpa);
+            return model;
+
+        }
+
 
     }
 }

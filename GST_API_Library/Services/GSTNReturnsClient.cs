@@ -51,7 +51,7 @@ namespace GST_API_Library.Services
         protected internal T Decrypt<T>(ResponseDataInfo output)
         {
             T model = default(T);
-            if(output == null)
+            if (output == null)
             {
                 return model;
             }
@@ -142,6 +142,7 @@ namespace GST_API_Library.Services
         //    return model2;
 
         //}
+
         //This API Is To Get status of return
         public async Task<GSTNResult<ReturnStatusInfo>> GetStatus(string ret_prd, string reference_id)
         {
@@ -166,7 +167,7 @@ namespace GST_API_Library.Services
                 state_cd = this.gstin.Substring(0, 2),
                 txn = GSTNConstants.txn,//System.Guid.NewGuid().ToString().Replace("-", "");
                 auth_token = provider.AuthToken,
-                gstin = this.gstin, 
+                gstin = this.gstin,
                 ret_period = this.ret_period,
                 ip_usr = GSTNConstants.publicip,
                 rtn_typ = "GSTR1",
@@ -188,7 +189,6 @@ namespace GST_API_Library.Services
             var result = this.BuildResult(info, output);
             return result;
         }
-
         public async Task<GSTNResult<dynamic>> GenerateSummary()
         {
             var data =
@@ -196,7 +196,7 @@ namespace GST_API_Library.Services
             {
                 action = "GENSUM"
             };
-           var info=  await this.PostAsync<object, dynamic>(data);
+            var info = await this.PostAsync<object, dynamic>(data);
             if (info == null)
             {
                 throw new Exception("Unable to get the details from server");
@@ -206,5 +206,20 @@ namespace GST_API_Library.Services
             return info;
         }
 
+        //Garima 19 March 2024
+        public async Task<GSTNResult<SaveInfo>> Reset_GSTR1(GenerateRequestInfo model)
+        {
+            var data = this.Encrypt(model);
+            data.action = "RESET";
+            string jsonData = JsonConvert.SerializeObject(data);
+            var info = await this.PostAsync<string, ResponseDataInfo>(jsonData, "GSTR1", "1.1");
+            if (info == null)
+            {
+                throw new Exception("Unable to get the details from server");
+            }
+            var output = this.Decrypt<SaveInfo>(info.Data);
+            var result = this.BuildResult(info, output);
+            return result;
+        }
     }
 }

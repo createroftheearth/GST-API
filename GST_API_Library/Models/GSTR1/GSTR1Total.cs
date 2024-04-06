@@ -1,4 +1,5 @@
 ﻿using GST_API_Library.Models.GSTR1;
+using Integrated.API.GSTN.GSTR1;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -50,6 +51,23 @@ namespace GST_API_Library.Models.GSTR1
         public List<DocIssued> doc_issued { get; set; }
 
         public List<SummaryOutward> summaryoutwards { get; set; }
+
+        //Garima 19 March 2024
+
+        public List<ValidateHSNSummary> validateHSNSummary { get; set; }
+
+        public List<GetSUPECO> Supeco { get; set; }
+
+        public List<GetSUPECOA> Supecoa { get; set; }
+
+        public List<HSNDetails> HsnDetails { get; set; }
+
+        public List<EComA> ecoma { get; set; }
+
+        public List<Einvoice> einvoice { get; set; }
+
+        public List<TXP> txp { get; set; }
+        public List<TXPA> txpa { get; set; }
 
 
     }
