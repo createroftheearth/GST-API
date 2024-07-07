@@ -14,7 +14,17 @@ using GST_API_Library.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var configuration = builder.Configuration;
+var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+var configuration = builder.Configuration
+.SetBasePath(System.IO.Directory.GetCurrentDirectory())
+.AddJsonFile($"appsettings.json", optional: false)
+.AddJsonFile($"appsettings.{env}.json", optional: true)
+.AddEnvironmentVariables()
+.Build();
+
+EncryptionUtils.isProduction = (env == "Production");
+
 if (configuration == null)
 {
     throw new Exception("unable to find configuration");
@@ -126,6 +136,9 @@ builder.Logging.AddSerilog(logger);
 
 builder.Services.Configure<ApiBehaviorOptions>(options
     => options.SuppressModelStateInvalidFilter = true);
+
+
+
 
 var app = builder.Build();
 

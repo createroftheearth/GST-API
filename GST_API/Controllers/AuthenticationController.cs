@@ -32,7 +32,6 @@ namespace GST_API.Controllers
         [AllowAnonymous]
         public async Task<object> Authenticate([FromBody] AuthenticateModel model)
         {
-            _logger.LogInformation("BasePath->>>>>"+GSTNConstants.base_path+ @"\GST_API\Resource\GSTN_G2B_SANDBOX_UAT_public.cer");
             var user = await _userManager.FindByNameAsync(model.username);
             if (user == null)
             {
