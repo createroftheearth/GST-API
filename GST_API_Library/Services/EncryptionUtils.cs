@@ -19,13 +19,14 @@ namespace GST_API_Library.Services
     public class EncryptionUtils
     {
 
+        public static bool isProduction = false;
+        private const string devKey = @"\GST_API\Resource\GSTN_G2B_SANDBOX_UAT_public.cer";
+        private const string productionKey = @"\GST_API\Resource\GSTN_G2B_Prod_public.cer";
         public static X509Certificate2 getPublicKey()
-
         {
             RSACryptoServiceProvider RSA = new RSACryptoServiceProvider();
-
-            X509Certificate2 cert2 = new X509Certificate2(GSTNConstants.base_path + @"\GST_API\Resource\GSTN_G2B_SANDBOX_UAT_public.cert.cer");//System.IO.Path.Combine(GSTNConstants.base_path, "Resources\\GSTN_G2A_SANDBOX_UAT_public.cer"));
-
+            string key = isProduction? productionKey: devKey;
+            X509Certificate2 cert2 = new X509Certificate2(GSTNConstants.base_path +key );//System.IO.Path.Combine(GSTNConstants.base_path, "Resources\\GSTN_G2A_SANDBOX_UAT_public.cer"));
             return cert2;
         }
 
