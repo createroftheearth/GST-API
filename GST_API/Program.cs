@@ -11,8 +11,10 @@ using System.Text;
 using Microsoft.OpenApi.Models;
 using GST_API.Filters;
 using GST_API_Library.Services;
+using GST_API.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
+
 
 var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
@@ -129,8 +131,17 @@ builder.Services.AddSwaggerGen(option =>
     });
 });
 
+
+string baseLogPath = builder.Environment.ContentRootPath + "\\Logs" ;
+
+if (!Directory.Exists(baseLogPath))
+{
+    Console.WriteLine("Directory does not exists");
+    Directory.CreateDirectory(baseLogPath);
+}
+
 var logger = new LoggerConfiguration()
-    .WriteTo.File(builder.Environment.ContentRootPath + "Logs" + "\\ApiLogs-.log", rollingInterval: RollingInterval.Day).CreateLogger();
+    .WriteTo.File(baseLogPath + "\\ApiLogs-.log", rollingInterval: RollingInterval.Day).CreateLogger();
 
 builder.Logging.AddSerilog(logger);
 
@@ -138,9 +149,15 @@ builder.Services.Configure<ApiBehaviorOptions>(options
     => options.SuppressModelStateInvalidFilter = true);
 
 
+builder.Services.AddExceptionHandler<ValidationExceptionHandler>();
+builder.Services.AddExceptionHandler<ExceptionHandler>();
+builder.Services.AddProblemDetails();
+
 
 
 var app = builder.Build();
+
+app.UseExceptionHandler();
 
 //// Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())
@@ -160,4 +177,27 @@ app.UseCors();
 
 app.MapControllers();
 
+ApplyMigration();
+
 app.Run();
+
+
+
+void ApplyMigration()
+{
+    if (!EncryptionUtils.isProduction)
+    {
+        return;
+    }
+    using (var scope = app.Services.CreateScope())
+    {
+        var _Db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        if (_Db != null)
+        {
+            if (_Db.Database.GetPendingMigrations().Any())
+            {
+                _Db.Database.Migrate();
+            }
+        }
+    }
+}

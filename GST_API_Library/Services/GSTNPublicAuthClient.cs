@@ -42,7 +42,7 @@ namespace GST_API_Library.Services
             {
                 action = "ACCESSTOKEN",
                 username =  gstnUsername,
-                password = EncryptionUtils.RsaEncrypt(dataToEncrypt),
+                password = EncryptionUtils.AesEncrypt(dataToEncrypt,this.appKey),
                 app_key = EncryptionUtils.RsaEncrypt(this.appKey)
             };
             return await this.PostAsync<object, TokenResponseModel>(model, "/commonapi/v0.2/authenticate");
