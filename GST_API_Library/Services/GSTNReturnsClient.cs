@@ -80,7 +80,7 @@ namespace GST_API_Library.Services
             UnsignedDataInfo info = new UnsignedDataInfo();
             if (input != null)
             {
-                string finalJson = JsonConvert.SerializeObject(input, Newtonsoft.Json.Formatting.Indented,
+                string finalJson = JsonConvert.SerializeObject(input,
                             new JsonSerializerSettings
                             {
                                 NullValueHandling = NullValueHandling.Ignore

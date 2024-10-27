@@ -30,7 +30,7 @@ namespace GST_API.Controllers
         /// <param name="data"></param>
         /// <returns></returns>
         [HttpPut("save")]
-        public async Task<ResponseModel> save([FromBody] GSTR1Total data)
+        public async Task<ResponseModel> save([FromBody]GSTR1Total data)
         {
             GSTNAuthClient client = new GSTNAuthClient(gstin, this.gstinUsername, appKey)
             {

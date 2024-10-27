@@ -20,7 +20,7 @@ namespace GST_API_Library.Services
     {
 
         public static bool isProduction = false;
-        private const string devKey = @"\GST_API\Resource\GSTN_G2B_SANDBOX_UAT_public.cer";
+        private const string devKey = @"\GST_API\Resource\GSTN_G2B_SANDBOX_UAT_public.cert.cer";
         private const string productionKey = @"\GST API\Resource\GSTN_G2B_Prod_public.cer";
         public static X509Certificate2 getPublicKey()
         {

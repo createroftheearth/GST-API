@@ -787,7 +787,7 @@ namespace GST_API_Library.Services
          public async Task<GSTNResult<SaveInfo>> file(SummaryOutward data, string OTP, string? PAN)
         {
             var encryptedData = this.Encrypt(data);
-            string finalJson = JsonConvert.SerializeObject(data, Newtonsoft.Json.Formatting.Indented,
+            string finalJson = JsonConvert.SerializeObject(data,
                           new JsonSerializerSettings
                           {
                               NullValueHandling = NullValueHandling.Ignore
@@ -796,14 +796,14 @@ namespace GST_API_Library.Services
             string base64Payload = Convert.ToBase64String(encodeJson);
             var model = new
             {
-                data = encryptedData,
+                encryptedData.data,
                 action = "RETFILE",
                 st = "EVC",
                 sign = EncryptionUtils.GenerateHMAC(PAN + OTP,base64Payload),
                 sid = PAN + "|" + OTP,
             };
 
-            var info = await this.PutAsync<object, ResponseDataInfo>(model);
+            var info = await this.PostAsync<object, ResponseDataInfo>(model);
             if (info == null)
             {
                 throw new Exception("Unable to get the details from server");
