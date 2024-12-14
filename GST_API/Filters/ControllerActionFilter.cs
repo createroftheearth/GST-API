@@ -52,8 +52,8 @@ namespace GST_API.Filters
             {
                 return;
             }
-            GSTNConstants.appKey = Convert.FromBase64String(baseAppKey);
             var baseController = (BaseController)context.Controller;
+            baseController.appKey = Convert.FromBase64String(baseAppKey);
             baseController.gstinUsername = User.Claims.FirstOrDefault(z => z.Type == "GSTNUsername")?.Value;
             baseController.gstin = User.Claims.FirstOrDefault(z => z.Type == "GSTN")?.Value;
             baseController.baseAppKey = baseAppKey;

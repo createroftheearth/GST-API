@@ -11,6 +11,7 @@ namespace GST_API.Controllers
     [Route("api/registration")]
     [ApiController]
     [AllowAnonymous]
+    [ApiExplorerSettings(IgnoreApi = true)]// Hide from Swagger UI
     public class RegistrationController : ControllerBase
     {
 
@@ -60,6 +61,46 @@ namespace GST_API.Controllers
                 isSuccess = true,
                 message = "success"
             };
+        }
+
+        [HttpPost("public")]
+        public async Task<ResponseModel> PublicRegister([FromBody] PublicRegistrationModel model)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    ResponseModel res = new ResponseModel
+                    {
+                        isSuccess = false,
+                        message = string.Join(",", ModelState.Values.SelectMany(z => z.Errors).Select(z => z.ErrorMessage))
+                    };
+                    return res;
+                }
+                User user = _mapper.Map<User>(model);
+                user.verificationEmailLink = "";
+                //TODO: Move this code into service
+                var result = await _userManager.CreateAsync(user, model.Password);
+
+                if (!result.Succeeded)
+                {
+                    return new ResponseModel
+                    {
+                        isSuccess = false,
+                        message = string.Join(",", result.Errors.Select(z => z.Description + ": " + z.Code))
+                    };
+                }
+                await _userManager.AddToRoleAsync(user, "PublicUser");
+                return new ResponseModel
+                {
+                    isSuccess = true,
+                    message = "success"
+                };
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
         [HttpGet("gstn-username-exists")]

@@ -1,9 +1,11 @@
 ﻿using GST_API_Library.Models;
 using Newtonsoft.Json;
+using Org.BouncyCastle.Asn1.Ocsp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using FileInfo = GST_API_Library.Models.FileInfo;
@@ -24,7 +26,7 @@ namespace GST_API_Library.Services
             provider = AuthProvider;
         }
 
-        protected internal override void BuildHeaders(HttpClient client)
+        protected internal override void BuildHeaders(HttpClient client, string? returnType = null, string? apiVersion = null)
         {
             client.DefaultRequestHeaders.Add("clientid", GSTNConstants.client_id);
             client.DefaultRequestHeaders.Add("client-secret", GSTNConstants.client_secret);
@@ -32,14 +34,27 @@ namespace GST_API_Library.Services
             client.DefaultRequestHeaders.Add("state-cd", this.gstin.Substring(0, 2));
             client.DefaultRequestHeaders.Add("gstin", this.gstin);
             if (!string.IsNullOrEmpty(this.ret_period)) client.DefaultRequestHeaders.Add("ret_period", this.ret_period);
-            client.DefaultRequestHeaders.Add("txn", System.Guid.NewGuid().ToString().Replace("-", ""));
+            client.DefaultRequestHeaders.Add("txn", GSTNConstants.txn);
             client.DefaultRequestHeaders.Add("username", provider.Username);
             client.DefaultRequestHeaders.Add("auth-token", provider.AuthToken);
+            if (!string.IsNullOrEmpty(returnType))
+            {
+                client.DefaultRequestHeaders.Add("rtn_typ", returnType);
+                client.DefaultRequestHeaders.Add("userrole", returnType);
+            }
+            if (!string.IsNullOrEmpty(apiVersion))
+            {
+                client.DefaultRequestHeaders.Add("api_version", apiVersion);
+            }
         }
 
         protected internal T Decrypt<T>(ResponseDataInfo output)
         {
             T model = default(T);
+            if (output == null)
+            {
+                return model;
+            }
             if (output.status_cd != "0")
             {
                 byte[] decryptREK = EncryptionUtils.AesDecrypt(output.rek, provider.DecryptedKey);
@@ -49,8 +64,13 @@ namespace GST_API_Library.Services
                 string base64Payload = UTF8Encoding.UTF8.GetString(jsonData);
                 byte[] decodeJson = Convert.FromBase64String(base64Payload);
                 string finalJson = Encoding.UTF8.GetString(decodeJson);
-                model = Newtonsoft.Json.JsonConvert.DeserializeObject<T>(finalJson);
+                model = JsonConvert.DeserializeObject<T>(finalJson);
                 LastJson = finalJson;
+            }
+            else
+            {
+                string finalJson = JsonConvert.SerializeObject(output);
+                model = JsonConvert.DeserializeObject<T>(finalJson);
             }
             return model;
         }
@@ -60,7 +80,7 @@ namespace GST_API_Library.Services
             UnsignedDataInfo info = new UnsignedDataInfo();
             if (input != null)
             {
-                string finalJson = JsonConvert.SerializeObject(input, Newtonsoft.Json.Formatting.Indented,
+                string finalJson = JsonConvert.SerializeObject(input,
                             new JsonSerializerSettings
                             {
                                 NullValueHandling = NullValueHandling.Ignore
@@ -122,8 +142,9 @@ namespace GST_API_Library.Services
         //    return model2;
 
         //}
+
         //This API Is To Get status of return
-        public async Task<GSTNResult<StatusInfo>> GetStatus(string ret_prd, string reference_id)
+        public async Task<GSTNResult<ReturnStatusInfo>> GetStatus(string ret_prd, string reference_id)
         {
             this.PrepareQueryStringGSTR(new Dictionary<string, string> {
             {"gstin",gstin},
@@ -132,24 +153,73 @@ namespace GST_API_Library.Services
             {"ref_id" ,reference_id}
             });//trans_id--ref_id
             var info = await this.GetAsync<ResponseDataInfo>();
-            var output = this.Decrypt<StatusInfo>(info.Data);
-            var model = this.BuildResult<StatusInfo>(info, output);
+            var output = this.Decrypt<ReturnStatusInfo>(info.Data);
+            var model = this.BuildResult<ReturnStatusInfo>(info, output);
             return model;
         }
 
-        public async Task<GSTNResult<StatusInfoGSTR2>> GetStatusGSTR2(string ret_prd, string reference_id)
+        public async Task<GSTNResult<NewProceedToFile>> NewProceedToFile_GSTR1(GenerateRequestInfo model)
         {
-            this.PrepareQueryStringGSTR(new Dictionary<string, string> {
-            {"gstin",gstin},
-            {"action","RETSTATUS"},
-            {"ret_period",ret_prd},
-            {"ref_id" ,reference_id}
-            });//trans_id--ref_id
-            var info = await this.GetAsync<ResponseDataInfo>();
-            var output = this.Decrypt<StatusInfoGSTR2>(info.Data);
-            var model = this.BuildResult<StatusInfoGSTR2>(info, output);
-            return model;
+            HeaderData hdrdata = new HeaderData
+            {
+                clientid = GSTNConstants.client_id,
+                username = provider.Username,
+                state_cd = this.gstin.Substring(0, 2),
+                txn = GSTNConstants.txn,//System.Guid.NewGuid().ToString().Replace("-", "");
+                auth_token = provider.AuthToken,
+                gstin = this.gstin,
+                ret_period = this.ret_period,
+                ip_usr = GSTNConstants.publicip,
+                rtn_typ = "GSTR1",
+                api_version = "1.1",
+                userrole = "GSTR1",
+            };
+
+
+            var data = this.Encrypt(model);
+            data.hdr = hdrdata;
+            data.action = "RETNEWPTF";
+            string jsonData = JsonConvert.SerializeObject(data);
+            var info = await this.PostAsync<string, ResponseDataInfo>(jsonData, "GSTR1", "1.1");
+            if (info == null)
+            {
+                throw new Exception("Unable to get the details from server");
+            }
+            var output = this.Decrypt<NewProceedToFile>(info.Data);
+            var result = this.BuildResult(info, output);
+            return result;
+        }
+        public async Task<GSTNResult<dynamic>> GenerateSummary()
+        {
+            var data =
+            new
+            {
+                action = "GENSUM"
+            };
+            var info = await this.PostAsync<object, dynamic>(data);
+            if (info == null)
+            {
+                throw new Exception("Unable to get the details from server");
+            }
+            //var output = this.Decrypt<NewProceedToFile>(info.Data);
+            //var result = this.BuildResult(info, output);
+            return info;
         }
 
+        //Garima 19 March 2024
+        public async Task<GSTNResult<SaveInfo>> Reset_GSTR1(GenerateRequestInfo model)
+        {
+            var data = this.Encrypt(model);
+            data.action = "RESET";
+            string jsonData = JsonConvert.SerializeObject(data);
+            var info = await this.PostAsync<string, ResponseDataInfo>(jsonData, "GSTR1", "1.1");
+            if (info == null)
+            {
+                throw new Exception("Unable to get the details from server");
+            }
+            var output = this.Decrypt<SaveInfo>(info.Data);
+            var result = this.BuildResult(info, output);
+            return result;
+        }
     }
 }

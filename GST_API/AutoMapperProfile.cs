@@ -9,6 +9,8 @@ namespace GST_API
         {
             CreateMap<RegistrationModel, User>();
             CreateMap<User, RegistrationModel>();
+            CreateMap<PublicRegistrationModel, User>();
+            CreateMap<User, PublicRegistrationModel>();
         }
     }
 }

@@ -11,10 +11,22 @@ using System.Text;
 using Microsoft.OpenApi.Models;
 using GST_API.Filters;
 using GST_API_Library.Services;
+using GST_API.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var configuration = builder.Configuration;
+
+var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+var configuration = builder.Configuration
+.SetBasePath(System.IO.Directory.GetCurrentDirectory())
+.AddJsonFile($"appsettings.json", optional: false)
+.AddJsonFile($"appsettings.{env}.json", optional: true)
+.AddEnvironmentVariables()
+.Build();
+
+EncryptionUtils.isProduction = (env == "Production");
+
 if (configuration == null)
 {
     throw new Exception("unable to find configuration");
@@ -25,19 +37,6 @@ builder.Services.AddDbContext<ApplicationDbContext>(
     {
         builder.EnableRetryOnFailure(10, TimeSpan.FromSeconds(60), null);
     }));
-
-builder.Services.AddIdentityCore<User>(options =>
-{
-    options.SignIn.RequireConfirmedAccount = false;
-    options.User.RequireUniqueEmail = true;
-    options.Password.RequireDigit = false;
-    options.Password.RequiredLength = 6;
-    options.Password.RequireNonAlphanumeric = false;
-    options.Password.RequireUppercase = false;
-    options.Password.RequireLowercase = false;
-}).AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddDefaultTokenProviders();
 
 var baseProjectPath = configuration.GetValue<string>(WebHostDefaults.ContentRootKey);
 if (string.IsNullOrEmpty(baseProjectPath))
@@ -63,7 +62,23 @@ builder.Services.AddCors(option =>
     });
 });
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(o =>
+builder.Services.AddIdentityCore<User>(options =>
+{
+    options.SignIn.RequireConfirmedAccount = false;
+    options.User.RequireUniqueEmail = true;
+    options.Password.RequireDigit = false;
+    options.Password.RequiredLength = 6;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequireLowercase = false;
+}).AddRoles<IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>()
+.AddDefaultTokenProviders();
+
+builder.Services.AddAuthentication(options=>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(o =>
 {
     o.TokenValidationParameters = new TokenValidationParameters
     {
@@ -116,22 +131,40 @@ builder.Services.AddSwaggerGen(option =>
     });
 });
 
+
+string baseLogPath = builder.Environment.ContentRootPath + "\\Logs" ;
+
+if (!Directory.Exists(baseLogPath))
+{
+    Console.WriteLine("Directory does not exists");
+    Directory.CreateDirectory(baseLogPath);
+}
+
 var logger = new LoggerConfiguration()
-    .WriteTo.File(builder.Environment.ContentRootPath + "Logs" + "\\ApiLogs-.log", rollingInterval: RollingInterval.Day).CreateLogger();
+    .WriteTo.File(baseLogPath + "\\ApiLogs-.log", rollingInterval: RollingInterval.Day).CreateLogger();
 
 builder.Logging.AddSerilog(logger);
 
 builder.Services.Configure<ApiBehaviorOptions>(options
     => options.SuppressModelStateInvalidFilter = true);
 
+
+builder.Services.AddExceptionHandler<ValidationExceptionHandler>();
+builder.Services.AddExceptionHandler<ExceptionHandler>();
+builder.Services.AddProblemDetails();
+
+
+
 var app = builder.Build();
+
+app.UseExceptionHandler();
 
 //// Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())
 //{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-    //app.UseHttpsRedirection();
+app.UseSwagger();
+app.UseSwaggerUI();
+//app.UseHttpsRedirection();
 //}
 
 app.UseAuthentication();
@@ -144,4 +177,27 @@ app.UseCors();
 
 app.MapControllers();
 
+ApplyMigration();
+
 app.Run();
+
+
+
+void ApplyMigration()
+{
+    if (!EncryptionUtils.isProduction)
+    {
+        return;
+    }
+    using (var scope = app.Services.CreateScope())
+    {
+        var _Db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        if (_Db != null)
+        {
+            if (_Db.Database.GetPendingMigrations().Any())
+            {
+                _Db.Database.Migrate();
+            }
+        }
+    }
+}

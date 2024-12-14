@@ -1,18 +1,50 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace GST_API_Library.Models
 {
-    public class StatusInfoGSTR2
+    public class ReturnStatusInfo : BaseErrorData
     {
         public string form_typ { get; set; }
         public string status_cd { get; set; }
         public string action { get; set; }
         public error_report error_report { get; set; }
     }
+
+    public class NewProceedToFile : BaseErrorData
+    {
+        public string reference_id { get; set; }
+        public string isSync { get; set; }
+    }
+    public class HeaderData
+    {
+
+        public string clientid { get; set; }
+        [JsonProperty (PropertyName = "ip-usr")]
+        public string ip_usr { get; set; }
+        [JsonProperty(PropertyName = "state-cd")]
+        public string state_cd { get; set; }
+        public string gstin { get; set; }
+        public string ret_period { get; set; }
+        public string txn { get; set; }
+        public string username { get; set; }
+        [JsonProperty(PropertyName = "auth-token")]
+        public string auth_token { get; set; }
+        public string rtn_typ { get; set; }
+        public string userrole { get; set; }
+        public string api_version { get; set; }
+
+
+
+    }
+
 
     public class error_report
     {
@@ -21,45 +53,64 @@ namespace GST_API_Library.Models
     }
 
 
-    public class StatusInfo
+    public class StatusInfo : BaseErrorData
     {
         public string status_cd { get; set; }
         public string errorCd { get; set; }
         public string error_msg { get; set; }
         public string error_report { get; set; }
     }
-    public class SaveInfo
+    public class SaveInfo : BaseErrorData
     {
         public string trans_id { get; set; }
         public string reference_id { get; set; }
     }
-    public class GenerateRequestInfo
+    public class GenerateRequestInfo : BaseErrorData
     {
         //change by amit as per version 2.2
         public string gstin { get; set; }
         public string ret_period { get; set; }
-        //public string generate_summary { get; set; }
+        public string isnil { get; set; }
+    }
+    public class RequestPTF : BaseErrorData
+    {
+        //change by amit as per version 2.2
+        
 
         public string action { get; set; }
+        public string data { get; set; }
+        public string hmac { get; set; }
+        public string hdr { get; set; }
     }
-    public class GenerateResponseInfo
+    public class GenerateResponseInfo : BaseErrorData
     {
         public string status { get; set; }
         public string trans_id { get; set; }
     }
-    public class FileInfo
+    public class FileInfo : BaseErrorData
     {
         public string status { get; set; }
         public string ack_num { get; set; }
     }
 
-    public class ResponseDataInfo
+    public class ResponseDataInfo :BaseErrorData
     {
         public string data { get; set; }
         public string status_cd { get; set; }
         public string rek { get; set; }
         public string hmac { get; set; }
         public string ack_num { get; set; }
+    }
+
+    public class BaseErrorData
+    {
+        public ErrorData? error { get; set; }
+    }
+
+    public class ErrorData
+    {
+        public string message { get; set; }
+        public string error_cd { get; set; }
     }
 
     //Created By Himanshu
@@ -71,6 +122,7 @@ namespace GST_API_Library.Models
     public class UnsignedDataInfo
     {
         public string data { get; set; }
+        public HeaderData hdr { get; set; }
         public string action { get; set; }
         public string hmac { get; set; }
     }
@@ -82,11 +134,31 @@ namespace GST_API_Library.Models
         public string st { get; set; }
         public string sid { get; set; }
     }
-    public class GSTNResult<T>
+    public class GSTNResult<T>: BaseErrorData
     {
         public int HttpStatusCode { get; set; }
 
         public T Data { get; set; }
 
+    }
+    //Garima
+    public class GSTR9CHashGenerate
+    {
+        public string hash { get; set; }
+    }
+
+    public class SavePreference
+    {
+        public string status_cd { get; set; }
+    }
+
+    public class UploadDocumentResp
+    {
+        public string doc_id { get; set; }
+    }
+
+    public class CreateNotificationResp
+    {
+        public string notify_id { get; set; }
     }
 }

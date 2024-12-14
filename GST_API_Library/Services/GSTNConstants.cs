@@ -8,7 +8,6 @@ namespace GST_API_Library.Services
 {
     public class GSTNConstants
     {
-        public static byte[] appKey = null;
         public static string base_url = "https://devapi.gst.gov.in";
         public static string base_path = ".";
         public static string client_id = "l7xx5edefdd923ad438eb5b332a73269f812";
@@ -20,25 +19,21 @@ namespace GST_API_Library.Services
         public static string filename = "";
         public static string ctin = "27GSPMH0231G1ZZ";
         public static string etin = "33GSPTN0231G1ZM";
+        public static string txn = "LAPN24235325555";
 
         public static byte[] GetAppKeyBytes()
         {
-            if (appKey == null)
-            {
-                appKey = EncryptionUtils.CreateAesKeyBC();
-            }
-            return appKey;
-
+            return EncryptionUtils.CreateAesKeyBC();
         }
-        public static string GetAppKeyEncoded()
-        {
-            if (appKey == null)
-            {
-                appKey = EncryptionUtils.CreateAesKeyBC();
-            }
-            return Convert.ToBase64String(appKey);
+        //public static string GetAppKeyEncoded()
+        //{
+        //    if (appKey == null)
+        //    {
+        //        appKey = EncryptionUtils.CreateAesKeyBC();
+        //    }
+        //    return Convert.ToBase64String(appKey);
 
-        }
+        //}
 
     }
 

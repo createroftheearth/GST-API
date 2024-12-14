@@ -1,5 +1,6 @@
 ﻿using GST_API_DAL.Models;
 using Microsoft.IdentityModel.Tokens;
+using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -15,11 +16,11 @@ namespace GST_API.Services
         }
         private const int ExpirationMinutes = 43205;
 
-        public string CreateToken(User user, string baseAppKey)
+        public string CreateToken(User user, string baseAppKey, IList<string>? roles)
         {
             var expiration = DateTime.UtcNow.AddMinutes(ExpirationMinutes);
             var token = CreateJwtToken(
-                CreateClaims(user, baseAppKey),
+                CreateClaims(user, baseAppKey,roles),
                 CreateSigningCredentials(),
                 expiration
             );
@@ -35,9 +36,9 @@ namespace GST_API.Services
                 claims,
                 expires: expiration,
                 signingCredentials: credentials
-            );
+        );
 
-        private List<Claim> CreateClaims(User user, string baseAppKey)
+        private List<Claim> CreateClaims(User user, string baseAppKey,IList<string>? roles)
         {
             try
             {
@@ -48,6 +49,13 @@ namespace GST_API.Services
                     new Claim("GSTNUsername",user.GSTINUsername),
                     new Claim("BaseAppKey",baseAppKey)
                 };
+                if(roles?.Count()>0) { 
+                    foreach(string role in roles)
+                    {
+                        claims.Add(new Claim(ClaimTypes.Role, role));
+                    }
+                }
+
                 return claims;
             }
             catch (Exception e)

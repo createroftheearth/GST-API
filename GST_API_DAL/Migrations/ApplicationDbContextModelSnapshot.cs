@@ -31,17 +31,14 @@ namespace GST_API_DAL.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Address")
-                        .IsRequired()
                         .HasMaxLength(120)
                         .HasColumnType("nvarchar(120)");
 
                     b.Property<string>("Address2")
-                        .IsRequired()
                         .HasMaxLength(120)
                         .HasColumnType("nvarchar(120)");
 
                     b.Property<string>("CancelledChequeString")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -61,17 +58,14 @@ namespace GST_API_DAL.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("GSTINUsername")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("GSTNNo")
-                        .IsRequired()
                         .HasMaxLength(15)
                         .HasColumnType("nvarchar(15)");
 
                     b.Property<string>("LargeImageString")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
@@ -94,12 +88,10 @@ namespace GST_API_DAL.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("OrganizationName")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Organization_PAN")
-                        .IsRequired()
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
@@ -113,12 +105,10 @@ namespace GST_API_DAL.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Pincode")
-                        .IsRequired()
                         .HasMaxLength(6)
                         .HasColumnType("nvarchar(6)");
 
                     b.Property<string>("Place")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
@@ -126,7 +116,6 @@ namespace GST_API_DAL.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("StateCode")
-                        .IsRequired()
                         .HasMaxLength(3)
                         .HasColumnType("nvarchar(3)");
 
@@ -183,10 +172,17 @@ namespace GST_API_DAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "d9ee718f-fe91-4fd9-81f7-98fe8291317e",
+                            Id = "7be4c1e7-4428-46e8-9f11-98b351c5a145",
                             ConcurrencyStamp = "1",
                             Name = "APIUser",
                             NormalizedName = "APIUser"
+                        },
+                        new
+                        {
+                            Id = "0680c1dc-d1de-4e7e-a4ba-fca5210ee175",
+                            ConcurrencyStamp = "1",
+                            Name = "PublicUser",
+                            NormalizedName = "PublicUser"
                         });
                 });
 

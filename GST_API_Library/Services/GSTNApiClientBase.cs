@@ -69,7 +69,6 @@ namespace GST_API_Library.Services
             using (var client = GetHttpClient())
             {
                 //url2 to url3 amit
-
                 System.Console.WriteLine("GET:" + url2);
                 HttpResponseMessage response = await client.GetAsync(url2);
                 return BuildResponse<TOutput>(response);
@@ -77,23 +76,19 @@ namespace GST_API_Library.Services
 
         }
 
-        public async Task<GSTNResult<TOutput>> PostAsync<TInput, TOutput>(TInput data)
+        public async Task<GSTNResult<TOutput>> PostAsync<TInput, TOutput>(TInput data,string? returnType= null, string? apiVersion = null)
         {
-            using (var client = GetHttpClient())
+            using (var client = GetHttpClient(returnType,apiVersion))
             {
                 System.Console.WriteLine("POST:" + url2);
                 HttpResponseMessage response;
                 if (typeof(TInput) == typeof(string))
                 {
-                    var content = new StringContent((string)(object)data, System.Text.Encoding.UTF8, "text/plain");
+                    var content = new StringContent((string)(object)data, System.Text.Encoding.UTF8, "application/json");
                     response = await client.PostAsync(url2, content);
                 }
                 else
                 {
-                // if(data)
-                //--http://devapi.gstsystem.co.in/taxpayerapi/v0.3/returns/gstr1?gstin=33GSPTN0231G1ZM&action=RETFILE&ret_period=042017
-                //Change by amit
-                //--http://devapi.gstsystem.co.in/taxpayerapi/v2.2/returns/gstr1?gstin=33GSPTN0231G1ZM&action=RETFILE&ret_period=022023
                     response = await client.PostAsJsonAsync(url2, data);
                 }
                 return BuildResponse<TOutput>(response);
@@ -138,24 +133,26 @@ namespace GST_API_Library.Services
 
 
 
-        protected HttpClient GetHttpClient()
+        protected HttpClient GetHttpClient(string? returnType = null, string? apiVersion = null)
         {
             var client = new HttpClient();
             client.Timeout = timeout;
-            BuildHeaders(client);
+            BuildHeaders(client,returnType,apiVersion);
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
             return client;
         }
 
-        protected internal abstract void BuildHeaders(HttpClient client);
+        protected internal abstract void BuildHeaders(HttpClient client,string? returnType,string? apiVersion);
 
         protected virtual GSTNResult<TOutput> BuildResponse<TOutput>(HttpResponseMessage response)
         {
             //This function can be used to convert simple API result to ResultInfo based API result
-            GSTNResult<TOutput> resultInfo = new GSTNResult<TOutput>();
-            resultInfo.HttpStatusCode = Convert.ToInt32(response.StatusCode.ToString("D"));
+            GSTNResult<TOutput> resultInfo = new GSTNResult<TOutput>
+            {
+                HttpStatusCode = Convert.ToInt32(response.StatusCode.ToString("D"))
+            };
             var str1 = response.Content.ReadAsStringAsync().Result;
             System.Console.WriteLine("Obtained Result:" + str1 + System.Environment.NewLine);
             if (resultInfo.HttpStatusCode == (int)HttpStatusCode.OK)
