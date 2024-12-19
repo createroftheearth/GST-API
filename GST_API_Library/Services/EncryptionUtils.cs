@@ -27,6 +27,7 @@ namespace GST_API_Library.Services
             RSACryptoServiceProvider RSA = new RSACryptoServiceProvider();
             string key = isProduction?productionKey:devKey;
             X509Certificate2 cert2 = new X509Certificate2(GSTNConstants.base_path +key );//System.IO.Path.Combine(GSTNConstants.base_path, "Resources\\GSTN_G2A_SANDBOX_UAT_public.cer"));
+
             return cert2;
         }
 
@@ -38,6 +39,23 @@ namespace GST_API_Library.Services
             return GenerateHMAC(messageBytes, keyByte);
 
 
+        }
+
+        public static String GetHash(String text, String key)
+        {
+            // change according to your needs, an UTF8Encoding
+            // could be more suitable in certain situations
+            ASCIIEncoding encoding = new ASCIIEncoding();
+
+            Byte[] textBytes = encoding.GetBytes(text);
+            Byte[] keyBytes = encoding.GetBytes(key);
+
+            Byte[] hashBytes;
+
+            using (HMACSHA256 hash = new HMACSHA256(keyBytes))
+                hashBytes = hash.ComputeHash(textBytes);
+
+            return BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
         }
 
         public static string GenerateHMAC(byte[] data, byte[] EK)

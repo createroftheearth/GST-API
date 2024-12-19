@@ -11,7 +11,7 @@ namespace GST_API.Controllers
     [Route("api/registration")]
     [ApiController]
     [AllowAnonymous]
-    [ApiExplorerSettings(IgnoreApi = true)]// Hide from Swagger UI
+    //[ApiExplorerSettings(IgnoreApi = true)]// Hide from Swagger UI
     public class RegistrationController : ControllerBase
     {
 

@@ -636,7 +636,7 @@ namespace GST_API.Controllers
 
             };
             GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, model.ret_period, Constants.GSTR1_V4_RETURN_URL);
-            var info = await client2.GetGSTR1Summary(model);
+            var info = await client2.GetGSTR1Summary1(model);
             return new ResponseModel
             {
                 data = info,

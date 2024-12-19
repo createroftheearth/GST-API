@@ -1,4 +1,5 @@
 ﻿using GST_API_Library.Models;
+using GST_API_Library.Models.GSTR1A;
 using GST_API_Library.Models.GSTR2B;
 using System;
 using System.Collections.Generic;
@@ -47,6 +48,20 @@ namespace GST_API_Library.Services
             var model = this.BuildResult<List<GetGSTR2B>>(info,null);
             return model;
 
+        }
+
+        public async Task<GSTNResult<Gen2BonDemandResp>> Gen2BonDemand(Gen2BonDemand data)
+        {
+            var model = this.Encrypt(data);
+            model.action = "GEN2B";
+            var info = await this.PutAsync<UnsignedDataInfo, ResponseDataInfo>(model);
+            if (info == null)
+            {
+                throw new Exception("Unable to get the details from server");
+            }
+            var output = this.Decrypt<Gen2BonDemandResp>(info.Data);
+            var model2 = this.BuildResult<Gen2BonDemandResp>(info, output);
+            return model2;
         }
     }
 }
