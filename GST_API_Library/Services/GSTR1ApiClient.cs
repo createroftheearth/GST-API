@@ -732,13 +732,23 @@ namespace GST_API_Library.Services
             }
             return dic;
         }
-        public async Task<GSTNResult<SummaryOutward>> GetGSTR1Summary(APIRequestParameters apiRequestParameters)
+        //public async Task<GSTNResult<SummaryOutward>> GetGSTR1Summary(APIRequestParameters apiRequestParameters)
+        //{
+        //    Dictionary<string, string> dic = this.prepareGSTR1SummaryDictionary(apiRequestParameters);
+        //    this.PrepareQueryString(dic);
+        //    var info = await this.GetAsync<ResponseDataInfo>();
+        //    var output = this.Decrypt<SummaryOutward>(info.Data);
+        //    var model = this.BuildResult<SummaryOutward>(info, output);
+        //    return model;
+        //}
+
+        public async Task<GSTNResult1<SummaryOutward>> GetGSTR1Summary1(APIRequestParameters apiRequestParameters)
         {
             Dictionary<string, string> dic = this.prepareGSTR1SummaryDictionary(apiRequestParameters);
             this.PrepareQueryString(dic);
-            var info = await this.GetAsync<ResponseDataInfo>();
+            var info = await this.GetAsync1<ResponseDataInfo>();
             var output = this.Decrypt<SummaryOutward>(info.Data);
-            var model = this.BuildResult<SummaryOutward>(info, output);
+            var model = this.BuildResult1<SummaryOutward>(info, output);
             return model;
         }
 

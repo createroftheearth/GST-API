@@ -76,6 +76,18 @@ namespace GST_API_Library.Services
 
         }
 
+        public async Task<GSTNResult1<TOutput>> GetAsync1<TOutput>()
+        {
+            using (var client = GetHttpClient())
+            {
+                //url2 to url3 amit
+                System.Console.WriteLine("GET:" + url2);
+                HttpResponseMessage response = await client.GetAsync(url2);
+                return BuildResponse1<TOutput>(response);
+            }
+
+        }
+
         public async Task<GSTNResult<TOutput>> PostAsync<TInput, TOutput>(TInput data,string? returnType= null, string? apiVersion = null)
         {
             using (var client = GetHttpClient(returnType,apiVersion))
@@ -96,16 +108,56 @@ namespace GST_API_Library.Services
 
         }
 
-        public async Task<GSTNResult<TOutput>> PutAsync<TInput, TOutput>(TInput data)
+        public async Task<GSTNResult<TOutput>> PutAsync<TInput, TOutput>(TInput data,string? returnType= null, string? apiVersion = null)
         {
-            using (var client = GetHttpClient())
+            using (var client = GetHttpClient(returnType,apiVersion))
             {
                 System.Console.WriteLine("PUT:" + url2);
-                HttpResponseMessage response = await client.PutAsJsonAsync(url2, data);
+                HttpResponseMessage response;
+                if (typeof(TInput) == typeof(string))
+                {
+                    var content = new StringContent((string)(object)data, System.Text.Encoding.UTF8, "application/json");
+                    response = await client.PutAsync(url2, content);
+                }
+                else
+                {
+                    response = await client.PutAsJsonAsync(url2, data);
+                }
                 return BuildResponse<TOutput>(response);
             }
 
         }
+
+        //public async Task<GSTNResult1<TOutput>> PutAsync1<TInput, TOutput>(TInput data, string? returnType = null, string? apiVersion = null)
+        //{
+        //    using (var client = GetHttpClient(returnType, apiVersion))
+        //    {
+        //        System.Console.WriteLine("PUT:" + url2);
+        //        HttpResponseMessage response;
+        //        if (typeof(TInput) == typeof(string))
+        //        {
+        //            var content = new StringContent((string)(object)data, System.Text.Encoding.UTF8, "application/json");
+        //            response = await client.PutAsync(url2, content);
+        //        }
+        //        else
+        //        {
+        //            response = await client.PutAsJsonAsync(url2, data);
+        //        }
+        //        return BuildResponse1<TOutput>(response);
+        //    }
+
+        //}
+
+        //public async Task<GSTNResult<TOutput>> PutAsync<TInput, TOutput>(TInput data, string? returnType = null, string? apiVersion = null)
+        //{
+        //    using (var client = GetHttpClient())
+        //    {
+        //        System.Console.WriteLine("PUT:" + url2);
+        //        HttpResponseMessage response = await client.PutAsJsonAsync(url2, data);
+        //        return BuildResponse<TOutput>(response);
+        //    }
+
+        //}
 
         public async Task<GSTNResult<TOutput>> PatchAsync<TInput, TOutput>(TInput data)
         {
@@ -156,6 +208,30 @@ namespace GST_API_Library.Services
             var str1 = response.Content.ReadAsStringAsync().Result;
             System.Console.WriteLine("Obtained Result:" + str1 + System.Environment.NewLine);
             if (resultInfo.HttpStatusCode == (int)HttpStatusCode.OK)
+            {
+                if (typeof(TOutput) == typeof(String))
+                {
+                    var result = (TOutput)(Object)str1;
+                    resultInfo.Data = result;
+                }
+                else
+                {
+                    resultInfo.Data = JsonConvert.DeserializeObject<TOutput>(str1);
+                }
+            }
+            return resultInfo;
+        }
+
+        protected virtual GSTNResult1<TOutput> BuildResponse1<TOutput>(HttpResponseMessage response)
+        {
+            //This function can be used to convert simple API result to ResultInfo based API result
+            GSTNResult1<TOutput> resultInfo = new GSTNResult1<TOutput>
+            {
+                //    HttpStatusCode = Convert.ToInt32(response.StatusCode.ToString("D"))
+            };
+            var str1 = response.Content.ReadAsStringAsync().Result;
+            System.Console.WriteLine("Obtained Result:" + str1 + System.Environment.NewLine);
+            //if (resultInfo.HttpStatusCode == (int)HttpStatusCode.OK)
             {
                 if (typeof(TOutput) == typeof(String))
                 {

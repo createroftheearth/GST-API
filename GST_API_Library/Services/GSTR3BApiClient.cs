@@ -146,5 +146,53 @@ namespace GST_API_Library.Services
             return model;
 
         }
+
+        private Dictionary<string, string> prepareGSTR3BLatestRCMBalDictionary(APIRequestParameters apiRequestParameters)
+        {
+            if (apiRequestParameters == null || string.IsNullOrEmpty(apiRequestParameters.gstin))
+            {
+                throw new Exception("gstin and ret_period is required");
+            }
+            var dic = new Dictionary<string, string>
+            {
+                { "gstin", apiRequestParameters.gstin },
+                { "action", "RCMCLOSINGBAL" }
+            };
+            return dic;
+        }
+        public async Task<GSTNResult<List<GetLatestBalance_RCM>>> GetLatestRCMBal3B(APIRequestParameters apiRequestParameters)
+        {
+            Dictionary<string, string> dic = this.prepareGSTR3BLatestRCMBalDictionary(apiRequestParameters);
+            this.PrepareQueryString(dic);
+            var info = await this.GetAsync<ResponseDataInfo>();
+            var output = this.Decrypt<GetLatestBalance_RCM>(info.Data);
+            var model = this.BuildResult<List<GetLatestBalance_RCM>>(info, null);
+            return model;
+
+        }
+
+        private Dictionary<string, string> prepareGSTR3BRCMOpeningBalDictionary(APIRequestParameters apiRequestParameters)
+        {
+            if (apiRequestParameters == null || string.IsNullOrEmpty(apiRequestParameters.gstin))
+            {
+                throw new Exception("gstin and ret_period is required");
+            }
+            var dic = new Dictionary<string, string>
+            {
+                { "gstin", apiRequestParameters.gstin },
+                { "action", "RCMOPNBAL" }
+            };
+            return dic;
+        }
+        public async Task<GSTNResult<List<GetOpeningBalance_RCM>>> GetOpeningRCMBal3B(APIRequestParameters apiRequestParameters)
+        {
+            Dictionary<string, string> dic = this.prepareGSTR3BRCMOpeningBalDictionary(apiRequestParameters);
+            this.PrepareQueryString(dic);
+            var info = await this.GetAsync<ResponseDataInfo>();
+            var output = this.Decrypt<GetOpeningBalance_RCM>(info.Data);
+            var model = this.BuildResult<List<GetOpeningBalance_RCM>>(info, null);
+            return model;
+
+        }
     }
 }

@@ -14,9 +14,14 @@
         public string date { get; set; }
         public string? state_cd { get; set; }
         public string? pgnum { get; set; }
+        
+        public string type { get; set; }
 
+        public string uid { get; set; }
 
+        public string email { get; set; }
 
+        public string mobile { get; set; }
 
     }
 }

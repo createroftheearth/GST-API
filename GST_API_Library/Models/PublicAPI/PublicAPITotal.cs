@@ -20,5 +20,9 @@ namespace GST_API_Library.Models.PublicAPI
         public List<UpdatedOnlineVerificationofGSTIN> updateonlineverificationofgstin { get; set; }
         public List<ViewandTrackReturns> viewandtrackreturn { get; set; }
 
+        public List<UnregApplicantsResponse> unregapp { get; set; }
+
+        public List<UnregApplicantsValidationResponse> unregappvalidation { get; set;}
+
     }
 }
