@@ -61,7 +61,9 @@ namespace GST_API.Controllers
                     message = "OTP Sent, Please use request-token API to get 'GSTIN-Token'",
                     data = new
                     {
-                        token = _tokenService.CreateToken(user,Convert.ToBase64String(appKey),roles)
+                        token = _tokenService.CreateToken(user,Convert.ToBase64String(appKey),roles),
+                        gstin = user.GSTNNo,
+                        organizationName = user.OrganizationName
                     }
                 };
             } else
@@ -133,7 +135,6 @@ namespace GST_API.Controllers
             return result;
         }
 
-        [Authorize]
         [HttpPost("logout")]
         public async Task<GSTNResult<LogoutResponseModel>> Logout()
         {
