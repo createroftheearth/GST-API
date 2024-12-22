@@ -52,6 +52,8 @@ namespace GST_API_Library.Models.GSTR1
 
         public List<SummaryOutward>? summaryoutwards { get; set; }
 
+        //public List<GetGSTR1SummaryRes> getgstr1smry { get; set; }
+
         //Garima 19 March 2024
 
         public List<ValidateHSNSummary>? validateHSNSummary { get; set; }

@@ -155,7 +155,6 @@ namespace GST_API_Library.Services
             return info;
         }
 
-
         protected virtual GSTNResult<TOutput> BuildResult<TOutput>(GSTNResult<ResponseDataInfo> response, TOutput data)
         {
             //This function can be used to convert simple API result to ResultInfo based API result

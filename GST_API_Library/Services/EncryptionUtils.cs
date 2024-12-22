@@ -58,6 +58,7 @@ namespace GST_API_Library.Services
             return BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
         }
 
+
         public static string GenerateHMAC(byte[] data, byte[] EK)
         {
             using (var HMACSHA256 = new HMACSHA256(EK))
