@@ -1,6 +1,6 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
-import { RegistrationService } from './registration.service';
+import { RegistrationService } from '../../services/registration.service';
 import { map } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 

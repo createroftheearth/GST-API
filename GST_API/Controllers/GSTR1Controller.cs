@@ -15,10 +15,10 @@ namespace GST_API.Controllers
     [Authorize(Roles = "APIUser")]
     public class GSTR1Controller : BaseController
     {
-        private readonly ILogger<AuthenticationController> _logger;
+        private readonly ILogger<GSTR1Controller> _logger;
         private readonly UserManager<User> _userManager;
 
-        public GSTR1Controller(ILogger<AuthenticationController> logger, UserManager<User> userManager)
+        public GSTR1Controller(ILogger<GSTR1Controller> logger, UserManager<User> userManager)
         {
             _logger = logger;
             _userManager = userManager;

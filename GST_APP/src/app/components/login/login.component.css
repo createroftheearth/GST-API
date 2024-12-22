@@ -1,0 +1,42 @@
+.login {
+    margin:0px;
+    min-height: 100%;
+  }
+
+  .card-content {
+    text-align: center;
+    padding:200px 100px;
+    max-width: 600px;
+  }
+
+  .otp-content h1 {
+    margin-bottom: 10px;
+  }
+
+  .otp-container {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+  }
+
+  .otp-input {
+    width: 50px;
+  }
+
+  .full-width {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+
+
+  .picture-content{
+    background-image: url("/assets/GST-Meaning-01.png");
+    background-size: cover;
+    width: 100%; /* Full width */
+    height: 100vh; /* Full height of the viewport */
+    display: flex; /* Use Flexbox to center the image */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    position: relative; /* Ensure child elements are positioned relative to this container */
+    overflow: hidden; /* Optional: prevents content overflow */
+  }

@@ -1,3 +1,6 @@
+<mat-toolbar color="primary">
+  <span>Registration</span>
+</mat-toolbar>
 <div class="m-5">
   <form [formGroup]="contactDetailsFormGroup" class="mt-2">
     <ng-template matStepLabel>Contact Details</ng-template>
@@ -79,7 +82,7 @@
         color="primary"
         (click)="register()"
         [disabled]="contactDetailsFormGroup.invalid"
-       >
+      >
         Register
       </button>
     </div>

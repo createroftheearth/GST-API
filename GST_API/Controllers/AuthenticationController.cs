@@ -69,7 +69,12 @@ namespace GST_API.Controllers
                 };
             } else
             {
-                return result;
+                return new ResponseModel
+                {
+                    isSuccess = false,
+                    message = "Otp failed to generate",
+                    data = result
+                };
             }
         }
 
@@ -107,24 +112,48 @@ namespace GST_API.Controllers
                     message = "OTP Sent, Please use request-token API to get 'GSTIN-Token'",
                     data = new
                     {
-                        token = _tokenService.CreateToken(user, Convert.ToBase64String(appKey), roles)
+                        token = _tokenService.CreateToken(user, Convert.ToBase64String(appKey), roles),
+                        gstin = user.GSTNNo,
+                        organizationName = user.OrganizationName
                     }
                 };
             }
             else
             {
-                return result;
+                return new ResponseModel
+                {
+                    isSuccess = false,
+                    message = "Otp failed to generate",
+                    data = result
+                };
             }
         }
 
         [HttpPost("{otp}/request-token")]
-        public async Task<GSTNResult<TokenResponseModel>> RequestToken(string otp)
+        public async Task<ResponseModel> RequestToken(string otp)
         {
             GSTNAuthClient client = new GSTNAuthClient(gstin, gstinUsername,appKey);
              //GSTNAuthClient client = new GSTNAuthClient(gstin, gstinUsername, GSTNConstants.GetAppKeyBytes());
             var result = await client.RequestToken(otp);
-            _logger.LogInformation(JsonConvert.SerializeObject(result));
-            return result;
+            _logger.LogInformation(JsonConvert.SerializeObject(result)); 
+            if (result.Data?.status_cd == "1")
+            {
+                return new ResponseModel
+                {
+                    isSuccess = true,
+                    message = "GSTN Token generation successfully",
+                    data = result
+                };
+            }
+            else
+            {
+                return new ResponseModel
+                {
+                    isSuccess = false,
+                    message = "Failed to generate token on GST",
+                    data = result
+                };
+            }
         }
 
         [HttpPost("refresh-token")]

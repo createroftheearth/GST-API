@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
-import { PublicRegistrationService } from './public-registration.service';
+import { PublicRegistrationService } from '../../services/public-registration.service';
 import { map } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
