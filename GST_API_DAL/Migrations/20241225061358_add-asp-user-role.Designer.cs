@@ -4,6 +4,7 @@ using GST_API_DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GST_API_DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241225061358_add-asp-user-role")]
+    partial class addaspuserrole
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -172,14 +175,14 @@ namespace GST_API_DAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "7be4c1e7-4428-46e8-9f11-98b351c5a145",
+                            Id = "307bd131-8f7a-45fe-ac6e-3ce7b0966355",
                             ConcurrencyStamp = "1",
                             Name = "APIUser",
                             NormalizedName = "APIUser"
                         },
                         new
                         {
-                            Id = "0680c1dc-d1de-4e7e-a4ba-fca5210ee175",
+                            Id = "62606de2-7eff-415f-a631-d635420f8c6c",
                             ConcurrencyStamp = "1",
                             Name = "PublicUser",
                             NormalizedName = "PublicUser"

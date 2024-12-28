@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 
 namespace GST_API.Controllers
 {
-    [Authorize(Roles = "APIUser")]
+    [Authorize(Roles = "APIUser, ASPUser")]
     [ApiController]
     [Route("api/auth")]
     public class AuthenticationController : BaseController
@@ -42,6 +42,24 @@ namespace GST_API.Controllers
                     message = "Invalid username"
                 };
             }
+            if (model.isASPUser &&
+                !await _userManager.IsInRoleAsync(user, "ASPUser"))
+            {
+                return new ResponseModel
+                {
+                    isSuccess = false,
+                    message = "Invalid username or password"
+                };
+            }
+            else if(!model.isASPUser && !await _userManager.IsInRoleAsync(user, "APIUser"))
+            {
+                return new ResponseModel
+                {
+                    isSuccess = false,
+                    message = "Invalid username or password"
+                };
+            }
+
             if (!await _userManager.CheckPasswordAsync(user, model.password))
             {
                 return new ResponseModel
@@ -55,14 +73,13 @@ namespace GST_API.Controllers
             var result = await client.RequestOTP();
             if (result.Data?.status_cd == "1")
             {
-                var roles = await _userManager.GetRolesAsync(user);
                 return new ResponseModel
                 {
                     isSuccess = true,
                     message = "OTP Sent, Please use request-token API to get 'GSTIN-Token'",
                     data = new
                     {
-                        token = _tokenService.CreateToken(user,Convert.ToBase64String(appKey),roles),
+                        token = _tokenService.CreateToken(user,Convert.ToBase64String(appKey),model.isASPUser?["ASPUser"]:["APIUser"]),
                         gstin = user.GSTNNo,
                         organizationName = user.OrganizationName
                     }

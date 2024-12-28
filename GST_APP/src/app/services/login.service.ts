@@ -11,7 +11,8 @@ export class LoginService {
 
   constructor(private httpService: HttpClient) {}
 
-  login(loginData: { username: string; password: string }) {
+  login(loginData: { username: string; password: string; isASPUser: boolean }) {
+    loginData.isASPUser = true;
     return this.httpService.post(`${this.baseUrl}`, loginData);
   }
 

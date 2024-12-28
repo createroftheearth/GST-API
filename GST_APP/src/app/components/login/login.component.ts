@@ -98,6 +98,8 @@ export class LoginComponent {
           'GSTIN-Token': response.data.data.auth_token,
           'GSTIN-Sek': response.data.data.sek,
         });
+
+        const expiryTime = response.data.data.expiry;
         if (gstTokenData) {
           localStorage.setItem(LOCAL_STORAGE_KEYS.GST_AUTH_DATA, gstTokenData);
           const returnUrl =

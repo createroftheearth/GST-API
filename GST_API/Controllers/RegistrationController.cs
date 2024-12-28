@@ -55,7 +55,9 @@ namespace GST_API.Controllers
                     message = string.Join(",", result.Errors.Select(z => z.Description + ": " + z.Code))
                 };
             }
-            await _userManager.AddToRoleAsync(user, "APIUser");
+            foreach(var role in model.UserRoles){
+                await _userManager.AddToRoleAsync(user, role);
+            }
             return new ResponseModel
             {
                 isSuccess = true,

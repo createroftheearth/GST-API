@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GST_API_DAL
 {
-    public class ApplicationDbContext: IdentityDbContext<User>
+    public class ApplicationDbContext : IdentityDbContext<User>
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options):base(options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }
 
@@ -24,9 +24,13 @@ namespace GST_API_DAL
                     new IdentityRole() { Name = "APIUser", ConcurrencyStamp = "1", NormalizedName = "APIUser" }
                 );
             builder.Entity<IdentityRole>().HasData
-        (
-            new IdentityRole() { Name = "PublicUser", ConcurrencyStamp = "1", NormalizedName = "PublicUser" }
-        );
+                (
+                    new IdentityRole() { Name = "PublicUser", ConcurrencyStamp = "1", NormalizedName = "PublicUser" }
+                );
+            builder.Entity<IdentityRole>().HasData
+                (
+                  new IdentityRole() { Name = "ASPUser", ConcurrencyStamp = "1", NormalizedName = "ASPUser" }
+                );
         }
     }
 }
