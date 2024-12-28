@@ -17,6 +17,7 @@ namespace GST_API.Extensions
         {
             services.AddScoped<TokenService,TokenService>();
             services.AddScoped<EncryptionUtils,EncryptionUtils>();
+            services.AddScoped<EncryptDecryptService, EncryptDecryptService>();
         }
     }
 }
