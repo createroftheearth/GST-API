@@ -23,12 +23,6 @@
     width: 50px;
   }
 
-  .full-width {
-    width: 100%;
-    margin-bottom: 15px;
-  }
-
-
   .picture-content{
     background-image: url("/assets/GST-Meaning-01.png");
     background-size: cover;

@@ -5,7 +5,7 @@ import { PublicRegistrationComponent } from './components/public-registration/pu
 import { LoginComponent } from './components/login/login.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { authGuard } from './auth.guard';
-import { Dashboard2Component } from './components/dashboard2/dashboard2.component';
+import { AddEditGstr1Component } from './components/gstr1/save/add-edit-gstr1/add-edit-gstr1.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -17,9 +17,10 @@ const routes: Routes = [
     canMatch: [authGuard], // Applying the new guard
   },
   {
-    path: 'dashboard2',
-    component: Dashboard2Component,
+    path: 'gstr1/add',
+    component: AddEditGstr1Component,
     canMatch: [authGuard], // Applying the new guard
+    data: { title: 'GSTR1' },
   },
   { path: '**', redirectTo: 'login' },
 ];

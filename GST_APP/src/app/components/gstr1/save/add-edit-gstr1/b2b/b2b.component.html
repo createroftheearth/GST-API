@@ -1,0 +1,161 @@
+<div [formGroup]="parentForm">
+  <div formArrayName="b2b">
+    <div
+      *ngFor="let b2bGroup of b2bArray.controls; let i = index"
+      [formGroupName]="i"
+      class="b2b-group"
+    >
+      <div class="row">
+        <div class="col-6">B2B #{{ i + 1 }}</div>
+        <div class="col-6">
+          <button
+            mat-raised-button
+            color="warn"
+            class="right-aligned-button"
+            (click)="removeB2b(i)"
+          >
+            <mat-icon>delete</mat-icon>
+            B2B #{{ i + 1 }}
+          </button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>CTIN</mat-label>
+            <input matInput formControlName="ctin" />
+            <mat-error
+              *ngIf="
+                b2bGroup.get('ctin')?.invalid && b2bGroup.get('ctin')?.touched
+              "
+            >
+              Please enter a valid CTIN.
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div formArrayName="inv">
+        <div
+          *ngFor="
+            let invGroup of getFormArray(b2bGroup, 'inv').controls;
+            let j = index
+          "
+          [formGroupName]="j"
+          class="invoice-group"
+        >
+          <div class="row">
+            <div class="col-6">Invoice #{{ j + 1 }}</div>
+            <div class="col-6">
+              <button
+                mat-raised-button
+                color="warn"
+                class="right-aligned-button"
+                (click)="removeInvoice(j, b2bGroup)"
+              >
+                <mat-icon>delete</mat-icon>
+                Invoice #{{ j + 1 }}
+              </button>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-3">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Invoice Number</mat-label>
+                <input matInput formControlName="inum" />
+              </mat-form-field>
+            </div>
+            <div class="col-3">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Invoice Date</mat-label>
+                <input matInput formControlName="idt" />
+              </mat-form-field>
+            </div>
+            <div class="col-3">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Invoice Value</mat-label>
+                <input matInput formControlName="val" type="number" />
+              </mat-form-field>
+            </div>
+          </div>
+          <!-- Items -->
+          <div formArrayName="itms">
+            <div
+              *ngFor="
+                let itemGroup of getFormArray(invGroup, 'itms').controls;
+                let k = index
+              "
+              [formGroupName]="k"
+              class="item-group"
+            >
+              <div class="row">
+                <div class="col-6">Item #{{ k + 1 }}</div>
+                <div class="col-6">
+                  <button
+                    mat-raised-button
+                    color="warn"
+                    class="right-aligned-button"
+                    (click)="removeItem(k, invGroup)"
+                  >
+                    <mat-icon>delete</mat-icon>
+                    Item #{{ k + 1 }}
+                  </button>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-3">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Item Number</mat-label>
+                    <input matInput formControlName="num" type="number" />
+                  </mat-form-field>
+                </div>
+              </div>
+              <div formGroupName="itm_det">
+                <div class="row">
+                  <div class="col-3">
+                    <mat-form-field appearance="outline" class="w-100">
+                      <mat-label>Taxable Value</mat-label>
+                      <input matInput formControlName="txval" type="number" />
+                    </mat-form-field>
+                  </div>
+                  <div class="col-3">
+                    <mat-form-field appearance="outline" class="w-100">
+                      <mat-label>Rate</mat-label>
+                      <input matInput formControlName="rt" type="number" />
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <button
+              mat-raised-button
+              color="accent"
+              class="right-aligned-button"
+              (click)="addItem(invGroup)"
+            >
+              <mat-icon>add</mat-icon>Item
+            </button>
+          </div>
+        </div>
+
+        <button
+          mat-raised-button
+          color="primary"
+          class="right-aligned-button"
+          (click)="addInvoice(b2bGroup)"
+        >
+          <mat-icon>add</mat-icon>Invoice
+        </button>
+      </div>
+    </div>
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="addB2b()"
+      class="right-aligned-button"
+    >
+      <mat-icon>add</mat-icon>
+      B2B
+    </button>
+  </div>
+</div>

@@ -3,7 +3,7 @@
   <div class="card-content col" *ngIf="!otpSent">
     <h1>Login</h1>
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-      <mat-form-field appearance="outline" class="full-width">
+      <mat-form-field appearance="outline" class="w-100">
         <mat-label>Username</mat-label>
         <input
           matInput
@@ -16,7 +16,7 @@
         }}</mat-error>
       </mat-form-field>
 
-      <mat-form-field appearance="outline" class="full-width">
+      <mat-form-field appearance="outline" class="w-100">
         <mat-label>Password</mat-label>
         <input
           matInput
@@ -33,7 +33,7 @@
       <button
         mat-raised-button
         color="primary"
-        class="full-width"
+        class="w-100"
         type="submit"
         [disabled]="!loginForm.valid"
       >

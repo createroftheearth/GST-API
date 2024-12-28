@@ -1,0 +1,16 @@
+.right-aligned-button {
+    float: right;
+    margin-right: 10px;
+}
+
+.b2b-group {
+    padding-left: 10px;
+}
+
+.invoice-group {
+    padding-left: 10px;
+}
+
+.item-group {
+    padding-left: 10px;
+}
