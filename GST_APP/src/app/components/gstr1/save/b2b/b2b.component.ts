@@ -7,7 +7,7 @@ import {
   Validators,
 } from '@angular/forms';
 
-import { ctinValidator } from '../../../../../validators/ctin.validator';
+import { ctinValidator } from '../../../../validators/ctin.validator';
 
 @Component({
   selector: 'app-b2b',
@@ -41,7 +41,7 @@ export class B2bComponent implements OnInit {
     return group.get(controlName) as FormArray;
   }
 
-  addB2b(): void {
+  addB2b() {
     this.b2bArray.push(
       this.fb.group({
         ctin: ['', [Validators.required, ctinValidator()]],
@@ -50,44 +50,7 @@ export class B2bComponent implements OnInit {
     );
   }
 
-  addInvoice(b2bGroup: AbstractControl<any, any>): void {
-    const invoices = this.getFormArray(b2bGroup, 'inv');
-    invoices.push(
-      this.fb.group({
-        inum: ['', []],
-        idt: ['', []],
-        val: [0, []],
-        pos: ['', []],
-        rchrg: [false, []],
-        itms: this.fb.array([]),
-      })
-    );
-  }
-
-  addItem(invoiceGroup: AbstractControl<any, any>): void {
-    const items = this.getFormArray(invoiceGroup, 'itms');
-    items.push(
-      this.fb.group({
-        num: [0, []],
-        itm_det: this.fb.group({
-          txval: [0, []],
-          rt: [0, []],
-        }),
-      })
-    );
-  }
-
   removeB2b(index: number): void {
     this.b2bArray.removeAt(index);
-  }
-
-  removeInvoice(index: number, b2bGroup: AbstractControl<any, any>) {
-    const invoices = this.getFormArray(b2bGroup, 'inv');
-    invoices.removeAt(index);
-  }
-
-  removeItem(index: number, invoiceGroup: AbstractControl<any, any>) {
-    const items = this.getFormArray(invoiceGroup, 'itms');
-    items.removeAt(index);
   }
 }

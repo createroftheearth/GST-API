@@ -4,6 +4,7 @@ import { RegistrationService } from '../../services/registration.service';
 import { map } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { STATES, USER_ROLES } from 'src/app/constants';
+import { gstinValidator } from 'src/app/validators/gstin.validator';
 
 @Component({
   selector: 'app-registration',
@@ -78,12 +79,7 @@ export class RegistrationComponent {
     ],
     GSTNNo: [
       '',
-      Validators.compose([
-        Validators.pattern(
-          '^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$'
-        ),
-        Validators.required,
-      ]),
+      Validators.compose([gstinValidator(), Validators.required]),
       this.validateGSTN.bind(this),
     ],
     GSTINUsername: [
