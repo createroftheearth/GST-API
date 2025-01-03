@@ -17,7 +17,7 @@ namespace GST_API_DAL.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.8")
+                .HasAnnotation("ProductVersion", "8.0.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -183,6 +183,13 @@ namespace GST_API_DAL.Migrations
                             ConcurrencyStamp = "1",
                             Name = "PublicUser",
                             NormalizedName = "PublicUser"
+                        },
+                        new
+                        {
+                            Id = "acbcc7c1-7ba9-41fe-9915-1d423ebae9c0",
+                            ConcurrencyStamp = "1",
+                            Name = "ASPUser",
+                            NormalizedName = "ASPUser"
                         });
                 });
 

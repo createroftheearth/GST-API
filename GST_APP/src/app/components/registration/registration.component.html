@@ -263,6 +263,19 @@
             }}</mat-error>
           </mat-form-field>
         </div>
+        <div class="col-md-6">
+          <mat-form-field appearance="outline">
+            <mat-label>User Roles</mat-label>
+            <mat-select formControlName="UserRoles" multiple>
+              <mat-option *ngFor="let role of userRoles" [value]="role.Value">
+                {{ role.Text }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="getErrorMessage('UserRoles')">{{
+              getErrorMessage("UserRoles")
+            }}</mat-error>
+          </mat-form-field>
+        </div>
       </div>
       <div class="text-center">
         <button

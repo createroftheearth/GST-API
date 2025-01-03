@@ -1,0 +1,92 @@
+<div [formGroup]="formGroup">
+  <div formArrayName="itms">
+    <div
+      *ngFor="
+        let itemGroup of getFormArray(invGroup, 'itms').controls;
+        let k = index
+      "
+      [formGroupName]="k"
+      class="pl-10"
+    >
+      <div class="row mb-10">
+        <div class="col-6">Item #{{ k + 1 }}</div>
+        <div class="col-6">
+          <button
+            class="right-aligned-button"
+            mat-raised-button
+            color="warn"
+            (click)="removeItem(k, invGroup)"
+          >
+            <mat-icon>delete</mat-icon>
+            Remove Item #{{ k + 1 }}
+          </button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Taxable Value</mat-label>
+            <input matInput formControlName="txval" type="number" />
+            <mat-error>
+              {{ getErrorMessage("txval", "Taxable Value", itemGroup) }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Rate</mat-label>
+            <input matInput formControlName="rt" type="number" />
+            <mat-error>
+              {{ getErrorMessage("rt", "Rate", itemGroup) }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>IGST Amount</mat-label>
+            <input matInput formControlName="iamt" type="number" />
+            <mat-error>
+              {{ getErrorMessage("iamt", "IGST Amount", itemGroup) }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>CGST Amount</mat-label>
+            <input matInput formControlName="camt" type="number" />
+            <mat-error>
+              {{ getErrorMessage("camt", "CGST Amount", itemGroup) }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>SGST Amount</mat-label>
+            <input matInput formControlName="samt" type="number" />
+            <mat-error>
+              {{ getErrorMessage("samt", "SGST Amount", itemGroup) }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Cess Amount</mat-label>
+            <input matInput formControlName="csamt" type="number" />
+            <mat-error>
+              {{ getErrorMessage("csamt", "Cess Amount", itemGroup) }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <button
+      class="right-aligned-button"
+      mat-raised-button
+      color="accent"
+      (click)="addItem(invGroup)"
+    >
+      <mat-icon>add</mat-icon>
+      Add Item
+    </button>
+  </div>
+</div>

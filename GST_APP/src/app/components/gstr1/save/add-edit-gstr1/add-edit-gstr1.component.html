@@ -1,0 +1,73 @@
+<form [formGroup]="gstr1Form" (ngSubmit)="onSubmit()">
+  <h1>Add GSTR1 Data</h1>
+  <div class="row">
+    <div class="col-3">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>GSTIN</mat-label>
+        <input matInput formControlName="gstin" required />
+        <mat-error>
+          {{ getErrorMessage("gstin", "GSTIN") }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div class="col-3">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Financial Period</mat-label>
+        <input matInput formControlName="fp" required />
+        <mat-error>
+          {{ getErrorMessage("fp", "Financial Period") }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div class="col-3">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Gross Turnover</mat-label>
+        <input matInput type="number" formControlName="gt" required />
+        <mat-error>
+          {{ getErrorMessage("gt", "Gross Turnover") }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div class="col-3">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Current Gross Turnover</mat-label>
+        <input matInput type="number" formControlName="cur_gt" required />
+        <mat-error>
+          {{ getErrorMessage("cur_gt", "Current Gross Turnover") }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <mat-tab-group>
+      <mat-tab label="B2B">
+        <app-b2b [parentForm]="gstr1Form"></app-b2b>
+      </mat-tab>
+      <mat-tab label="B2BA">
+        <app-b2ba [parentForm]="gstr1Form"></app-b2ba>
+      </mat-tab>
+      <mat-tab label="B2CL"><app-b2cl></app-b2cl></mat-tab>
+      <mat-tab label="B2CLA"><app-b2cla></app-b2cla></mat-tab>
+      <mat-tab label="B2CS"><app-b2cs></app-b2cs></mat-tab>
+      <mat-tab label="B2CSA"><app-b2csa></app-b2csa></mat-tab>
+      <mat-tab label="CDNR"><app-cdnr></app-cdnr></mat-tab>
+      <mat-tab label="CDNRA"><app-cdnra></app-cdnra></mat-tab>
+      <mat-tab label="CDNUR"><app-cdnur></app-cdnur></mat-tab>
+      <mat-tab label="CDNURA"><app-cdnura></app-cdnura></mat-tab>
+      <mat-tab label="NIL"><app-nil></app-nil></mat-tab>
+      <mat-tab label="EXP"><app-exp></app-exp></mat-tab>
+      <mat-tab label="EXPA"><app-expa></app-expa></mat-tab>
+      <mat-tab label="AT"><app-at></app-at></mat-tab>
+      <mat-tab label="ATA"><app-ata></app-ata></mat-tab>
+      <mat-tab label="TXPD"><app-txpd></app-txpd></mat-tab>
+      <mat-tab label="TXPDA"><app-txpda></app-txpda></mat-tab>
+      <mat-tab label="SUPECO"><app-supeco></app-supeco></mat-tab>
+      <mat-tab label="SUPECOA"><app-supecoa></app-supecoa></mat-tab>
+      <mat-tab label="ECOM"><app-ecom></app-ecom></mat-tab>
+      <mat-tab label="ECOMA"><app-ecoma></app-ecoma></mat-tab>
+      <mat-tab label="HSN"><app-hsn></app-hsn></mat-tab>
+      <mat-tab label="DOC"><app-doc-issue></app-doc-issue></mat-tab>
+    </mat-tab-group>
+  </div>
+  <button mat-raised-button type="submit" [disabled]="gstr1Form.invalid">
+    Submit
+  </button>
+</form>

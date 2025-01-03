@@ -1,0 +1,46 @@
+<div [formGroup]="parentForm" class="p-20 mb-25">
+  <div formArrayName="b2b">
+    <div
+      *ngFor="let b2bGroup of b2bArray.controls; let i = index"
+      [formGroupName]="i"
+    >
+      <div class="row mb-10">
+        <div class="col-6">B2B #{{ i + 1 }}</div>
+        <div class="col-6">
+          <button
+            class="right-aligned-button"
+            mat-raised-button
+            color="warn"
+            (click)="removeB2b(i)"
+          >
+            <mat-icon>delete</mat-icon>
+            Remove B2B #{{ i + 1 }}
+          </button>
+        </div>
+      </div>
+      <!-- CTIN and Ecom Tin -->
+      <div class="row">
+        <div class="col-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>CTIN</mat-label>
+            <input matInput formControlName="ctin" />
+            <mat-error *ngIf="b2bGroup.get('ctin')?.hasError('pattern')">
+              Invalid GSTIN format.
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <!-- Invoices -->
+      <app-invoice-b2b [b2bGroup]="b2bGroup"></app-invoice-b2b>
+    </div>
+    <button
+      class="right-aligned-button"
+      mat-raised-button
+      color="accent"
+      (click)="addB2b()"
+    >
+      <mat-icon>add</mat-icon>
+      Add B2B
+    </button>
+  </div>
+</div>
