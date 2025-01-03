@@ -7,6 +7,7 @@ namespace GST_API_DAL
 {
     public class ApplicationDbContext: IdentityDbContext<User>
     {
+        public DbSet<Gstr1> Gstr1 { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options):base(options)
         {
         }

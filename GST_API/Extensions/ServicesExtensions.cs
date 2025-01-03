@@ -11,6 +11,7 @@ namespace GST_API.Extensions
         public static void AddRepositories(this IServiceCollection services)
         {
             services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IGSTR1Repository, GSTR1Repository>();
         }
 
         public static void AddServices(this IServiceCollection services)
