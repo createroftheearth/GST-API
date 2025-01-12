@@ -9,6 +9,8 @@ namespace GST_API_Library.Models.GSTR1DTO
     public class Gstr1Dto
     {
         public string RequestBody { get; set; }
+        public DateTime FinancialPeriod { get; set; }
+        public string GSTINNo { get; set; }
     }
 
 }

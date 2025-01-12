@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GST_API_DAL.Repository
 {
-    internal interface IBaseRepository<T> : IDisposable where T : class
+    public interface IBaseRepository<T> : IDisposable where T : class
     {
         void beginTransaction();
         void rollback();

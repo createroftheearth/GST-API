@@ -3,6 +3,7 @@ using GST_API.Services;
 using GST_API_DAL.Repository.Implementations;
 using GST_API_DAL.Repository.Interfaces;
 using GST_API_Library.Services;
+using GST_API_Library.Services.Implementation;
 
 namespace GST_API.Extensions
 {
@@ -19,6 +20,7 @@ namespace GST_API.Extensions
             services.AddScoped<TokenService,TokenService>();
             services.AddScoped<EncryptionUtils,EncryptionUtils>();
             services.AddScoped<EncryptDecryptService, EncryptDecryptService>();
+            services.AddScoped<IGstr1Service, Gstr1Service>();
         }
     }
 }
