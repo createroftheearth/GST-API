@@ -1,5 +1,6 @@
 ﻿using GST_API.APIModels;
 using GST_API.Services;
+using GST_API_Library.Models;
 using GST_API_Library.Models.GSTR2B;
 using GST_API_Library.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -56,6 +57,33 @@ namespace GST_API.Controllers
                     message = ex.Message
                 };
             }
+        }
+
+        [HttpPut("Gen2BOnDemand")]
+        public async Task<ResponseModel> Gen2BOnDemand([FromBody] Gen2BonDemand model)
+        {
+            if (string.IsNullOrEmpty(this.GSTINToken) || string.IsNullOrEmpty(this.GSTINSek))
+            {
+                return new ResponseModel
+                {
+                    isSuccess = false,
+                    message = "Please send 'GSTIN-Token' or 'GSTIN-Sek' in headers"
+                };
+            }
+            GSTNAuthClient client = new GSTNAuthClient(gstin, this.gstinUsername, this.appKey)
+            {
+                AuthToken = this.GSTINToken,
+                DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, this.appKey)
+
+            };
+            GSTR2BApiClient client2 = new GSTR2BApiClient(client, gstin, model.itcprd, Constants.GSTR2B_GenOnDemand_URL);
+            var info = await client2.Gen2BonDemand(model);
+            return new ResponseModel
+            {
+                data = info,
+                isSuccess = true,
+                message = "success"
+            };
         }
 
     }

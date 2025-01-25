@@ -209,6 +209,82 @@ namespace GST_API.Controllers
             }
         }
 
+        [HttpGet("GetLatestRCMBal3B")]
+        public async Task<ResponseModel> GetLatestRCMBal3B([FromQuery] APIRequestParameters model)
+        {
+            if (string.IsNullOrEmpty(this.GSTINToken) || string.IsNullOrEmpty(this.GSTINSek))
+            {
+                return new ResponseModel
+                {
+                    isSuccess = false,
+                    message = "Please send 'GSTIN-Token' or 'GSTIN-Sek' in headers"
+                };
+            }
+            GSTNAuthClient client = new GSTNAuthClient(gstin, this.gstinUsername, this.appKey)
+            {
+                AuthToken = this.GSTINToken,
+                DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, this.appKey)
+
+            };
+            try
+            {
+                GSTR3BApiClient client2 = new GSTR3BApiClient(client, gstin, model.ret_period, Constants.GSTR3B_RCM_URL);
+                var info = await client2.GetLatestRCMBal3B(model);
+                return new ResponseModel
+                {
+                    data = info,
+                    isSuccess = true,
+                    message = "success"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    isSuccess = false,
+                    message = ex.Message
+                };
+            }
+        }
+
+        [HttpGet("GetOpeningRCMBal3B")]
+        public async Task<ResponseModel> GetOpeningRCMBal3B([FromQuery] APIRequestParameters model)
+        {
+            if (string.IsNullOrEmpty(this.GSTINToken) || string.IsNullOrEmpty(this.GSTINSek))
+            {
+                return new ResponseModel
+                {
+                    isSuccess = false,
+                    message = "Please send 'GSTIN-Token' or 'GSTIN-Sek' in headers"
+                };
+            }
+            GSTNAuthClient client = new GSTNAuthClient(gstin, this.gstinUsername, this.appKey)
+            {
+                AuthToken = this.GSTINToken,
+                DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, this.appKey)
+
+            };
+            try
+            {
+                GSTR3BApiClient client2 = new GSTR3BApiClient(client, gstin, model.ret_period, Constants.GSTR3B_RCM_URL);
+                var info = await client2.GetOpeningRCMBal3B(model);
+                return new ResponseModel
+                {
+                    data = info,
+                    isSuccess = true,
+                    message = "success"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    isSuccess = false,
+                    message = ex.Message
+                };
+            }
+        }
+
         //[HttpPut("OffsetLiabilityGSTR3B")]
         //public async Task<ResponseModel> OffsetLiabilityGSTR3B([FromBody] OffsetLiabilityGSTR3Bdata model)
         //{

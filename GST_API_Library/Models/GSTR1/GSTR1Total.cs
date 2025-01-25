@@ -36,7 +36,7 @@ namespace GST_API_Library.Models.GSTR1
         public List<B2clAOutward> b2cla { get; set; }
         public List<B2csOutward> b2cs { get; set; }
         public List<B2CSAOutward> b2csa { get; set; }
-        public NilRatedOutward nil { get; set; }
+        public List<NilRatedOutward> nil { get; set; }
         public List<Exp> exp { get; set; }
         public List<ExpA> expa { get; set; }
         public List<CDNAOutward> cdna { get; set; }
@@ -50,7 +50,9 @@ namespace GST_API_Library.Models.GSTR1
         public List<EComOutward> ecom_invocies { get; set; }
         public List<DocIssued> doc_issued { get; set; }
 
-        public List<SummaryOutward> summaryoutwards { get; set; }
+       public List<SummaryOutward> summaryoutwards { get; set; }
+
+        public List<GetGSTR1SummaryRes> getgstr1smry { get; set; }
 
         //Garima 19 March 2024
 
