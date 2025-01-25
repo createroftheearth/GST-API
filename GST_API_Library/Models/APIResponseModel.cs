@@ -137,6 +137,7 @@ namespace GST_API_Library.Models
         public string rek { get; set; }
         public string hmac { get; set; }
         public string ack_num { get; set; }
+        //public string serializeddata { get; set; }
     }
 
     public class BaseErrorData
@@ -194,13 +195,17 @@ namespace GST_API_Library.Models
         public int HttpStatusCode { get; set; }
 
         public T Data { get; set; }
+        
 
     }
 
     public class GSTNResult1<T>
     {
-        public T Data { get; set; }
+        //internal string SerializedData;
 
+        public T Data { get; set; }
+        //public T SerializedData { get; set; }
+        //public string serjson { get; set; }
     }
 
     //Garima

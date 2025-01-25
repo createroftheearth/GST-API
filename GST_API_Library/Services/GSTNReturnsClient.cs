@@ -155,6 +155,45 @@ namespace GST_API_Library.Services
             return info;
         }
 
+        protected internal UnsignedDataInfo1 Encrypt1<T>(T input)
+        {
+            UnsignedDataInfo1 info = new UnsignedDataInfo1();
+            if (input != null)
+            {
+                string finalJson = JsonConvert.SerializeObject(input, Newtonsoft.Json.Formatting.Indented,
+                            new JsonSerializerSettings
+                            {
+                                NullValueHandling = NullValueHandling.Ignore
+                            });
+                byte[] encodeJson = UTF8Encoding.UTF8.GetBytes(finalJson);
+                string base64Payload = Convert.ToBase64String(encodeJson);
+                byte[] jsonData = UTF8Encoding.UTF8.GetBytes(base64Payload);
+                info.data = EncryptionUtils.AesEncrypt(jsonData, provider.DecryptedKey);
+                //info.hmac = EncryptionUtils.GenerateHMAC(jsonData, provider.DecryptedKey);
+            }
+            return info;
+        }
+
+        protected internal UnsignedDataInfo2 Encrypt3<T>(T input)
+        {
+            UnsignedDataInfo2 info = new UnsignedDataInfo2();
+            if (input != null)
+            {
+                string finalJson = JsonConvert.SerializeObject(input, Newtonsoft.Json.Formatting.Indented,
+                            new JsonSerializerSettings
+                            {
+                                NullValueHandling = NullValueHandling.Ignore
+                            });
+                byte[] encodeJson = UTF8Encoding.UTF8.GetBytes(finalJson);
+                string base64Payload = Convert.ToBase64String(encodeJson);
+                byte[] jsonData = UTF8Encoding.UTF8.GetBytes(base64Payload);
+                info.data = EncryptionUtils.AesEncrypt(jsonData, provider.DecryptedKey);
+                info.hmac = EncryptionUtils.GenerateHMAC(jsonData, provider.DecryptedKey);
+            }
+            return info;
+        }
+
+
         protected virtual GSTNResult<TOutput> BuildResult<TOutput>(GSTNResult<ResponseDataInfo> response, TOutput data)
         {
             //This function can be used to convert simple API result to ResultInfo based API result
@@ -178,6 +217,9 @@ namespace GST_API_Library.Services
             }
             return resultInfo;
         }
+
+
+
 
         //protected internal virtual GSTNResult<FileInfo> SignFile(UnsignedDataInfo unsignedDataInfo, string sign, string st, string sid, string ret_prd)
         //{
@@ -263,7 +305,7 @@ namespace GST_API_Library.Services
             return result;
         }
 
-        public async Task<GSTNResult<FileInfo>> filegstr1(File1 data, string OTP, string? PAN) //File1 - Summaryoutward
+        public async Task<GSTNResult<FileInfo>> filegstr1(GetGSTR1SummaryRes data, string OTP, string? PAN) //File1 - Summaryoutward
         {
             string finalJson = JsonConvert.SerializeObject(data, Newtonsoft.Json.Formatting.Indented,
                           new JsonSerializerSettings

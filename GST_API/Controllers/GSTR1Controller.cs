@@ -7,6 +7,7 @@ using GST_API_Library.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace GST_API.Controllers
 {
@@ -51,7 +52,7 @@ namespace GST_API.Controllers
         }
 
         [HttpPost("{otp}/file")]
-        public async Task<ResponseModel> file([FromBody] File1 data, string otp) //File1 - Summaryoutward
+        public async Task<ResponseModel> file([FromBody] GetGSTR1SummaryRes data, string otp) //File1 - Summaryoutward
         {
             GSTNAuthClient client = new GSTNAuthClient(gstin, this.gstinUsername, appKey)
             {
@@ -621,31 +622,54 @@ namespace GST_API.Controllers
             };
         }
 
+        //[HttpGet("GetSummary")]
+        //public async Task<ResponseModel> GetGSTR1Summary([FromQuery] APIRequestParameters model)
+        //{
+        //    if (string.IsNullOrEmpty(this.GSTINToken) || string.IsNullOrEmpty(this.GSTINSek))
+        //    {
+        //        return new ResponseModel
+        //        {
+        //            isSuccess = false,
+        //            message = "Please send 'GSTIN-Token' or 'GSTIN-Sek' in headers"
+        //        };
+        //    }
+        //    GSTNAuthClient client = new GSTNAuthClient(gstin, this.gstinUsername, this.appKey)
+        //    {
+        //        AuthToken = this.GSTINToken,
+        //        DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, this.appKey)
+
+        //    };
+        //    GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, "092017", Constants.GSTR1_V4_RETURN_URL);
+        //    var info = await client2.GetGSTR1Summary(model);
+        //    return new ResponseModel
+        //    {
+        //        data = info,
+        //        isSuccess = true,
+        //        message = "success"
+        //    };
+        //}
+
+
         [HttpGet("GetSummary")]
-        public async Task<ResponseModel> GetGSTR1Summary([FromQuery] APIRequestParameters model)
+        public async Task<GetGSTR1SummaryRes> GetGSTR1Summary([FromQuery] APIRequestParameters model)
         {
             if (string.IsNullOrEmpty(this.GSTINToken) || string.IsNullOrEmpty(this.GSTINSek))
             {
-                return new ResponseModel
-                {
-                    isSuccess = false,
-                    message = "Please send 'GSTIN-Token' or 'GSTIN-Sek' in headers"
-                };
+                throw new InvalidOperationException("Please send 'GSTIN-Token' or 'GSTIN-Sek' in headers");
             }
+
             GSTNAuthClient client = new GSTNAuthClient(gstin, this.gstinUsername, this.appKey)
             {
                 AuthToken = this.GSTINToken,
                 DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, this.appKey)
+            };
 
-            };
-            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, "092017", Constants.GSTR1_V4_RETURN_URL);
+            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, model.ret_period, Constants.GSTR1_V4_RETURN_URL);
             var info = await client2.GetGSTR1Summary1(model);
-            return new ResponseModel
-            {
-                data = info,
-                isSuccess = true,
-                message = "success"
-            };
+
+            // Return only the data part of the response
+            //return info.SerializedData;
+            return info.Data;
         }
 
         ////[HttpGet("GetSummary")]
@@ -679,6 +703,48 @@ namespace GST_API.Controllers
         ////}
 
 
+
+
+
+        //Garima 10Jan2025 Start//
+
+        //[HttpGet("GetSummary")]
+        //public async Task<GetGSTR1SummaryRes> GetGSTR1Summary([FromQuery] APIRequestParameters model)
+        //{
+        //    if (string.IsNullOrEmpty(this.GSTINToken) || string.IsNullOrEmpty(this.GSTINSek))
+        //    {
+        //        //return new ResponseModel1
+        //        //{
+        //        //    isSuccess = false,
+        //        //    message = "Please send 'GSTIN-Token' or 'GSTIN-Sek' in headers"
+        //        //};
+        //    }
+        //    GSTNAuthClient client = new GSTNAuthClient(gstin, this.gstinUsername, this.appKey)
+        //    {
+        //        AuthToken = this.GSTINToken,
+        //        DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, this.appKey)
+
+        //    };
+        //    GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, model.ret_period, Constants.GSTR1_V4_RETURN_URL);
+        //    var info = await client2.GetGSTR1Summary1(model);
+        //    // Serialize the response data to JSON
+        //    //var serializedJson = JsonConvert.SerializeObject(info.Data, Formatting.None,
+        //    //    new JsonSerializerSettings
+        //    //    {
+        //    //        NullValueHandling = NullValueHandling.Ignore
+        //    //    });
+        //    return info.Data;
+
+        //    //return new ResponseModel1
+        //    //{
+        //    //    dataR = info.Data
+
+        //    //    //isSuccess = true,
+        //    //    //message = "success"
+        //    //};
+        //}
+
+        //Garima 10Jan2025 End//
 
         /// <summary>
         /// NewProceedToFile
