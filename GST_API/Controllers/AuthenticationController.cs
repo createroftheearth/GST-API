@@ -18,14 +18,18 @@ namespace GST_API.Controllers
         private readonly ILogger<AuthenticationController> _logger;
         private readonly UserManager<User> _userManager;
         private readonly TokenService _tokenService;
+        private readonly EncryptDecryptService _encryptDecryptService;
+
         private readonly IConfiguration _configuration;
         public AuthenticationController(ILogger<AuthenticationController> logger,
             UserManager<User> userManager,
-            TokenService tokenService)
+            TokenService tokenService,
+            EncryptDecryptService encryptDecryptService)
         {
             _logger = logger;
             _userManager = userManager;
             _tokenService = tokenService;
+            _encryptDecryptService = encryptDecryptService;
         }
 
         [HttpPost]
@@ -146,11 +150,13 @@ namespace GST_API.Controllers
             }
         }
 
-        [HttpPost("{otp}/request-token")]
-        public async Task<ResponseModel> RequestToken(string otp)
+        [HttpPost("{encryptedOTP}/request-token")]
+        public async Task<ResponseModel> RequestToken(string encryptedOTP)
         {
-            GSTNAuthClient client = new GSTNAuthClient(gstin, gstinUsername,appKey);
-             //GSTNAuthClient client = new GSTNAuthClient(gstin, gstinUsername, GSTNConstants.GetAppKeyBytes());
+            GSTNAuthClient client = new GSTNAuthClient(gstin, gstinUsername, appKey);
+            var otp = _encryptDecryptService.DecryptText(encryptedOTP);
+            //GSTNAuthClient client = new GSTNAuthClient(gstin, gstinUsername, GSTNConstants.GetAppKeyBytes());
+
             var result = await client.RequestToken(otp);
             _logger.LogInformation(JsonConvert.SerializeObject(result)); 
             if (result.Data?.status_cd == "1")
