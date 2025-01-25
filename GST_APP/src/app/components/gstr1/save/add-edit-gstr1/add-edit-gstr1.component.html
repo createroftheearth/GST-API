@@ -44,8 +44,12 @@
       <mat-tab label="B2BA">
         <app-b2ba [parentForm]="gstr1Form"></app-b2ba>
       </mat-tab>
-      <mat-tab label="B2CL"><app-b2cl></app-b2cl></mat-tab>
-      <mat-tab label="B2CLA"><app-b2cla></app-b2cla></mat-tab>
+      <mat-tab label="B2CL"
+        ><app-b2cl [parentForm]="gstr1Form"></app-b2cl
+      ></mat-tab>
+      <mat-tab label="B2CLA"
+        ><app-b2cla [parentForm]="gstr1Form"></app-b2cla
+      ></mat-tab>
       <mat-tab label="B2CS"><app-b2cs></app-b2cs></mat-tab>
       <mat-tab label="B2CSA"><app-b2csa></app-b2csa></mat-tab>
       <mat-tab label="CDNR"><app-cdnr></app-cdnr></mat-tab>

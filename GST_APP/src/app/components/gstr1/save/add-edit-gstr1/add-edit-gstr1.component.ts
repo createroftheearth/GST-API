@@ -21,6 +21,7 @@ export class AddEditGstr1Component {
       b2b: this.fb.array([]),
       b2ba: this.fb.array([]),
       b2cl: this.fb.array([]),
+      b2cla: this.fb.array([]),
     });
   }
 

@@ -7,14 +7,13 @@ import {
   Validators,
 } from '@angular/forms';
 import { ValidationService } from 'src/app/services/validation.service';
-
 @Component({
-  selector: 'app-invoice-b2b',
-  templateUrl: './invoice-b2b.component.html',
-  styleUrls: ['./invoice-b2b.component.css'],
+  selector: 'app-invoice-b2cla',
+  templateUrl: './invoice-b2cla.component.html',
+  styleUrls: ['./invoice-b2cla.component.css'],
 })
-export class InvoiceB2bComponent {
-  @Input() b2bGroup!: AbstractControl<any, any>;
+export class InvoiceB2claComponent {
+  @Input() b2claGroup!: AbstractControl<any, any>;
 
   getFormArray(
     group: AbstractControl<any, any>,
@@ -27,7 +26,7 @@ export class InvoiceB2bComponent {
   }
 
   get formGroup() {
-    return this.b2bGroup as FormGroup;
+    return this.b2claGroup as FormGroup;
   }
 
   constructor(
@@ -36,7 +35,7 @@ export class InvoiceB2bComponent {
   ) {}
 
   addInvoice() {
-    const invoices = this.getFormArray(this.b2bGroup, 'inv');
+    const invoices = this.getFormArray(this.b2claGroup, 'inv');
     // Initialize the form group with all fields and validations
     invoices.push(
       this.fb.group({
@@ -57,11 +56,18 @@ export class InvoiceB2bComponent {
         pos: ['', [Validators.pattern(/^(3[0-8]|[12][0-9]|0[1-9]|96|97)$/)]], // Place of Supply
         diff_percent: [null, [Validators.min(0), Validators.max(100)]], // Differential Percentage
         rchrg: [false], // Reverse Charge
-        inv_typ: [''],
-        irngendate: ['', [this.dateValidator]], // Optional, valid date
-        irn: ['', [Validators.minLength(1)]], // Optional IRN, limited to 50 characters
         srctyp: ['', [Validators.minLength(1)]], // Optional Source Type
         itms: this.fb.array([]), // Invoice Items
+        oidt: ['', [this.dateValidator]], // Optional, valid date
+        oinum: [
+          '',
+          [
+            Validators.maxLength(16),
+            Validators.pattern(
+              /^(?=.{1,16}$)([/\\\-0]*[a-zA-Z0-9/\\\-]*[a-zA-Z1-9]+[a-zA-Z0-9/\\\-]*)$/
+            ),
+          ],
+        ], // Optional IRN, limited to 50 characters
       })
     );
   }
@@ -78,8 +84,8 @@ export class InvoiceB2bComponent {
     return null;
   }
 
-  removeInvoice(index: number, b2bGroup: AbstractControl<any, any>) {
-    const invoices = this.getFormArray(b2bGroup, 'inv');
+  removeInvoice(index: number, b2claGroup: AbstractControl<any, any>) {
+    const invoices = this.getFormArray(b2claGroup, 'inv');
     invoices.removeAt(index);
   }
 

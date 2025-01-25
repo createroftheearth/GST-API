@@ -8,6 +8,7 @@ import {
 } from '@angular/forms';
 
 import { ctinValidator } from '../../../../validators/ctin.validator';
+import { ValidationService } from 'src/app/services/validation.service';
 @Component({
   selector: 'app-b2ba',
   templateUrl: './b2ba.component.html',
@@ -20,7 +21,10 @@ export class B2baComponent {
     return this.parentForm.get('b2ba') as FormArray;
   }
 
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    private validationService: ValidationService
+  ) {}
 
   ngOnInit(): void {
     // Ensure the b2ba form array is initialized
@@ -51,5 +55,13 @@ export class B2baComponent {
 
   removeB2b(index: number): void {
     this.b2baArray.removeAt(index);
+  }
+
+  getErrorMessage(
+    controlName: string,
+    fieldName: string,
+    form: AbstractControl<any, any>
+  ): string {
+    return this.validationService.getErrorMessage(controlName, fieldName, form);
   }
 }

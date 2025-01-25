@@ -2,7 +2,7 @@
   <div formArrayName="inv">
     <div
       *ngFor="
-        let invGroup of getFormArray(b2bGroup, 'inv').controls;
+        let invGroup of getFormArray(b2claGroup, 'inv').controls;
         let j = index
       "
       [formGroupName]="j"
@@ -15,7 +15,7 @@
             class="right-aligned-button"
             mat-raised-button
             color="warn"
-            (click)="removeInvoice(j, b2bGroup)"
+            (click)="removeInvoice(j, b2claGroup)"
           >
             <mat-icon>delete</mat-icon>
             Remove Invoice #{{ j + 1 }}
@@ -120,42 +120,6 @@
       <div class="row">
         <div class="col-4">
           <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Invoice Type</mat-label>
-            <mat-select formControlName="inv_typ">
-              <mat-option value="R">Regular</mat-option>
-              <mat-option value="DE">Deemed Export</mat-option>
-              <mat-option value="SEWP">SEZ with Payment</mat-option>
-              <mat-option value="SEWOP">SEZ without Payment</mat-option>
-              <mat-option value="CBW">Custom Bonded Warehouse</mat-option>
-            </mat-select>
-            <mat-error>
-              {{ getErrorMessage("inv_typ", "Invoice Type", invGroup) }}
-            </mat-error>
-          </mat-form-field>
-        </div>
-        <div class="col-4">
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>IRN Generate Date</mat-label>
-            <input matInput formControlName="irngendate" type="date" />
-            <mat-error>
-              {{ getErrorMessage("irngendate", "IRN Generate Date", invGroup) }}
-            </mat-error>
-          </mat-form-field>
-        </div>
-        <div class="col-4">
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>IRN</mat-label>
-            <input matInput formControlName="irn" />
-            <mat-error>
-              {{ getErrorMessage("irn", "IRN", invGroup) }}
-            </mat-error>
-          </mat-form-field>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-6">
-          <mat-form-field appearance="outline" class="w-100">
             <mat-label>Source Type</mat-label>
             <input matInput formControlName="srctyp" />
             <mat-error>
@@ -163,9 +127,29 @@
             </mat-error>
           </mat-form-field>
         </div>
+        <div class="col-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>IRN Generate Date</mat-label>
+            <input matInput formControlName="oidt" type="date" />
+            <mat-error>
+              {{ getErrorMessage("oidt", "Supplier Invoice Date", invGroup) }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>IRN</mat-label>
+            <input matInput formControlName="oinum" />
+            <mat-error>
+              {{
+                getErrorMessage("oinum", "Supplier Invoice Number", invGroup)
+              }}
+            </mat-error>
+          </mat-form-field>
+        </div>
       </div>
 
-      <app-item-b2b [invGroup]="invGroup"></app-item-b2b>
+      <app-item-b2cla [invGroup]="invGroup"></app-item-b2cla>
     </div>
     <button
       class="right-aligned-button"

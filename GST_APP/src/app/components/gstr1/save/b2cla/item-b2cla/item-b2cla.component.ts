@@ -9,11 +9,11 @@ import {
 import { ValidationService } from 'src/app/services/validation.service';
 
 @Component({
-  selector: 'app-item-b2b',
-  templateUrl: './item-b2b.component.html',
-  styleUrls: ['./item-b2b.component.css'],
+  selector: 'app-item-b2cla',
+  templateUrl: './item-b2cla.component.html',
+  styleUrls: ['./item-b2cla.component.css'],
 })
-export class ItemB2bComponent {
+export class ItemB2claComponent {
   @Input() invGroup!: AbstractControl<any, any>;
 
   getFormArray(
@@ -55,8 +55,6 @@ export class ItemB2bComponent {
             [Validators.required, Validators.min(0), Validators.max(999.99)],
           ],
           iamt: [null, [Validators.min(0)]],
-          camt: [null, [Validators.min(0)]],
-          samt: [null, [Validators.min(0)]],
           csamt: [null, [Validators.min(0)]],
         }),
       })

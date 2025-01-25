@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { B2claComponent } from './b2cla.component';
+import { ItemB2baComponent } from './item-b2ba.component';
 
-describe('B2claComponent', () => {
-  let component: B2claComponent;
-  let fixture: ComponentFixture<B2claComponent>;
+describe('ItemB2baComponent', () => {
+  let component: ItemB2baComponent;
+  let fixture: ComponentFixture<ItemB2baComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [B2claComponent]
+      declarations: [ItemB2baComponent]
     });
-    fixture = TestBed.createComponent(B2claComponent);
+    fixture = TestBed.createComponent(ItemB2baComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

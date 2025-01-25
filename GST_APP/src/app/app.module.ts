@@ -15,8 +15,6 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { B2bComponent } from './components/gstr1/save/b2b/b2b.component';
 import { B2baComponent } from './components/gstr1/save/b2ba/b2ba.component';
-import { B2clComponent } from './components/gstr1/save/b2cl/b2cl.component';
-import { B2claComponent } from './components/gstr1/save/b2cla/b2cla.component';
 import { B2csComponent } from './components/gstr1/save/b2cs/b2cs.component';
 import { B2csaComponent } from './components/gstr1/save/b2csa/b2csa.component';
 import { CdnrComponent } from './components/gstr1/save/cdnr/cdnr.component';
@@ -40,6 +38,14 @@ import { AddEditGstr1Component } from './components/gstr1/save/add-edit-gstr1/ad
 import { ItemB2bComponent } from './components/gstr1/save/b2b/item-b2b/item-b2b.component';
 import { InvoiceB2bComponent } from './components/gstr1/save/b2b/invoice-b2b/invoice-b2b.component';
 import { MaterialModules } from './material.module';
+import { InvoiceB2baComponent } from './components/gstr1/save/b2ba/invoice-b2ba/invoice-b2ba.component';
+import { ItemB2baComponent } from './components/gstr1/save/b2ba/item-b2ba/item-b2ba.component';
+import { B2claComponent } from './components/gstr1/save/b2cla/b2cla.component';
+import { B2clComponent } from './components/gstr1/save/b2cl/b2cl.component';
+import { ItemB2clComponent } from './components/gstr1/save/b2cl/item-b2cl/item-b2cl.component';
+import { InvoiceB2clComponent } from './components/gstr1/save/b2cl/invoice-b2cl/invoice-b2cl.component';
+import { ItemB2claComponent } from './components/gstr1/save/b2cla/item-b2cla/item-b2cla.component';
+import { InvoiceB2claComponent } from './components/gstr1/save/b2cla/invoice-b2cla/invoice-b2cla.component';
 
 @NgModule({
   declarations: [
@@ -50,7 +56,6 @@ import { MaterialModules } from './material.module';
     DashboardComponent,
     B2bComponent,
     B2baComponent,
-    B2clComponent,
     B2claComponent,
     B2csComponent,
     B2csaComponent,
@@ -74,6 +79,13 @@ import { MaterialModules } from './material.module';
     AddEditGstr1Component,
     ItemB2bComponent,
     InvoiceB2bComponent,
+    InvoiceB2baComponent,
+    ItemB2baComponent,
+    B2clComponent,
+    InvoiceB2clComponent,
+    ItemB2clComponent,
+    InvoiceB2claComponent,
+    ItemB2claComponent,
   ],
   imports: [
     BrowserModule,

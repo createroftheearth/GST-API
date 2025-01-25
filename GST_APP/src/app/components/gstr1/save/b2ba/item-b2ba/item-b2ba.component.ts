@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import {
   AbstractControl,
   FormArray,
@@ -9,11 +9,11 @@ import {
 import { ValidationService } from 'src/app/services/validation.service';
 
 @Component({
-  selector: 'app-item-b2b',
-  templateUrl: './item-b2b.component.html',
-  styleUrls: ['./item-b2b.component.css'],
+  selector: 'app-item-b2ba',
+  templateUrl: './item-b2ba.component.html',
+  styleUrls: ['./item-b2ba.component.css'],
 })
-export class ItemB2bComponent {
+export class ItemB2baComponent {
   @Input() invGroup!: AbstractControl<any, any>;
 
   getFormArray(

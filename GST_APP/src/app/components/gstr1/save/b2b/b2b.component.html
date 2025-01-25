@@ -24,8 +24,8 @@
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>CTIN</mat-label>
             <input matInput formControlName="ctin" />
-            <mat-error *ngIf="b2bGroup.get('ctin')?.hasError('pattern')">
-              Invalid GSTIN format.
+            <mat-error>
+              {{ getErrorMessage("ctin", "CTIN", b2bGroup) }}
             </mat-error>
           </mat-form-field>
         </div>

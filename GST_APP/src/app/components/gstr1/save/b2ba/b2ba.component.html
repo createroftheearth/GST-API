@@ -24,14 +24,14 @@
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>CTIN</mat-label>
             <input matInput formControlName="ctin" />
-            <mat-error *ngIf="b2baGroup.get('ctin')?.hasError('pattern')">
-              Invalid GSTIN format.
+            <mat-error>
+              {{ getErrorMessage("ctin", "CTIN", b2baGroup) }}
             </mat-error>
           </mat-form-field>
         </div>
       </div>
       <!-- Invoices -->
-      <!-- <app-invoice-b2ba [b2baGroup]="b2baGroup"></app-invoice-b2ba> -->
+      <app-invoice-b2ba [b2baGroup]="b2baGroup"></app-invoice-b2ba>
     </div>
     <button
       class="right-aligned-button"
