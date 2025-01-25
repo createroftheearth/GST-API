@@ -17,10 +17,47 @@ namespace GST_API_DAL.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.8")
+                .HasAnnotation("ProductVersion", "8.0.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("GST_API_DAL.Models.Gstr1", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime>("FinancialPeriod")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("GSTINNo")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
+
+                    b.Property<string>("Gstr1SaveRequest")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NewProceedToFileGstr1Reponse")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NewProceedToFileGstr1Request")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SaveGstr1Reponse")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SaveGstr1Status")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Gstr1");
+                });
 
             modelBuilder.Entity("GST_API_DAL.Models.User", b =>
                 {
@@ -172,17 +209,24 @@ namespace GST_API_DAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "7be4c1e7-4428-46e8-9f11-98b351c5a145",
+                            Id = "5ef41ecd-5455-418f-b35c-6e6b8fffbb51",
                             ConcurrencyStamp = "1",
                             Name = "APIUser",
                             NormalizedName = "APIUser"
                         },
                         new
                         {
-                            Id = "0680c1dc-d1de-4e7e-a4ba-fca5210ee175",
+                            Id = "46abda0b-f2c6-4208-ab13-91d9b53c112c",
                             ConcurrencyStamp = "1",
                             Name = "PublicUser",
                             NormalizedName = "PublicUser"
+                        },
+                        new
+                        {
+                            Id = "acb00388-498a-4531-8856-c5c35f5ee0c2",
+                            ConcurrencyStamp = "1",
+                            Name = "ASPUser",
+                            NormalizedName = "ASPUser"
                         });
                 });
 

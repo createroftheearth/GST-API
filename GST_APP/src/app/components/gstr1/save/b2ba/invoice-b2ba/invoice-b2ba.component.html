@@ -1,0 +1,165 @@
+<div [formGroup]="formGroup">
+  <div formArrayName="inv">
+    <div
+      *ngFor="
+        let invGroup of getFormArray(b2baGroup, 'inv').controls;
+        let j = index
+      "
+      [formGroupName]="j"
+      class="pl-10"
+    >
+      <div class="row mb-10">
+        <div class="col-6">Invoice #{{ j + 1 }}</div>
+        <div class="col-6">
+          <button
+            class="right-aligned-button"
+            mat-raised-button
+            color="warn"
+            (click)="removeInvoice(j, b2baGroup)"
+          >
+            <mat-icon>delete</mat-icon>
+            Remove Invoice #{{ j + 1 }}
+          </button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Ecom Tin</mat-label>
+            <input matInput formControlName="etin" />
+            <mat-error>
+              {{ getErrorMessage("etin", "Ecom Tin", invGroup) }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Flag</mat-label>
+            <input matInput formControlName="flag" />
+            <mat-error>
+              {{ getErrorMessage("flag", "Flag", invGroup) }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Invoice Number</mat-label>
+            <input matInput formControlName="inum" />
+            <mat-error>
+              {{ getErrorMessage("inum", "Invoice Number", invGroup) }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Invoice Date</mat-label>
+            <input matInput formControlName="idt" type="date" />
+            <mat-error>
+              {{ getErrorMessage("idt", "Invoice Date", invGroup) }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Invoice Value</mat-label>
+            <input matInput formControlName="val" type="number" />
+            <mat-error>
+              {{ getErrorMessage("val", "Invoice Value", invGroup) }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Place of Supply</mat-label>
+            <input matInput formControlName="pos" />
+            <mat-error>
+              {{ getErrorMessage("pos", "Place of Supply", invGroup) }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Differential Percentage</mat-label>
+            <input matInput formControlName="diff_percent" type="number" />
+            <mat-error>
+              {{
+                getErrorMessage(
+                  "diff_percent",
+                  "Differential Percentage",
+                  invGroup
+                )
+              }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Reverse Charge</mat-label>
+            <mat-select formControlName="rchrg">
+              <mat-option [value]="true">Yes</mat-option>
+              <mat-option [value]="false">No</mat-option>
+            </mat-select>
+            <mat-error>
+              {{ getErrorMessage("rchrg", "Reverse Charge", invGroup) }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Invoice Type</mat-label>
+            <mat-select formControlName="inv_typ">
+              <mat-option value="R">Regular</mat-option>
+              <mat-option value="DE">Deemed Export</mat-option>
+              <mat-option value="SEWP">SEZ with Payment</mat-option>
+              <mat-option value="SEWOP">SEZ without Payment</mat-option>
+              <mat-option value="CBW">Custom Bonded Warehouse</mat-option>
+            </mat-select>
+            <mat-error>
+              {{ getErrorMessage("inv_typ", "Invoice Type", invGroup) }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>IRN Generate Date</mat-label>
+            <input matInput formControlName="oidt" type="date" />
+            <mat-error>
+              {{ getErrorMessage("oidt", "Supplier Invoice Date", invGroup) }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>IRN</mat-label>
+            <input matInput formControlName="oinum" />
+            <mat-error>
+              {{
+                getErrorMessage("oinum", "Supplier Invoice Number", invGroup)
+              }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <app-item-b2ba [invGroup]="invGroup"></app-item-b2ba>
+    </div>
+    <button
+      class="right-aligned-button"
+      mat-raised-button
+      color="accent"
+      (click)="addInvoice()"
+    >
+      <mat-icon>add</mat-icon>
+      Add Invoice
+    </button>
+  </div>
+</div>

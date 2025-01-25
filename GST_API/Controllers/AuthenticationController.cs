@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 
 namespace GST_API.Controllers
 {
-    [Authorize(Roles = "APIUser")]
+    [Authorize(Roles = "APIUser, ASPUser")]
     [ApiController]
     [Route("api/auth")]
     public class AuthenticationController : BaseController
@@ -18,21 +18,25 @@ namespace GST_API.Controllers
         private readonly ILogger<AuthenticationController> _logger;
         private readonly UserManager<User> _userManager;
         private readonly TokenService _tokenService;
+        private readonly EncryptDecryptService _encryptDecryptService;
+
         private readonly IConfiguration _configuration;
         public AuthenticationController(ILogger<AuthenticationController> logger,
             UserManager<User> userManager,
-            TokenService tokenService)
+            TokenService tokenService,
+            EncryptDecryptService encryptDecryptService)
         {
             _logger = logger;
             _userManager = userManager;
             _tokenService = tokenService;
+            _encryptDecryptService = encryptDecryptService;
         }
 
         [HttpPost]
         [AllowAnonymous]
         public async Task<object> Authenticate([FromBody] AuthenticateModel model)
         {
-            _logger.LogInformation("BasePath->>>>>"+GSTNConstants.base_path+ @"\GST_API\Resource\GSTN_G2B_SANDBOX_UAT_public.cert.cer");
+            _logger.LogInformation("Is Production"+EncryptionUtils.isProduction);
             var user = await _userManager.FindByNameAsync(model.username);
             if (user == null)
             {
@@ -42,6 +46,24 @@ namespace GST_API.Controllers
                     message = "Invalid username"
                 };
             }
+            if (model.isASPUser &&
+                !await _userManager.IsInRoleAsync(user, "ASPUser"))
+            {
+                return new ResponseModel
+                {
+                    isSuccess = false,
+                    message = "Invalid username or password"
+                };
+            }
+            else if(!model.isASPUser && !await _userManager.IsInRoleAsync(user, "APIUser"))
+            {
+                return new ResponseModel
+                {
+                    isSuccess = false,
+                    message = "Invalid username or password"
+                };
+            }
+
             if (!await _userManager.CheckPasswordAsync(user, model.password))
             {
                 return new ResponseModel
@@ -55,21 +77,25 @@ namespace GST_API.Controllers
             var result = await client.RequestOTP();
             if (result.Data?.status_cd == "1")
             {
-                var roles = await _userManager.GetRolesAsync(user);
                 return new ResponseModel
                 {
                     isSuccess = true,
                     message = "OTP Sent, Please use request-token API to get 'GSTIN-Token'",
                     data = new
                     {
-                        token = _tokenService.CreateToken(user,Convert.ToBase64String(appKey),roles),
+                        token = _tokenService.CreateToken(user,Convert.ToBase64String(appKey),model.isASPUser?["ASPUser"]:["APIUser"]),
                         gstin = user.GSTNNo,
                         organizationName = user.OrganizationName
                     }
                 };
             } else
             {
-                return result;
+                return new ResponseModel
+                {
+                    isSuccess = false,
+                    message = "Otp failed to generate",
+                    data = result
+                };
             }
         }
 
@@ -107,24 +133,50 @@ namespace GST_API.Controllers
                     message = "OTP Sent, Please use request-token API to get 'GSTIN-Token'",
                     data = new
                     {
-                        token = _tokenService.CreateToken(user, Convert.ToBase64String(appKey), roles)
+                        token = _tokenService.CreateToken(user, Convert.ToBase64String(appKey), roles),
+                        gstin = user.GSTNNo,
+                        organizationName = user.OrganizationName
                     }
                 };
             }
             else
             {
-                return result;
+                return new ResponseModel
+                {
+                    isSuccess = false,
+                    message = "Otp failed to generate",
+                    data = result
+                };
             }
         }
 
-        [HttpPost("{otp}/request-token")]
-        public async Task<GSTNResult<TokenResponseModel>> RequestToken(string otp)
+        [HttpPost("{encryptedOTP}/request-token")]
+        public async Task<ResponseModel> RequestToken(string encryptedOTP)
         {
-            GSTNAuthClient client = new GSTNAuthClient(gstin, gstinUsername,appKey);
-             //GSTNAuthClient client = new GSTNAuthClient(gstin, gstinUsername, GSTNConstants.GetAppKeyBytes());
+            GSTNAuthClient client = new GSTNAuthClient(gstin, gstinUsername, appKey);
+            var otp = _encryptDecryptService.DecryptText(encryptedOTP);
+            //GSTNAuthClient client = new GSTNAuthClient(gstin, gstinUsername, GSTNConstants.GetAppKeyBytes());
+
             var result = await client.RequestToken(otp);
-            _logger.LogInformation(JsonConvert.SerializeObject(result));
-            return result;
+            _logger.LogInformation(JsonConvert.SerializeObject(result)); 
+            if (result.Data?.status_cd == "1")
+            {
+                return new ResponseModel
+                {
+                    isSuccess = true,
+                    message = "GSTN Token generation successfully",
+                    data = result
+                };
+            }
+            else
+            {
+                return new ResponseModel
+                {
+                    isSuccess = false,
+                    message = "Failed to generate token on GST",
+                    data = result
+                };
+            }
         }
 
         [HttpPost("refresh-token")]

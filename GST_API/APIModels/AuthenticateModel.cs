@@ -6,6 +6,8 @@ namespace GST_API.APIModels
     {
         public string username { get; set; }
         public string password { get; set; }
+
+        public bool isASPUser { get; set; } = false;
     }
 
     public class PublicAuthenticateModel : AuthenticateModel
