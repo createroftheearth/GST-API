@@ -86,6 +86,9 @@ public class RegistrationModel
     [RegularExpression("^([A-Za-z]){5}([0-9]){4}([A-Za-z]){1}$", ErrorMessage = "Invalid PAN Number")]
     [Display(Name = "Organization PAN")]
     public string Organization_PAN { get; set; }
+
+    [Required(ErrorMessage = "User Role is required")]
+    public string[] UserRoles { get; set; }
 }
 
 public class PublicRegistrationModel

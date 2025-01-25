@@ -1,4 +1,5 @@
-﻿using GST_API_DAL;
+﻿using GST_API.Controllers;
+using GST_API_DAL;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -8,10 +9,12 @@ namespace GST_API.Middlewares
     public class DbTransactionMiddleware
     {
         private readonly RequestDelegate _next;
+        private readonly ILogger<DbTransactionMiddleware> _logger;
 
-        public DbTransactionMiddleware(RequestDelegate next)
+        public DbTransactionMiddleware(RequestDelegate next, ILogger<DbTransactionMiddleware> logger)
         {
             _next = next;
+            _logger = logger;
         }
 
         public async Task Invoke(HttpContext httpContext, ApplicationDbContext dbContext)
@@ -27,13 +30,12 @@ namespace GST_API.Middlewares
             {
 
                 // If action is not decorated with TransactionAttribute then skip opening transaction
-                IDbContextTransaction transaction = null;
                 var executionStrategy = dbContext.Database.CreateExecutionStrategy();
                 await executionStrategy.ExecuteAsync(async () =>
                 {
+                    await using var transaction = await dbContext.Database.BeginTransactionAsync();
                     try
                     {
-                        transaction = await dbContext.Database.BeginTransactionAsync();
 
                         await _next(httpContext);
 
@@ -42,14 +44,19 @@ namespace GST_API.Middlewares
                     catch (Exception ex)
                     {
                         if (transaction != null)
+                        {
                             await transaction.RollbackAsync();
-
+                            _logger.LogError("Transaction rolled back due to an error: {Message}", ex.Message);
+                        }
                         throw;
                     }
                     finally
                     {
                         if (transaction != null)
+                        {
                             await transaction.DisposeAsync();
+                            _logger.LogDebug("Transaction disposed.");
+                        }
                     }
                 });
             }

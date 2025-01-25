@@ -44,22 +44,22 @@ namespace GST_API_DAL.Repository
             return DbSet.AsQueryable();
         }
 
-        public virtual async Task<ICollection<T>> GetAllAsyn()
+        public  async Task<ICollection<T>> GetAllAsyn()
         {
             return await DbSet.AsQueryable().ToListAsync();//.ToListAsync();
         }
 
-        public virtual T Get(int id)
+        public  T Get(int id)
         {
             return DbSet.Find(id);
         }
 
-        public virtual async Task<T> GetAsync(int id)
+        public  async Task<T> GetAsync(int id)
         {
             return await DbSet.FindAsync(id);
         }
 
-        public virtual T Add(T t)
+        public  T Add(T t)
         {
             DbSet.Add(t);
             _context.SaveChanges();
@@ -71,7 +71,7 @@ namespace GST_API_DAL.Repository
 
         }
 
-        public virtual async Task<T> AddAsyn(T t)
+        public  async Task<T> AddAsyn(T t)
         {
             DbSet.Add(t);
             await _context.SaveChangesAsync();
@@ -103,16 +103,16 @@ namespace GST_API_DAL.Repository
             return _resetSet.AsQueryable();
         }
 
-        public virtual async Task<bool> AnyAsync(Expression<Func<T, bool>> match)
+        public  async Task<bool> AnyAsync(Expression<Func<T, bool>> match)
         {
             return await _context.Set<T>().AnyAsync(match);
         }
-        public virtual T Find(Expression<Func<T, bool>> match)
+        public  T Find(Expression<Func<T, bool>> match)
         {
             return _context.Set<T>().SingleOrDefault(match);
         }
 
-        public virtual async Task<T> FindAsync(Expression<Func<T, bool>> match)
+        public  async Task<T> FindAsync(Expression<Func<T, bool>> match)
         {
             return await _context.Set<T>().SingleOrDefaultAsync(match);
         }
@@ -127,19 +127,19 @@ namespace GST_API_DAL.Repository
             return await _context.Set<T>().Where(match).ToListAsync();
         }
 
-        public virtual int Delete(T entity)
+        public  int Delete(T entity)
         {
             _context.Set<T>().Remove(entity);
             return _context.SaveChanges();
         }
 
-        public virtual async Task<int> DeleteAsyn(T entity)
+        public  async Task<int> DeleteAsyn(T entity)
         {
             _context.Set<T>().Remove(entity);
             return await _context.SaveChangesAsync();
         }
         //TODO:change to DBset
-        public virtual int Update(T t, object key)
+        public  int Update(T t, object key)
         {
             if (t == null)
                 return 0;
@@ -153,7 +153,7 @@ namespace GST_API_DAL.Repository
 
         }
         //TODO:change to DBset
-        public virtual async Task<int> UpdateAsyn(T t, object key)
+        public  async Task<int> UpdateAsyn(T t, object key)
         {
 
             if (t == null)
@@ -167,7 +167,7 @@ namespace GST_API_DAL.Repository
             _context.Entry(exist).CurrentValues.SetValues(t);
             return await _context.SaveChangesAsync();
         }
-        public virtual async Task<int> UpdateAsynPartB(T t, object key)
+        public async Task<int> UpdateAsynPartB(T t, object key)
         {
 
             if (t == null)
@@ -192,25 +192,25 @@ namespace GST_API_DAL.Repository
             return await _context.Set<T>().CountAsync();
         }
 
-        public virtual void Save()
+        public void Save()
         {
 
             _context.SaveChanges();
         }
         //TODO:change to _context to all DBset
-        public async virtual Task<int> SaveAsync()
+        public async  Task<int> SaveAsync()
         {
             var i = await _context.SaveChangesAsync();
             return i;
         }
 
-        public virtual IQueryable<T> FindBy(Expression<Func<T, bool>> predicate)
+        public  IQueryable<T> FindBy(Expression<Func<T, bool>> predicate)
         {
             IQueryable<T> query = _context.Set<T>().Where(predicate);
             return query;
         }
 
-        public virtual async Task<ICollection<T>> FindByAsyn(Expression<Func<T, bool>> predicate)
+        public  async Task<ICollection<T>> FindByAsyn(Expression<Func<T, bool>> predicate)
         {
             return await _context.Set<T>().Where(predicate).ToListAsync();
         }
@@ -229,7 +229,7 @@ namespace GST_API_DAL.Repository
         }
 
         private bool disposed = false;
-        protected virtual void Dispose(bool disposing)
+        protected  void Dispose(bool disposing)
         {
             if (!disposed)
             {
