@@ -31,8 +31,9 @@ if (configuration == null)
 {
     throw new Exception("unable to find configuration");
 }
+var connectionString = configuration.GetConnectionString("Default");
 builder.Services.AddDbContext<ApplicationDbContext>(
-    options => options.UseSqlServer(configuration.GetConnectionString("Default"),
+    options => options.UseSqlServer(connectionString,
     builder =>
     {
         builder.EnableRetryOnFailure(10, TimeSpan.FromSeconds(60), null);
@@ -190,6 +191,7 @@ app.Run();
 
 void ApplyMigration()
 {
+    logger.Information("Environment fetched >>>>>> "+env);
     if (!EncryptionUtils.isProduction)
     {
         return;
@@ -199,6 +201,7 @@ void ApplyMigration()
         var _Db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
         if (_Db != null)
         {
+            logger.Information("Using Connection String >>>> " + connectionString);
             if (_Db.Database.GetPendingMigrations().Any())
             {
                 _Db.Database.Migrate();
