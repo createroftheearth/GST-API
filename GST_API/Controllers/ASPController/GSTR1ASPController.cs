@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
 namespace GST_API.Controllers.ASPController
@@ -51,6 +52,19 @@ namespace GST_API.Controllers.ASPController
             {
                 return BadRequest(response); // HTTP 400
             }
+        }
+
+        [HttpGet("getallgstr1")]
+        public async Task<IActionResult> GetAllGstr1Data()
+        {
+            var gstr1Data = await _gstr1Service.GetAllGstr1DataAsync();
+
+            if (gstr1Data == null || !gstr1Data.Any())
+            {
+                return NotFound(new { message = "No data found in Gstr1 table." });
+            }
+
+            return Ok(gstr1Data);
         }
 
     }
