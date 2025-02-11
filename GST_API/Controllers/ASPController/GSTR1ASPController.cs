@@ -15,7 +15,7 @@ namespace GST_API.Controllers.ASPController
     [Route("api/[controller]")]
     [ApiController]
     [Authorize(Roles = "ASPUser")]
-    public class GSTR1ASPController : ControllerBase
+    public class GSTR1ASPController : BaseController
     {
         private readonly ILogger<GSTR1ASPController> _logger;
         private readonly UserManager<User> _userManager;

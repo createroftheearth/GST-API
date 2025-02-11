@@ -1,0 +1,70 @@
+<div class="row">
+  <div class="col-12">
+    <mat-menu #fileMenu="matMenu">
+      <button mat-menu-item (click)="triggerFileInput('jsonFileInput')">
+        Upload JSON
+      </button>
+      <input
+        type="file"
+        id="jsonFileInput"
+        (change)="onFileSelected($event, 'json')"
+        accept="application/json"
+        hidden
+      />
+
+      <button mat-menu-item (click)="triggerFileInput('excelFileInput')">
+        Upload Excel
+      </button>
+      <input
+        type="file"
+        id="excelFileInput"
+        (change)="onFileSelected($event, 'excel')"
+        accept=".xls,.xlsx"
+        hidden
+      />
+    </mat-menu>
+    <button
+      class="right-aligned-button"
+      mat-raised-button
+      color="primary"
+      [matMenuTriggerFor]="fileMenu"
+      *ngIf="!hideUploadButton"
+    >
+      <mat-icon>upload</mat-icon>
+      Upload File
+    </button>
+  </div>
+</div>
+<br />
+
+<div class="row" *ngIf="jsonString">
+  <div class="col-9">
+    <h4>Uploaded JSON data</h4>
+    <h5>Please validate data before submitting</h5>
+    <ng-container *ngFor="let error of jsonValidationErrors | slice : 0 : 5">
+      <mat-error> {{ error }} </mat-error>
+      <br />
+    </ng-container>
+    <pre class="json-pretty">{{ jsonString }}</pre>
+  </div>
+  <div class="col-3">
+    <button
+      mat-raised-button
+      color="secondary"
+      class="right-aligned-button"
+      (click)="saveData()"
+      [disabled]="this.jsonValidationErrors.length > 0"
+    >
+      <mat-icon>save</mat-icon>
+      Save Data
+    </button>
+    <button
+      mat-raised-button
+      color="primary"
+      [disabled]="this.jsonValidationErrors.length > 0"
+    >
+      <mat-icon>upload</mat-icon>
+      Submit GSTR1
+    </button>
+  </div>
+</div>

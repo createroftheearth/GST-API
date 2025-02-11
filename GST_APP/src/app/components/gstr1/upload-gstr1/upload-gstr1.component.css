@@ -1,0 +1,10 @@
+  .json-pretty {
+    background: #f4f4f4;
+    padding: 10px;
+    border-radius: 5px;
+    white-space: pre-wrap;
+    font-family: monospace;
+    max-width: 80%;
+    overflow-x: auto;
+  }
+  

@@ -46,6 +46,7 @@ import { ItemB2clComponent } from './components/gstr1/save/b2cl/item-b2cl/item-b
 import { InvoiceB2clComponent } from './components/gstr1/save/b2cl/invoice-b2cl/invoice-b2cl.component';
 import { ItemB2claComponent } from './components/gstr1/save/b2cla/item-b2cla/item-b2cla.component';
 import { InvoiceB2claComponent } from './components/gstr1/save/b2cla/invoice-b2cla/invoice-b2cla.component';
+import { UploadGstr1Component } from './components/gstr1/upload-gstr1/upload-gstr1.component';
 
 @NgModule({
   declarations: [
@@ -86,6 +87,7 @@ import { InvoiceB2claComponent } from './components/gstr1/save/b2cla/invoice-b2c
     ItemB2clComponent,
     InvoiceB2claComponent,
     ItemB2claComponent,
+    UploadGstr1Component,
   ],
   imports: [
     BrowserModule,

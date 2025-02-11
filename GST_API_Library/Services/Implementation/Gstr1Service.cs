@@ -18,7 +18,7 @@ namespace GST_API_Library.Services.Implementation
             // Check if an entry with the same GSTINNo and FinancialPeriod exists
             var existingEntry = await _gSTR1Repository.FindAsync(
                 x => x.GSTINNo == gstr1SaveDto.GSTINNo &&
-                     x.FinancialPeriod.Date == gstr1SaveDto.FinancialPeriod.Date);
+                     x.FinancialPeriod.Year == gstr1SaveDto.FinancialPeriod.Year && x.FinancialPeriod.Month == gstr1SaveDto.FinancialPeriod.Month);
 
             if (existingEntry != null)
             {

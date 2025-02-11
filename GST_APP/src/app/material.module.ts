@@ -14,7 +14,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTabsModule } from '@angular/material/tabs';
-
+import { MatTableModule } from '@angular/material/table';
 export const MaterialModules = [
   MatCardModule,
   MatFormFieldModule,
@@ -33,4 +33,5 @@ export const MaterialModules = [
   MatExpansionModule,
   MatMenuModule,
   MatTabsModule,
+  MatTableModule,
 ];

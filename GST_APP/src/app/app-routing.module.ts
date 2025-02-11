@@ -6,6 +6,7 @@ import { LoginComponent } from './components/login/login.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { authGuard } from './auth.guard';
 import { AddEditGstr1Component } from './components/gstr1/save/add-edit-gstr1/add-edit-gstr1.component';
+import { UploadGstr1Component } from './components/gstr1/upload-gstr1/upload-gstr1.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -21,6 +22,12 @@ const routes: Routes = [
     component: AddEditGstr1Component,
     canMatch: [authGuard], // Applying the new guard
     data: { title: 'GSTR1' },
+  },
+  {
+    path: 'gstr1/upload',
+    component: UploadGstr1Component,
+    canMatch: [authGuard],
+    data: { title: 'Upload GSTR1' },
   },
   { path: '**', redirectTo: 'login' },
 ];
