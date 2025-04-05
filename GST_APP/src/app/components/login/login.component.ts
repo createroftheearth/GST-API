@@ -97,9 +97,9 @@ export class LoginComponent {
         const gstTokenData = JSONSafeStringify({
           'GSTIN-Token': response.data.data.auth_token,
           'GSTIN-Sek': response.data.data.sek,
+          expiry: this.addMinutes(new Date(), response.data.data.expiry - 5),
         });
 
-        const expiryTime = response.data.data.expiry;
         if (gstTokenData) {
           localStorage.setItem(LOCAL_STORAGE_KEYS.GST_AUTH_DATA, gstTokenData);
           const returnUrl =
@@ -111,6 +111,10 @@ export class LoginComponent {
         localStorage.removeItem(LOCAL_STORAGE_KEYS.GST_AUTH_DATA);
       }
     });
+  }
+
+  private addMinutes(date: Date, minutes: number) {
+    return new Date(date.getTime() + minutes * 60000);
   }
 
   private getFormControl(formControlName: string) {

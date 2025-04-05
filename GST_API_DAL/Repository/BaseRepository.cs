@@ -92,7 +92,7 @@ namespace GST_API_DAL.Repository
         }
 
 
-        public IQueryable<T> Filter<Key>(Expression<Func<T, bool>> filter, out int total, int index = 0, int size = 50)
+        public IQueryable<T> Filter(Expression<Func<T, bool>> filter, out int total, int index = 0, int size = 50)
         {
             int skipCount = index * size;
             var _resetSet = filter != null ? DbSet.Where(filter).AsQueryable() :
@@ -139,11 +139,11 @@ namespace GST_API_DAL.Repository
             return await _context.SaveChangesAsync();
         }
         //TODO:change to DBset
-        public  int Update(T t, object key)
+        public  int Update(T t, Expression<Func<T, bool>> match)
         {
             if (t == null)
                 return 0;
-            T exist = _context.Set<T>().Find(key);
+            T exist = _context.Set<T>().Find(match);
             if (exist == null)
             {
                 return 0;

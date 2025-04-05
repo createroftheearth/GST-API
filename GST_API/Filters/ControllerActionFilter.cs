@@ -59,6 +59,12 @@ namespace GST_API.Filters
             baseController.baseAppKey = baseAppKey;
             baseController.GSTINSek = sek;
             baseController.GSTINToken = gstinToken;
+            context.HttpContext.Items["gstin"] = baseController.gstin;
+            context.HttpContext.Items["gstinUsername"] = baseController.gstinUsername;
+            context.HttpContext.Items["GSTINToken"] = baseController.GSTINToken;
+            context.HttpContext.Items["GSTINSek"] = baseController.GSTINSek;
+            context.HttpContext.Items["appKey"] = baseController.appKey;
+            context.HttpContext.Items["baseAppKey"] = baseController.baseAppKey;
         }
     }
 

@@ -12,6 +12,7 @@ using Microsoft.OpenApi.Models;
 using GST_API.Filters;
 using GST_API_Library.Services;
 using GST_API.Middlewares;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -106,6 +107,8 @@ builder.Services.AddControllers(config =>
 //10Jan2025 --NULL Handling
 builder.Services.AddControllers()
     .AddJsonOptions(options => options.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull);
+
+builder.Services.AddHttpContextAccessor();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

@@ -14,6 +14,9 @@ namespace GST_API_Library.Services
     {
         Task<(bool IsSuccess, string Message)> SaveGSTR1Async(Gstr1Dto gstr1SaveDto);
 
-        Task<List<Gstr1>> GetAllGstr1DataAsync();
+        List<Gstr1> GetAllGstr1Data(int page, int pageSize, out int totalRecords);
+
+        Task<(bool IsSucess, string Message)> SubmitGSTR1(int id, string url);
+        Task<(bool IsSucess, string Message)> ProceedToFile(int id, string url);
     }
 }

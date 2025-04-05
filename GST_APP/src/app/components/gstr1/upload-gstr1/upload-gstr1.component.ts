@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 import Ajv from 'ajv';
 import addErrors from 'ajv-errors';
 import { GSTR1Service } from 'src/app/services/gstr1.service';
@@ -19,7 +20,8 @@ export class UploadGstr1Component implements OnInit {
 
   constructor(
     private snackBar: MatSnackBar,
-    private gstr1Service: GSTR1Service
+    private gstr1Service: GSTR1Service,
+    private router: Router
   ) {}
   async ngOnInit() {
     await this.loadJsonSchema();
@@ -110,16 +112,27 @@ export class UploadGstr1Component implements OnInit {
     };
     this.gstr1Service.saveGstr1(model).subscribe(
       (data) => {
-        this.snackBar.open(
-          'Data Saved in DB, Please use submit button to save',
-          'Close',
-          { duration: 3000 }
-        );
+        if (data.isSuccess) {
+          let snackBarRef = this.snackBar.open('Data Saved in DB', 'Close', {
+            duration: 3000,
+          });
+          snackBarRef.afterDismissed().subscribe(() => {
+            this.router.navigate(['/gstr1/list']);
+          });
+
+          snackBarRef.onAction().subscribe(() => {
+            this.router.navigate(['/gstr1/list']);
+          });
+        }
       },
       (err) => {
-        this.snackBar.open('Error occured while trying to save', 'Close', {
-          duration: 3000,
-        });
+        this.snackBar.open(
+          err?.error?.message || 'Error occured while trying to save',
+          'Close',
+          {
+            duration: 3000,
+          }
+        );
       }
     );
   }

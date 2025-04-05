@@ -1,4 +1,5 @@
 ﻿using GST_API.APIModels;
+using GST_API.Middlewares;
 using GST_API.Services;
 using GST_API_DAL.Models;
 using GST_API_Library.Models.GSTR1DTO;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using System.Dynamic;
 
 namespace GST_API.Controllers.ASPController
 {
@@ -55,17 +57,40 @@ namespace GST_API.Controllers.ASPController
         }
 
         [HttpGet("getallgstr1")]
-        public async Task<IActionResult> GetAllGstr1Data()
+        public async Task<IActionResult> GetAllGstr1Data([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
-            var gstr1Data = await _gstr1Service.GetAllGstr1DataAsync();
-
-            if (gstr1Data == null || !gstr1Data.Any())
-            {
-                return NotFound(new { message = "No data found in Gstr1 table." });
-            }
-
-            return Ok(gstr1Data);
+            var gstr1Data = _gstr1Service.GetAllGstr1Data(page, pageSize, out int totalRecords);
+            return Ok(new { totalRecords, gstr1Data });
         }
 
+        [HttpPost("submit")]
+        public async Task<IActionResult> Submit([FromBody] request data)
+        {
+            var (isSuccess, message) = await _gstr1Service.SubmitGSTR1(data.id, Constants.GSTR1_SAVE_URL);
+            return Ok(new ResponseModel
+            {
+                isSuccess = isSuccess,
+                message = message,
+                data = isSuccess
+            });
+        }
+
+        [HttpPost("proceedToFile")]
+        public async Task<IActionResult> ProceedToFile([FromBody] request data)
+        {
+            var (isSuccess, message) = await _gstr1Service.ProceedToFile(data.id, Constants.GSTR1_NewProceedToFile_URL);
+            return Ok(new ResponseModel
+            {
+                isSuccess = isSuccess,
+                message = message,
+                data = isSuccess
+            });
+        }
+
+    }
+
+    public class request
+    {
+        public int id { get; set; }
     }
 }

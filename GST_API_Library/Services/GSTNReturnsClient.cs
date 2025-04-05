@@ -163,6 +163,11 @@ namespace GST_API_Library.Services
             if (resultInfo.HttpStatusCode == (int)HttpStatusCode.OK)
             {
                 resultInfo.Data = data;
+                resultInfo.error = response?.Data?.error;
+            }
+            else
+            {
+                resultInfo.error = response?.Data?.error;
             }
             return resultInfo;
         }
@@ -262,7 +267,7 @@ namespace GST_API_Library.Services
                 throw new Exception("Unable to get the details from server");
             }
             var output = this.Decrypt<NewProceedToFile>(info.Data);
-            var result = this.BuildResult(info, output);
+            var result = this.BuildResult(info, output);;
             return result;
         }
 

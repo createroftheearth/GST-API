@@ -1,1 +1,77 @@
-<p>gsrt1-list works!</p>
+<div class="container">
+  <table mat-table [dataSource]="gstr1Data" class="mat-elevation-z8">
+    <!-- ID Column -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef>ID</th>
+      <td mat-cell *matCellDef="let item">{{ item.id }}</td>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="gstinNo">
+      <th mat-header-cell *matHeaderCellDef>GSTNNo</th>
+      <td mat-cell *matCellDef="let item">{{ item.gstinNo }}</td>
+    </ng-container>
+
+    <!-- Description Column -->
+    <ng-container matColumnDef="financialPeriod">
+      <th mat-header-cell *matHeaderCellDef>Financial Period</th>
+      <td mat-cell *matCellDef="let item">{{ item.financialPeriod }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="grossTurnOver">
+      <th mat-header-cell *matHeaderCellDef>Gross Turnover</th>
+      <td mat-cell *matCellDef="let item">{{ item.grossTurnOver }}</td>
+    </ng-container>
+
+    <!-- Action Column -->
+    <ng-container matColumnDef="action">
+      <th mat-header-cell *matHeaderCellDef>Action</th>
+      <td mat-cell *matCellDef="let item">
+        <button
+          mat-mini-fab
+          color="secondary"
+          (click)="onSaveGSTR1(item.id)"
+          matTooltip="Save"
+          *ngIf="item.saveGstr1Status === -1 || item.saveGstr1Status === 0"
+        >
+          <mat-icon>cloud_upload</mat-icon>
+        </button>
+        <button
+          mat-mini-fab
+          color="accent"
+          (click)="onProceedToFile(item.id)"
+          matTooltip="Proceed To File"
+          *ngIf="item.saveGstr1Status === 0"
+          style="margin-left: 5px"
+        >
+          <mat-icon>description</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr
+      mat-header-row
+      *matHeaderRowDef="[
+        'id',
+        'gstinNo',
+        'financialPeriod',
+        'grossTurnOver',
+        'action'
+      ]"
+    ></tr>
+    <tr
+      mat-row
+      *matRowDef="
+        let row;
+        columns: ['id', 'gstinNo', 'financialPeriod', 'grossTurnOver', 'action']
+      "
+    ></tr>
+  </table>
+
+  <mat-paginator
+    [length]="totalRecords"
+    [pageSize]="pageSize"
+    (page)="onPageChange($event.pageIndex + 1)"
+  >
+  </mat-paginator>
+</div>

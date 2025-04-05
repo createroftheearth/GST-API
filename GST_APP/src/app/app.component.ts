@@ -10,7 +10,6 @@ import { filter } from 'rxjs/operators';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
-  isLoggedIn: boolean = false;
   title: string = 'My App';
 
   constructor(private router: Router, private titleService: Title) {
@@ -28,15 +27,18 @@ export class AppComponent implements OnInit {
       });
   }
 
-  ngOnInit() {
+  ngOnInit() {}
+
+  get isLoggedIn() {
     const gstTokenData = localStorage.getItem(LOCAL_STORAGE_KEYS.GST_AUTH_DATA);
     const token = localStorage.getItem(LOCAL_STORAGE_KEYS.INTERNAL_AUTH_TOKEN);
-    if (token && gstTokenData) {
-      this.isLoggedIn = true;
-    }
+    return token && gstTokenData;
   }
 
   logout() {
-    // this.authService.logout();
+    localStorage.removeItem(LOCAL_STORAGE_KEYS.GST_AUTH_DATA);
+    localStorage.removeItem(LOCAL_STORAGE_KEYS.INTERNAL_AUTH_DATA);
+    localStorage.removeItem(LOCAL_STORAGE_KEYS.INTERNAL_AUTH_TOKEN);
+    this.router.navigate(['/login']);
   }
 }
