@@ -27,7 +27,7 @@ namespace GST_API_Library.Services
             var dic = new Dictionary<string, string>
             {
                 { "gstin", apiRequestParameters.gstin },
-                { "ret_period", apiRequestParameters.ret_period },
+                { "rtnprd", apiRequestParameters.ret_period },
                 { "action", "GET2B" }
             };
            

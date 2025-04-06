@@ -74,6 +74,7 @@ namespace GST_API_Library.Models
         public string form_typ { get; set; }
 
 
+
     }
 
 
@@ -95,6 +96,11 @@ namespace GST_API_Library.Models
     {
         public string trans_id { get; set; }
         public string reference_id { get; set; }
+    }
+
+    public class SaveInfo1
+    {
+        public string message { get; set; }
     }
     public class GenerateRequestInfo : BaseErrorData
     {
@@ -253,5 +259,10 @@ namespace GST_API_Library.Models
     public class GSTRIMS_Reset_Response
     {
         public string reference_id { get; set; }
+    }
+
+    public class GSTR3B_ACKNUM
+    {
+        public string ack_num { get; set; }
     }
 }

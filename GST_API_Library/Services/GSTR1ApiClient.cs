@@ -17,7 +17,7 @@ namespace GST_API_Library.Services
         {
         }
 
-        public async Task<GSTNResult<SaveInfo>> Save(dynamic data)
+        public async Task<GSTNResult<SaveInfo>> Save(SaveRequest data)
         {
             var model = this.Encrypt(data);
             model.action = "RETSAVE";

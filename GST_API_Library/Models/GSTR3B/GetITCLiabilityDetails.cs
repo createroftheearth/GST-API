@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
+using GST_API_Library.Models.GSTR3B;
 
-namespace GST_API_Library.Models.GSTR3B
+
+namespace Integrated.API.GSTN.GSTR3B
 {
     public class GetITCLiabilityDetails
     {
@@ -276,7 +279,7 @@ namespace GST_API_Library.Models.GSTR3B
         public List<Error> error { get; set; }
     }
 
-    
+
 
     public class Subtotal
     {

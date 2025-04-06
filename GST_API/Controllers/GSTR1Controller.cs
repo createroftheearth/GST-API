@@ -31,7 +31,7 @@ namespace GST_API.Controllers
         /// <param name="data"></param>
         /// <returns></returns>
         [HttpPut("save")]
-        public async Task<ResponseModel> save([FromBody]GSTR1Total data)
+        public async Task<ResponseModel> save([FromBody] SaveRequest data)
         {
             GSTNAuthClient client = new GSTNAuthClient(gstin, this.gstinUsername, appKey)
             {
@@ -672,36 +672,6 @@ namespace GST_API.Controllers
             return info.Data;
         }
 
-        ////[HttpGet("GetSummary")]
-        ////public async Task<SummaryOutward> GetGSTR1Summary([FromQuery] APIRequestParameters model)
-        ////{
-        ////    if (string.IsNullOrEmpty(this.GSTINToken) || string.IsNullOrEmpty(this.GSTINSek))
-        ////    {
-        ////        //return new ResponseModel1
-        ////        //{
-        ////        //    isSuccess = false,
-        ////        //    message = "Please send 'GSTIN-Token' or 'GSTIN-Sek' in headers"
-        ////        //};
-        ////    }
-        ////    GSTNAuthClient client = new GSTNAuthClient(gstin, this.gstinUsername, this.appKey)
-        ////    {
-        ////        AuthToken = this.GSTINToken,
-        ////        DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, this.appKey)
-
-        ////    };
-        ////    GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, model.ret_period, Constants.GSTR1_V4_RETURN_URL);
-        ////    var info = await client2.GetGSTR1Summary1(model);
-        ////    return info.Data;
-
-        ////    //return new ResponseModel1
-        ////    //{
-        ////    //    dataR = info.Data
-
-        ////    //    //isSuccess = true,
-        ////    //    //message = "success"
-        ////    //};
-        ////}
-
 
 
 
@@ -768,7 +738,7 @@ namespace GST_API.Controllers
                 DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, this.appKey)
 
             };
-            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, model.ret_period, Constants.GSTR1_V4_RETURN_URL);
+            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, model.ret_period, Constants.GSTR1_NewProceedToFile_URL);
             var info = await client2.NewProceedToFile_GSTR1(model);
             return new ResponseModel
             {

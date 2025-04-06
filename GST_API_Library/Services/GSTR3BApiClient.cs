@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GST_API_Library.Models;
+﻿using GST_API_Library.Models;
 using GST_API_Library.Models.GSTR3B;
+using Integrated.API.GSTN.GSTR3B;
+using Newtonsoft.Json;
+using System.Globalization;
+using System.Text;
+using FileInfo = GST_API_Library.Models.FileInfo;
+
 
 
 namespace GST_API_Library.Services
@@ -15,6 +16,25 @@ namespace GST_API_Library.Services
           : base(provider, URL, gstin, ret_period)
         {
         }
+
+        // START AMIT 10FEB2025 SAVE GSTR3B
+
+        // Save GSTR3B 05-02-25 Amit
+        public async Task<GSTNResult<SaveInfo>> Save(SaveGSTR3BDetails data)
+        {
+            var model = this.Encrypt(data);
+            model.action = "RETSAVE";
+            var info = await this.PutAsync<UnsignedDataInfo, ResponseDataInfo>(model);
+            if (info == null)
+            {
+                throw new Exception("Unable to get the details from server");
+            }
+            var output = this.Decrypt<SaveInfo>(info.Data);
+            var model2 = this.BuildResult<SaveInfo>(info, output);
+            return model2;
+        }
+
+        // END AMIT 10FEB2025 SAVE GSTR3B
 
         //This API call to get system calculated interest
         private Dictionary<string, string> prepareGSTR3BCalculatedInterestDictionary(APIRequestParameters apiRequestParameters)
@@ -57,16 +77,28 @@ namespace GST_API_Library.Services
             };
             return dic;
         }
-        public async Task<GSTNResult<List<GetGSTR3BDetails>>> GetGSTR3BDetails(APIRequestParameters apiRequestParameters)
+
+        public async Task<GSTNResult1<GetGSTR3BDetails>> GetGSTR3BDetails(APIRequestParameters apiRequestParameters)
         {
             Dictionary<string, string> dic = this.prepareGSTR3BDetailsDictionary(apiRequestParameters);
             this.PrepareQueryString(dic);
-            var info = await this.GetAsync<ResponseDataInfo>();
+            var info = await this.GetAsync1<ResponseDataInfo>();
             var output = this.Decrypt<GetGSTR3BDetails>(info.Data);
-            var model = this.BuildResult<List<GetGSTR3BDetails>>(info, null);
+            var model = this.BuildResult1<GetGSTR3BDetails>(info, output);
             return model;
 
         }
+
+        //public async Task<GSTNResult<List<GetGSTR3BDetails>>> GetGSTR3BDetails(APIRequestParameters apiRequestParameters)
+        //{
+        //    Dictionary<string, string> dic = this.prepareGSTR3BDetailsDictionary(apiRequestParameters);
+        //    this.PrepareQueryString(dic);
+        //    var info = await this.GetAsync<ResponseDataInfo>();
+        //    var output = this.Decrypt<GetGSTR3BDetails>(info.Data);
+        //    var model = this.BuildResult<List<GetGSTR3BDetails>>(info, null);
+        //    return model;
+
+        //}
 
 
         //This API call to get autocalculated liability and ITC details for monthly and quarterly taxpayers.
@@ -193,6 +225,34 @@ namespace GST_API_Library.Services
             var model = this.BuildResult<List<GetOpeningBalance_RCM>>(info, null);
             return model;
 
+        }
+
+        public async Task<GSTNResult<SaveInfo1>> offsetliab(OffsetLiabilityGSTR3Bdata data)
+        {
+            var model = this.Encrypt(data);
+            model.action = "RETOFFSET";
+            var info = await this.PutAsync<UnsignedDataInfo, ResponseDataInfo>(model);
+            if (info == null)
+            {
+                throw new Exception("Unable to get the details from server");
+            }
+            var output = this.Decrypt<SaveInfo1>(info.Data);
+            var model2 = this.BuildResult<SaveInfo1>(info, output);
+            return model2;
+        }
+
+        public async Task<GSTNResult<SaveInfo>> savepalibrk(Savepastliabbrk data)
+        {
+            var model = this.Encrypt(data);
+            model.action = "RETBKP";
+            var info = await this.PutAsync<UnsignedDataInfo, ResponseDataInfo>(model);
+            if (info == null)
+            {
+                throw new Exception("Unable to get the details from server");
+            }
+            var output = this.Decrypt<SaveInfo>(info.Data);
+            var model2 = this.BuildResult<SaveInfo>(info, output);
+            return model2;
         }
     }
 }

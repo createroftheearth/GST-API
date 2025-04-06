@@ -1,6 +1,7 @@
 ﻿using GST_API_Library.Models;
 using GST_API_Library.Models.CommonAPI;
 using GST_API_Library.Models.GSTR1;
+using GST_API_Library.Models.GSTR3B;
 using GST_API_Library.Models.GSTR1A;
 using GST_API_Library.Models.GSTRIMS;
 using Newtonsoft.Json;
@@ -78,7 +79,7 @@ namespace GST_API_Library.Services
             }
             return model;
         }
-
+         
         protected internal SignedDataInfo Encrypt2<T>(T input)
         {
             SignedDataInfo info = new SignedDataInfo();
@@ -103,7 +104,7 @@ namespace GST_API_Library.Services
             UnsignedDataInfo info = new UnsignedDataInfo();
             if (input != null)
             {
-                string finalJson = JsonConvert.SerializeObject(input,
+                string finalJson = JsonConvert.SerializeObject(input, Newtonsoft.Json.Formatting.Indented,
                             new JsonSerializerSettings
                             {
                                 NullValueHandling = NullValueHandling.Ignore
@@ -154,6 +155,7 @@ namespace GST_API_Library.Services
             }
             return info;
         }
+
 
         protected virtual GSTNResult<TOutput> BuildResult<TOutput>(GSTNResult<ResponseDataInfo> response, TOutput data)
         {
@@ -267,7 +269,7 @@ namespace GST_API_Library.Services
                 throw new Exception("Unable to get the details from server");
             }
             var output = this.Decrypt<NewProceedToFile>(info.Data);
-            var result = this.BuildResult(info, output);;
+            var result = this.BuildResult(info, output);
             return result;
         }
 
@@ -732,6 +734,95 @@ namespace GST_API_Library.Services
                 throw new Exception("Unable to get the details from server");
             }
             var output = this.Decrypt<GSTRIMS_Reset_Response>(info.Data);
+            var result = this.BuildResult(info, output);
+            return result;
+        }
+
+        public async Task<GSTNResult<FileInfo>> filegstr3b(GetGSTR3BDetails data, string OTP, string? PAN) //File1 - Summaryoutward
+        {
+            string finalJson = JsonConvert.SerializeObject(data, Newtonsoft.Json.Formatting.Indented,
+                          new JsonSerializerSettings
+                          {
+                              NullValueHandling = NullValueHandling.Ignore
+                          });
+            byte[] encodeJson = UTF8Encoding.UTF8.GetBytes(finalJson);
+            string base64Payload = Convert.ToBase64String(encodeJson);
+
+            var data1 = this.Encrypt2(data);
+            data1.action = "RETFILE";
+            data1.st = "EVC";
+            data1.sign = EncryptionUtils.GenerateHMAC(base64Payload, PAN + "|" + OTP);
+            data1.sid = PAN + "|" + OTP;
+
+            string jsonData = JsonConvert.SerializeObject(data1);
+            var info = await this.PostAsync<string, ResponseDataInfo>(jsonData);
+
+            if (info == null)
+            {
+                throw new Exception("Unable to get the details from server");
+            }
+            var output = this.Decrypt<FileInfo>(info.Data);
+            var model2 = this.BuildResult(info, output);
+            return model2;
+        }
+
+        //GSTR3B-Garima
+        public async Task<GSTNResult<SaveInfo>> RecomputeInterest(ReComputeInterest model)
+        {
+            var data = this.Encrypt(model);
+            data.action = "CMPINT";
+            string jsonData = JsonConvert.SerializeObject(data);
+            var info = await this.PostAsync<string, ResponseDataInfo>(jsonData, "GSTR3B", "6.0");
+            if (info == null)
+            {
+                throw new Exception("Unable to get the details from server");
+            }
+            var output = this.Decrypt<SaveInfo>(info.Data);
+            var result = this.BuildResult(info, output);
+            return result;
+        }
+
+        public async Task<GSTNResult<ResponseDataInfoGSTR1>> saveopening(SaveOpeningBalRequest model)
+        {
+            var data = this.Encrypt(model);
+            data.action = "SAVEOB";
+            string jsonData = JsonConvert.SerializeObject(data);
+            var info = await this.PostAsync<string, ResponseDataInfo>(jsonData, "GSTR3B", "6.0");
+            if (info == null)
+            {
+                throw new Exception("Unable to get the details from server");
+            }
+            var output = this.Decrypt<ResponseDataInfoGSTR1>(info.Data);
+            var result = this.BuildResult(info, output);
+            return result;
+        }
+
+        public async Task<GSTNResult<ValidateGSTR3BResponse>> validategstr3bauto(ValidateGSTR3BRequest model)
+        {
+            var data = this.Encrypt(model);
+            data.action = "VALID";
+            string jsonData = JsonConvert.SerializeObject(data);
+            var info = await this.PostAsync<string, ResponseDataInfo>(jsonData, "GSTR3B", "6.0");
+            if (info == null)
+            {
+                throw new Exception("Unable to get the details from server");
+            }
+            var output = this.Decrypt<ValidateGSTR3BResponse>(info.Data);
+            var result = this.BuildResult(info, output);
+            return result;
+        }
+
+        public async Task<GSTNResult<GSTR3B_ACKNUM>> SubmitRCMOpnBalGSTR3B(SubmitRCMOpeningBalance_Request model)
+        {
+            var data = this.Encrypt(model);
+            data.action = "SAVERCMOPNBAL";
+            string jsonData = JsonConvert.SerializeObject(data);
+            var info = await this.PostAsync<string, ResponseDataInfo>(jsonData, "GSTR3B", "6.0");
+            if (info == null)
+            {
+                throw new Exception("Unable to get the details from server");
+            }
+            var output = this.Decrypt<GSTR3B_ACKNUM>(info.Data);
             var result = this.BuildResult(info, output);
             return result;
         }
