@@ -503,11 +503,6 @@ namespace GST_API_Library.Models.GSTR1
         public double csamt { get; set; }
     }
 
-    public class Nil1
-    {
-        public List<Inv2> inv { get; set; }
-    }
-
     public class Inv2
     {
        
