@@ -14,10 +14,10 @@ namespace GST_API_Library.Models.GSTR3B
     // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
     public class Opnbal
     {
-        public int igst { get; set; }
-        public int cgst { get; set; }
-        public int sgst { get; set; }
-        public int cess { get; set; }
+        public double igst { get; set; }
+        public double cgst { get; set; }
+        public double sgst { get; set; }
+        public double cess { get; set; }
     }
 
 

@@ -14,8 +14,8 @@ namespace GST_API_Library.Models.GSTR3B
         public string filingdt { get; set; }
         public string computedt { get; set; }
         public Txpay txpay { get; set; }
-        public Pdcash pdcash { get; set; }
-        public Pditc pditc { get; set; }
+        public Pdcash1 pdcash { get; set; }
+        public Pditc1 pditc { get; set; }
         public Interest interest { get; set; }
         public List<Interestbreakup> interestbreakup { get; set; }
     }
@@ -50,7 +50,7 @@ namespace GST_API_Library.Models.GSTR3B
         public List<Rate> rates { get; set; }
     }
 
-    public class Pdcash
+    public class Pdcash1
     {
         public int iamt { get; set; }
         public int samt { get; set; }
@@ -58,7 +58,7 @@ namespace GST_API_Library.Models.GSTR3B
         public int csamt { get; set; }
     }
 
-    public class Pditc
+    public class Pditc1
     {
         public int iamt { get; set; }
         public int samt { get; set; }

@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.ComponentModel.DataAnnotations;
+using GST_API_Library.Models.GSTR1;
+using System.Text.Json;
 
 namespace GST_API_Library.Models.GSTR1
 {
-   
-
     public class AtAOutward:AtOutward
     {
         [Required]

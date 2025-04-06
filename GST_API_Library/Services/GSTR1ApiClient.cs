@@ -17,7 +17,7 @@ namespace GST_API_Library.Services
         {
         }
 
-        public async Task<GSTNResult<SaveInfo>> Save(GSTR1Total data)
+        public async Task<GSTNResult<SaveInfo>> Save(SaveRequest data)
         {
             var model = this.Encrypt(data);
             model.action = "RETSAVE";
@@ -726,21 +726,89 @@ namespace GST_API_Library.Services
                 { "ret_period", apiRequestParameters.ret_period },
                 { "action", "RETSUM" }
             };
-            if (!string.IsNullOrEmpty(apiRequestParameters.smrytyp))
-            {
-                dic.Add("smrytyp", apiRequestParameters.smrytyp);
-            }
+            //if (!string.IsNullOrEmpty(apiRequestParameters.smrytyp))
+            //{
+            //    dic.Add("smrytyp", apiRequestParameters.smrytyp);
+            //}
             return dic;
         }
-        public async Task<GSTNResult<SummaryOutward>> GetGSTR1Summary(APIRequestParameters apiRequestParameters)
+        //public async Task<GSTNResult<SummaryOutward>> GetGSTR1Summary(APIRequestParameters apiRequestParameters)
+        //{
+        //    Dictionary<string, string> dic = this.prepareGSTR1SummaryDictionary(apiRequestParameters);
+        //    this.PrepareQueryString(dic);
+        //    var info = await this.GetAsync<ResponseDataInfo>();
+        //    var output = this.Decrypt<SummaryOutward>(info.Data);
+        //    var model = this.BuildResult<SummaryOutward>(info, output);
+        //    return model;
+        //}
+
+
+
+        //public async Task<GSTNResult1<GetGSTR1SummaryRes>> GetGSTR1Summary1(APIRequestParameters apiRequestParameters)
+        //{
+        //    Dictionary<string, string> dic = this.prepareGSTR1SummaryDictionary(apiRequestParameters);
+        //    this.PrepareQueryString(dic);
+        //    var info = await this.GetAsync1<ResponseDataInfo>();
+        //    var output = this.Decrypt<GetGSTR1SummaryRes>(info.Data);
+
+        //    // Serialize the output to JSON
+        //    var serializedJson = JsonConvert.SerializeObject(output, Formatting.None,
+        //        new JsonSerializerSettings
+        //        {
+        //            NullValueHandling = NullValueHandling.Ignore
+        //        });
+
+        //    // Pass the serialized JSON to the result builder
+        //    var model = this.BuildResult1(info, output, serializedJson);
+        //    return model;
+        //}
+
+        ////Update BuildResult1 to accept serializedJson
+        //private GSTNResult1<GetGSTR1SummaryRes> BuildResult1<ResponseDataInfo>(
+        //    ResponseDataInfo info,
+        //    GetGSTR1SummaryRes output,
+        //    string serializedJson)
+        //{
+        //    // Use serializedJson as needed here
+        //    return new GSTNResult1<GetGSTR1SummaryRes>
+        //    {
+        //        Data = output,
+        //        //SerializedData = serializedJson,
+        //        // Additional properties as required
+        //    };
+        //}
+
+
+
+
+
+
+
+        //Garima - 10Jan2025 Start//
+
+        public async Task<GSTNResult1<GetGSTR1SummaryRes>> GetGSTR1Summary1(APIRequestParameters apiRequestParameters)
         {
             Dictionary<string, string> dic = this.prepareGSTR1SummaryDictionary(apiRequestParameters);
             this.PrepareQueryString(dic);
-            var info = await this.GetAsync<ResponseDataInfo>();
-            var output = this.Decrypt<SummaryOutward>(info.Data);
-            var model = this.BuildResult<SummaryOutward>(info, output);
+            var info = await this.GetAsync1<ResponseDataInfo>();
+            var output = this.Decrypt<GetGSTR1SummaryRes>(info.Data);
+            // Serialize the output to JSON
+            //var serializedJson = JsonConvert.SerializeObject(output, Formatting.None,
+            //    new JsonSerializerSettings
+            //    {
+            //        NullValueHandling = NullValueHandling.Ignore
+            //    });
+            // var result = JsonConvert.DeserializeObject<dynamic>(serializedJson);
+            var model = this.BuildResult1<GetGSTR1SummaryRes>(info, output);
             return model;
         }
+
+        //private GSTNResult1<T> BuildResult1<T>(GSTNResult1<ResponseDataInfo> info, string serializedJson)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        //Garima - 10Jan2025 End//
 
         //API call  NIL for getting  liabilities such as 'Nil Rated’, ‘Exempted’, and ‘Non GST’ supplies for a return period
         private Dictionary<string, string> prepareNILDictionary(APIRequestParameters apiRequestParameters)
@@ -784,34 +852,44 @@ namespace GST_API_Library.Services
 
         }
        //File 03/04/2024
-         public async Task<GSTNResult<SaveInfo>> file(SummaryOutward data, string OTP, string? PAN)
-        {
-            var encryptedData = this.Encrypt(data);
-            string finalJson = JsonConvert.SerializeObject(data, Newtonsoft.Json.Formatting.Indented,
-                          new JsonSerializerSettings
-                          {
-                              NullValueHandling = NullValueHandling.Ignore
-                          });
-            byte[] encodeJson = UTF8Encoding.UTF8.GetBytes(finalJson);
-            string base64Payload = Convert.ToBase64String(encodeJson);
-            var model = new
-            {
-                data = encryptedData,
-                action = "RETFILE",
-                st = "EVC",
-                sign = EncryptionUtils.GenerateHMAC(PAN + OTP,base64Payload),
-                sid = PAN + "|" + OTP,
-            };
+        // public async Task<GSTNResult<SaveInfo>> file(SummaryOutward data, string OTP, string? PAN)
+        //{
+        //    var encryptedData1 = this.Encrypt1(data);
+        //    string finalJson = JsonConvert.SerializeObject(data, Newtonsoft.Json.Formatting.Indented,
+        //                  new JsonSerializerSettings
+        //                  {
+        //                      NullValueHandling = NullValueHandling.Ignore
+        //                  });
+        //    byte[] encodeJson = UTF8Encoding.UTF8.GetBytes(finalJson);
+        //    string base64Payload = Convert.ToBase64String(encodeJson);
+        //    var model = new
+        //    {
+        //        data = encryptedData1,
+        //        action = "RETFILE",
+        //        st = "EVC",
+        //        sign = EncryptionUtils.GenerateHMAC(base64Payload, PAN + "|" + OTP),
+        //        sid = PAN + "|" + OTP
+        //    };
 
-            var info = await this.PutAsync<object, ResponseDataInfo>(model);
-            if (info == null)
-            {
-                throw new Exception("Unable to get the details from server");
-            }
-            var output = this.Decrypt<SaveInfo>(info.Data);
-            var model2 = this.BuildResult(info, output);
-            return model2;
-        }
+        //    //{
+        //    //    action = "RETFILE",
+        //    //    data = "H2zl6gQKcdJihoe1sig9K9mFUSeULCbYU5HyLpgY5NK825BwnwgY41y7f2YmNomOFM4Z//qel5Hbvpqvpc65/",
+        //    //    sign = "lnXgRnoKJd3+VQfC3eezoCTJ53zICBQ=",
+        //    //    st = "EVC",
+        //    //    sid = "AIGPR8348J|7A8772"
+        //    //    //sid = PAN
+
+        //    //};
+
+        //    var info = await this.PutAsync<object, ResponseDataInfo>(model);
+        //    if (info == null)
+        //    {
+        //        throw new Exception("Unable to get the details from server");
+        //    }
+        //    var output = this.Decrypt<SaveInfo>(info.Data);
+        //    var model2 = this.BuildResult(info, output);
+        //    return model2;
+        //}
 
         //Garima 19 March 2024
 
