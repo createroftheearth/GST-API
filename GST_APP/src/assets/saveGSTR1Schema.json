@@ -85,7 +85,8 @@
                     },
                     "diff_percent": {
                       "description": "Differential percentage",
-                      "type": "number"
+                      "type": "number",
+                      "multipleOf": 0.01
                     },
                     "rchrg": {
                       "description": "Reverse Charge",
@@ -206,7 +207,8 @@
                     },
                     "diff_percent": {
                       "description": "Differential percentage",
-                      "type": "number"
+                      "type": "number",
+                      "multipleOf": 0.01
                     },
                     "rchrg": {
                       "description": "Reverse Charge",
@@ -345,7 +347,8 @@
                     },
                     "diff_percent": {
                       "description": "Differential percentage",
-                      "type": "number"
+                      "type": "number",
+                      "multipleOf": 0.01
                     },
                     "rchrg": {
                       "description": "Reverse Charge",
@@ -378,7 +381,8 @@
                               },
                               "rt": {
                                 "description": "rate",
-                                "type": "number"
+                                "type": "number",
+                                "multipleOf": 0.01
                               },
                               "iamt": {
                                 "description": "IGST Amount as per invoice",
@@ -462,7 +466,8 @@
                     },
                     "diff_percent": {
                       "description": "Differential percentage",
-                      "type": "number"
+                      "type": "number",
+                      "multipleOf": 0.01
                     },
                     "rchrg": {
                       "description": "Reverse Charge",
@@ -494,7 +499,8 @@
                               },
                               "rt": {
                                 "description": "rate",
-                                "type": "number"
+                                "type": "number",
+                                "multipleOf": 0.01
                               },
                               "iamt": {
                                 "description": "IGST Amount as per invoice",
@@ -576,7 +582,8 @@
                     },
                     "diff_percent": {
                       "description": "Differential percentage",
-                      "type": "number"
+                      "type": "number",
+                      "multipleOf": 0.01
                     },
                     "itms": {
                       "type": "array",
@@ -656,7 +663,8 @@
                     },
                     "diff_percent": {
                       "description": "Differential percentage",
-                      "type": "number"
+                      "type": "number",
+                      "multipleOf": 0.01
                     },
                     "pos": {
                       "description": "Maintained in GST System common database POS as provided in law / actual provision of service",
@@ -767,7 +775,8 @@
                     },
                     "diff_percent": {
                       "description": "Differential percentage",
-                      "type": "number"
+                      "type": "number",
+                      "multipleOf": 0.01
                     },
                     "itms": {
                       "type": "array",
@@ -787,7 +796,8 @@
                             "properties": {
                               "rt": {
                                 "description": "rate",
-                                "type": "number"
+                                "type": "number",
+                                "multipleOf": 0.01
                               },
                               "txval": {
                                 "description": "Taxable value of Goods or Service as per invoice",
@@ -857,7 +867,8 @@
                     },
                     "diff_percent": {
                       "description": "Differential percentage",
-                      "type": "number"
+                      "type": "number",
+                      "multipleOf": 0.01
                     },
                     "itms": {
                       "type": "array",
@@ -876,7 +887,8 @@
                             "properties": {
                               "rt": {
                                 "description": "rate",
-                                "type": "number"
+                                "type": "number",
+                                "multipleOf": 0.01
                               },
                               "txval": {
                                 "description": "Taxable value of Goods or Service as per invoice",
@@ -952,7 +964,8 @@
               },
               "diff_percent": {
                 "description": "Differential percentage",
-                "type": "number"
+                "type": "number",
+                "multipleOf": 0.01
               },
               "txval": {
                 "description": "Taxable value of Goods or Service as per invoice",
@@ -1021,7 +1034,8 @@
               },
               "diff_percent": {
                 "description": "Differential percentage",
-                "type": "number"
+                "type": "number",
+                "multipleOf": 0.01
               },
               "txval": {
                 "description": "Taxable value of Goods or Service as per invoice",
@@ -1090,7 +1104,8 @@
               },
               "diff_percent": {
                 "description": "Differential percentage",
-                "type": "number"
+                "type": "number",
+                "multipleOf": 0.01
               },
               "omon": {
                 "description": "Original Month",
@@ -1107,7 +1122,8 @@
                   "properties": {
                     "rt": {
                       "description": "rate",
-                      "type": "number"
+                      "type": "number",
+                      "multipleOf": 0.01
                     },
                     "txval": {
                       "description": "Taxable value of Goods or Service as per invoice",
@@ -1154,7 +1170,8 @@
               },
               "diff_percent": {
                 "description": "Differential percentage",
-                "type": "number"
+                "type": "number",
+                "multipleOf": 0.01
               },
               "omon": {
                 "description": "Original Month",
@@ -1191,7 +1208,8 @@
                   "properties": {
                     "rt": {
                       "description": "rate",
-                      "type": "number"
+                      "type": "number",
+                      "multipleOf": 0.01
                     },
                     "txval": {
                       "description": "Taxable value of Goods or Service as per invoice",
@@ -1274,7 +1292,8 @@
                     },
                     "diff_percent": {
                       "description": "Differential percentage",
-                      "type": "number"
+                      "type": "number",
+                      "multipleOf": 0.01
                     },
                     "pos": {
                       "description": "Maintained in GST System common database POS as provided in law / actual provision of service.",
@@ -1321,7 +1340,8 @@
                               },
                               "rt": {
                                 "description": "rate",
-                                "type": "number"
+                                "type": "number",
+                                "multipleOf": 0.01
                               },
                               "iamt": {
                                 "description": "IGST Amount as per invoice",
@@ -1395,7 +1415,8 @@
                     },
                     "diff_percent": {
                       "description": "Differential percentage",
-                      "type": "number"
+                      "type": "number",
+                      "multipleOf": 0.01
                     },
                     "pos": {
                       "description": "Maintained in GST System common database POS as provided in law / actual provision of service.",
@@ -1441,7 +1462,8 @@
                               },
                               "rt": {
                                 "description": "rate",
-                                "type": "number"
+                                "type": "number",
+                                "multipleOf": 0.01
                               },
                               "iamt": {
                                 "description": "IGST Amount as per invoice",
@@ -1545,7 +1567,8 @@
                     },
                     "diff_percent": {
                       "description": "Differential percentage",
-                      "type": "number"
+                      "type": "number",
+                      "multipleOf": 0.01
                     },
                     "itms": {
                       "type": "array",
@@ -1569,7 +1592,8 @@
                               },
                               "rt": {
                                 "description": "rate",
-                                "type": "number"
+                                "type": "number",
+                                "multipleOf": 0.01
                               },
                               "iamt": {
                                 "description": "IGST Amount as per invoice",
@@ -1665,7 +1689,8 @@
                     },
                     "diff_percent": {
                       "description": "Differential percentage",
-                      "type": "number"
+                      "type": "number",
+                      "multipleOf": 0.01
                     },
                     "itms": {
                       "type": "array",
@@ -1688,7 +1713,8 @@
                               },
                               "rt": {
                                 "description": "rate",
-                                "type": "number"
+                                "type": "number",
+                                "multipleOf": 0.01
                               },
                               "iamt": {
                                 "description": "IGST Amount as per invoice",
@@ -1757,7 +1783,8 @@
               },
               "diff_percent": {
                 "description": "Differential percentage",
-                "type": "number"
+                "type": "number",
+                "multipleOf": 0.01
               },
               "irngendate": {
                 "description": "IRN generate Date",
@@ -1791,7 +1818,8 @@
                         },
                         "rt": {
                           "description": "rate",
-                          "type": "number"
+                          "type": "number",
+                          "multipleOf": 0.01
                         },
                         "iamt": {
                           "description": "IGST Amount as per invoice",
@@ -1879,7 +1907,8 @@
               },
               "diff_percent": {
                 "description": "Differential percentage",
-                "type": "number"
+                "type": "number",
+                "multipleOf": 0.01
               },
               "irngendate": {
                 "description": "IRN generate Date",
@@ -1912,7 +1941,8 @@
                         },
                         "rt": {
                           "description": "rate",
-                          "type": "number"
+                          "type": "number",
+                          "multipleOf": 0.01
                         },
                         "iamt": {
                           "description": "IGST Amount as per invoice",
@@ -1985,7 +2015,8 @@
               },
               "diff_percent": {
                 "description": "Differential percentage",
-                "type": "number"
+                "type": "number",
+                "multipleOf": 0.01
               },
               "itms": {
                 "type": "array",
@@ -2009,7 +2040,8 @@
                         },
                         "rt": {
                           "description": "rate",
-                          "type": "number"
+                          "type": "number",
+                          "multipleOf": 0.01
                         },
                         "iamt": {
                           "description": "IGST Amount as per invoice",
@@ -2105,7 +2137,8 @@
               },
               "diff_percent": {
                 "description": "Differential percentage",
-                "type": "number"
+                "type": "number",
+                "multipleOf": 0.01
               },
               "itms": {
                 "type": "array",
@@ -2128,7 +2161,8 @@
                         },
                         "rt": {
                           "description": "rate",
-                          "type": "number"
+                          "type": "number",
+                          "multipleOf": 0.01
                         },
                         "iamt": {
                           "description": "IGST Amount as per invoice",
@@ -2643,7 +2677,8 @@
               },
               "diff_percent": {
                 "description": "Differential percentage",
-                "type": "number"
+                "type": "number",
+                "multipleOf": 0.01
               },
               "itms": {
                 "type": "array",
@@ -2703,7 +2738,8 @@
               },
               "diff_percent": {
                 "description": "Differential percentage",
-                "type": "number"
+                "type": "number",
+                "multipleOf": 0.01
               },
               "itms": {
                 "minLength": 1,
@@ -2774,7 +2810,8 @@
               },
               "diff_percent": {
                 "description": "Differential percentage",
-                "type": "number"
+                "type": "number",
+                "multipleOf": 0.01
               },
               "itms": {
                 "minItems": 1,
@@ -2837,7 +2874,8 @@
               },
               "diff_percent": {
                 "description": "Differential percentage",
-                "type": "number"
+                "type": "number",
+                "multipleOf": 0.01
               },
               "itms": {
                 "type": "array",
@@ -2898,7 +2936,8 @@
               },
               "diff_percent": {
                 "description": "Differential percentage",
-                "type": "number"
+                "type": "number",
+                "multipleOf": 0.01
               },
               "itms": {
                 "minItems": 1,
@@ -2959,7 +2998,8 @@
               },
               "diff_percent": {
                 "description": "Differential percentage",
-                "type": "number"
+                "type": "number",
+                "multipleOf": 0.01
               },
               "itms": {
                 "type": "array",
@@ -3030,7 +3070,8 @@
               },
               "diff_percent": {
                 "description": "Differential percentage",
-                "type": "number"
+                "type": "number",
+                "multipleOf": 0.01
               },
               "itms": {
                 "minItems": 1,
@@ -3094,7 +3135,8 @@
               },
               "diff_percent": {
                 "description": "Differential percentage",
-                "type": "number"
+                "type": "number",
+                "multipleOf": 0.01
               },
               "itms": {
                 "type": "array",
@@ -5798,242 +5840,7 @@
           "properties": {
             "flag": {
               "description": "tax payer action",
-              "$ref": "#/definitions/flag"
-            },
-            "data": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "anyOf": [
-                  {
-                    "additionalProperties": false,
-                    "properties": {
-                      "num": {
-                        "description": "Serial no",
-                        "type": "integer",
-                        "minimum": 1
-                      },
-                      "hsn_sc": {
-                        "description": "HSN or SAC of Goods or Services as per Invoice line items",
-                        "maxLength": 8,
-                        "minLength": 2,
-                        "type": "string",
-                        "pattern": "^[0-9]{2,8}$"
-                      },
-                      "val": {
-                        "description": "Supplier Invoice Value",
-                        "type": "number",
-                        "minimum": 0,
-                        "maximum": 0
-                      },
-                      "txval": {
-                        "description": "Taxable value of Goods or Service as per invoice",
-                        "minLength": 1,
-                        "$ref": "#/definitions/hsnamt"
-                      },
-                      "iamt": {
-                        "description": "IGST Amount as per invoice",
-                        "$ref": "#/definitions/hsnamt"
-                      },
-                      "camt": {
-                        "description": "CGST Amount as per invoice",
-                        "$ref": "#/definitions/hsnamt"
-                      },
-                      "samt": {
-                        "description": "SGST Amount as per invoice",
-                        "$ref": "#/definitions/hsnamt"
-                      },
-                      "csamt": {
-                        "description": "Cess Amount as per invoice",
-                        "$ref": "#/definitions/hsnamt"
-                      },
-                      "desc": {
-                        "description": "Description of goods sold",
-                        "type": "string"
-                      },
-                      "user_desc": {
-                        "description": "Description given by Taxpayer",
-                        "type": "string"
-                      },
-                      "uqc": {
-                        "description": "UQC (Unit of Measure) of goods sold",
-                        "minLength": 1,
-                        "maxLength": 30,
-                        "pattern": "^[a-zA-Z]*$",
-                        "type": "string"
-                      },
-                      "qty": {
-                        "description": "Quantity of goods sold",
-                        "$ref": "#/definitions/hsnqty"
-                      },
-                      "flag": {
-                        "description": "tax payer action",
-                        "$ref": "#/definitions/flag"
-                      },
-                      "rt": {
-                        "description": "rate",
-                        "type": "number",
-                        "minimum": 0,
-                        "maximum": 999.99
-                      }
-                    },
-                    "required": ["hsn_sc", "uqc", "qty", "num", "txval", "rt"]
-                  },
-                  {
-                    "additionalProperties": false,
-                    "properties": {
-                      "num": {
-                        "description": "Serial no",
-                        "type": "integer",
-                        "minimum": 1
-                      },
-                      "hsn_sc": {
-                        "description": "HSN or SAC of Goods or Services as per Invoice line items",
-                        "maxLength": 8,
-                        "minLength": 2,
-                        "type": "string",
-                        "pattern": "^[0-9]{2,8}$"
-                      },
-                      "val": {
-                        "description": "Supplier Invoice Value",
-                        "type": "number",
-                        "maximum": 9999999999999.99
-                      },
-                      "txval": {
-                        "description": "Taxable value of Goods or Service as per invoice",
-                        "minLength": 1,
-                        "$ref": "#/definitions/hsnamt"
-                      },
-                      "iamt": {
-                        "description": "IGST Amount as per invoice",
-                        "$ref": "#/definitions/hsnamt"
-                      },
-                      "camt": {
-                        "description": "CGST Amount as per invoice",
-                        "$ref": "#/definitions/hsnamt"
-                      },
-                      "samt": {
-                        "description": "SGST Amount as per invoice",
-                        "$ref": "#/definitions/hsnamt"
-                      },
-                      "csamt": {
-                        "description": "Cess Amount as per invoice",
-                        "$ref": "#/definitions/hsnamt"
-                      },
-                      "desc": {
-                        "description": "Description of goods sold",
-                        "minLength": 0,
-                        "maxLength": 30,
-                        "type": "string"
-                      },
-                      "user_desc": {
-                        "description": "Description of goods sold",
-                        "minLength": 0,
-                        "maxLength": 30,
-                        "type": "string"
-                      },
-                      "uqc": {
-                        "description": "UQC (Unit of Measure) of goods sold",
-                        "minLength": 1,
-                        "maxLength": 30,
-                        "pattern": "^[a-zA-Z]*$",
-                        "type": "string"
-                      },
-                      "qty": {
-                        "description": "Quantity of goods sold",
-                        "$ref": "#/definitions/hsnqty"
-                      },
-                      "flag": {
-                        "description": "tax payer action",
-                        "$ref": "#/definitions/flag"
-                      }
-                    },
-                    "required": ["hsn_sc", "uqc", "qty", "val", "num", "txval"]
-                  },
-                  {
-                    "additionalProperties": false,
-                    "properties": {
-                      "num": {
-                        "description": "Serial no",
-                        "type": "integer",
-                        "minimum": 1
-                      },
-                      "hsn_sc": {
-                        "description": "hsn ",
-                        "anyOf": [
-                          {
-                            "description": "HSN or SAC of Goods or Services as per Invoice line items",
-                            "maxLength": 8,
-                            "minLength": 2,
-                            "type": "string",
-                            "pattern": "^[0-9]{2,8}$"
-                          },
-                          {
-                            "description": "HSN or SAC of Goods or Services as per Invoice line items",
-                            "maxLength": 0,
-                            "minLength": 0,
-                            "type": "string"
-                          }
-                        ]
-                      },
-                      "val": {
-                        "description": "Supplier Invoice Value",
-                        "type": "number",
-                        "maximum": 9999999999999.99
-                      },
-                      "txval": {
-                        "description": "Taxable value of Goods or Service as per invoice",
-                        "minLength": 1,
-                        "$ref": "#/definitions/hsnamt"
-                      },
-                      "iamt": {
-                        "description": "IGST Amount as per invoice",
-                        "$ref": "#/definitions/hsnamt"
-                      },
-                      "camt": {
-                        "description": "CGST Amount as per invoice",
-                        "$ref": "#/definitions/hsnamt"
-                      },
-                      "samt": {
-                        "description": "SGST Amount as per invoice",
-                        "$ref": "#/definitions/hsnamt"
-                      },
-                      "csamt": {
-                        "description": "Cess Amount as per invoice",
-                        "$ref": "#/definitions/hsnamt"
-                      },
-                      "desc": {
-                        "description": "Description of goods sold",
-                        "minLength": 1,
-                        "maxLength": 30,
-                        "type": "string"
-                      },
-                      "user_desc": {
-                        "description": "Description of goods sold",
-                        "minLength": 0,
-                        "maxLength": 30,
-                        "type": "string"
-                      },
-                      "uqc": {
-                        "description": "UQC (Unit of Measure) of goods sold",
-                        "minLength": 1,
-                        "maxLength": 30,
-                        "pattern": "^[a-zA-Z]*$",
-                        "type": "string"
-                      },
-                      "qty": {
-                        "description": "Quantity of goods sold",
-                        "$ref": "#/definitions/hsnqty"
-                      },
-                      "flag": {
-                        "description": "tax payer action",
-                        "$ref": "#/definitions/flag"
-                      }
-                    },
-                    "required": ["desc", "uqc", "qty", "val", "num", "txval"]
-                  }
-                ]
-              }
+              "$ref": "#/definitions/hsnFlag"
             },
             "hsn_b2b": {
               "type": "array",
@@ -6084,8 +5891,6 @@
                       },
                       "user_desc": {
                         "description": "Description given by user",
-                        "minLength": 0,
-                        "maxLength": 30,
                         "type": "string"
                       },
                       "desc": {
@@ -6105,7 +5910,7 @@
                       },
                       "flag": {
                         "description": "tax payer action",
-                        "$ref": "#/definitions/flag"
+                        "$ref": "#/definitions/hsnFlag"
                       },
                       "rt": {
                         "description": "rate",
@@ -6180,7 +5985,7 @@
                       },
                       "flag": {
                         "description": "tax payer action",
-                        "$ref": "#/definitions/flag"
+                        "$ref": "#/definitions/hsnFlag"
                       }
                     },
                     "required": ["hsn_sc", "uqc", "qty", "val", "num", "txval"]
@@ -6245,8 +6050,6 @@
                       },
                       "user_desc": {
                         "description": "Description of goods sold",
-                        "minLength": 1,
-                        "maxLength": 30,
                         "type": "string"
                       },
                       "uqc": {
@@ -6262,7 +6065,7 @@
                       },
                       "flag": {
                         "description": "tax payer action",
-                        "$ref": "#/definitions/flag"
+                        "$ref": "#/definitions/hsnFlag"
                       }
                     },
                     "required": ["desc", "uqc", "qty", "val", "num", "txval"]
@@ -6323,8 +6126,6 @@
                       },
                       "user_desc": {
                         "description": "Description of given by Taxpayer",
-                        "minLength": 0,
-                        "maxLength": 30,
                         "type": "string"
                       },
                       "uqc": {
@@ -6340,7 +6141,7 @@
                       },
                       "flag": {
                         "description": "tax payer action",
-                        "$ref": "#/definitions/flag"
+                        "$ref": "#/definitions/hsnFlag"
                       },
                       "rt": {
                         "description": "rate",
@@ -6415,7 +6216,7 @@
                       },
                       "flag": {
                         "description": "tax payer action",
-                        "$ref": "#/definitions/flag"
+                        "$ref": "#/definitions/hsnFlag"
                       }
                     },
                     "required": ["hsn_sc", "uqc", "qty", "val", "num", "txval"]
@@ -6495,7 +6296,7 @@
                       },
                       "flag": {
                         "description": "tax payer action",
-                        "$ref": "#/definitions/flag"
+                        "$ref": "#/definitions/hsnFlag"
                       }
                     },
                     "required": ["desc", "uqc", "qty", "val", "num", "txval"]
@@ -6513,81 +6314,7 @@
               "type": "string",
               "enum": ["D"]
             },
-            "data": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "additionalProperties": false,
-                "properties": {
-                  "num": {
-                    "description": "Serial no",
-                    "type": "integer",
-                    "minimum": 1
-                  },
-                  "hsn_sc": {
-                    "description": "HSN or SAC of Goods or Services as per Invoice line items",
-                    "maxLength": 8,
-                    "minLength": 2,
-                    "type": "string",
-                    "pattern": "^[0-9]{2,8}$"
-                  },
-                  "val": {
-                    "description": "Supplier Invoice Value",
-                    "type": "number",
-                    "maximum": 9999999999999.99
-                  },
-                  "txval": {
-                    "description": "Taxable value of Goods or Service as per invoice",
-                    "$ref": "#/definitions/hsnamt"
-                  },
-                  "iamt": {
-                    "description": "IGST Amount as per invoice",
-                    "$ref": "#/definitions/hsnamt"
-                  },
-                  "camt": {
-                    "description": "CGST Amount as per invoice",
-                    "$ref": "#/definitions/hsnamt"
-                  },
-                  "samt": {
-                    "description": "SGST Amount as per invoice",
-                    "$ref": "#/definitions/hsnamt"
-                  },
-                  "csamt": {
-                    "description": "Cess Amount as per invoice",
-                    "$ref": "#/definitions/hsnamt"
-                  },
-                  "desc": {
-                    "description": "Description of goods sold",
-                    "type": "string"
-                  },
-                  "user_desc": {
-                    "description": "Description given by Taxpayer",
-                    "type": "string"
-                  },
-                  "uqc": {
-                    "description": "UQC (Unit of Measure) of goods sold",
-                    "minLength": 1,
-                    "maxLength": 30,
-                    "pattern": "^[a-zA-Z]*$",
-                    "type": "string"
-                  },
-                  "qty": {
-                    "description": "Quantity of goods sold",
-                    "$ref": "#/definitions/hsnqty"
-                  },
-                  "flag": {
-                    "description": "tax payer action",
-                    "$ref": "#/definitions/flag"
-                  },
-                  "rt": {
-                    "description": "rate",
-                    "type": "number",
-                    "minimum": 0,
-                    "maximum": 999.99
-                  }
-                }
-              }
-            },
+
             "hsn_b2b": {
               "type": "array",
               "items": {
@@ -6652,7 +6379,7 @@
                   },
                   "flag": {
                     "description": "tax payer action",
-                    "$ref": "#/definitions/flag"
+                    "$ref": "#/definitions/hsnFlag"
                   },
                   "rt": {
                     "description": "rate",
@@ -6727,7 +6454,7 @@
                   },
                   "flag": {
                     "description": "tax payer action",
-                    "$ref": "#/definitions/flag"
+                    "$ref": "#/definitions/hsnFlag"
                   },
                   "rt": {
                     "description": "rate",
@@ -7031,6 +6758,10 @@
     "flag": {
       "type": "string",
       "enum": ["N", "M", "U", "E"]
+    },
+    "hsnFlag": {
+      "type": "string",
+      "enum": ["D", "N", "M", "U", "E"]
     },
     "ntty": {
       "type": "string",
