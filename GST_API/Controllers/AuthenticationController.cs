@@ -150,14 +150,14 @@ namespace GST_API.Controllers
             }
         }
 
-        [HttpPost("{encryptedOTP}/request-token")]
-        public async Task<ResponseModel> RequestToken(string encryptedOTP)
+        [HttpPost("request-token")]
+        public async Task<ResponseModel> RequestToken([FromQuery]string otp)
         {
             GSTNAuthClient client = new GSTNAuthClient(gstin, gstinUsername, appKey);
-            var otp = _encryptDecryptService.DecryptText(encryptedOTP);
+            var decryptedOtp = _encryptDecryptService.DecryptText(otp);
             //GSTNAuthClient client = new GSTNAuthClient(gstin, gstinUsername, GSTNConstants.GetAppKeyBytes());
 
-            var result = await client.RequestToken(otp);
+            var result = await client.RequestToken(decryptedOtp);
             _logger.LogInformation(JsonConvert.SerializeObject(result)); 
             if (result.Data?.status_cd == "1")
             {

@@ -60,6 +60,7 @@ export class UploadGstr1Component implements OnInit {
               { duration: 3000 }
             );
           } catch (error) {
+            console.log(error);
             this.snackBar.open('Invalid JSON file', 'Close', {
               duration: 3000,
             });
