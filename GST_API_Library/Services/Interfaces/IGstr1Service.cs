@@ -8,7 +8,7 @@ using GST_API_DAL.Models;
 using GST_API_Library.Models.GSTR1DTO;
 using Microsoft.EntityFrameworkCore;
 
-namespace GST_API_Library.Services
+namespace GST_API_Library.Services.Interfaces
 {
     public interface IGstr1Service
     {

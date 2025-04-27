@@ -4,6 +4,7 @@ using GST_API_DAL.Repository.Implementations;
 using GST_API_DAL.Repository.Interfaces;
 using GST_API_Library.Services;
 using GST_API_Library.Services.Implementation;
+using GST_API_Library.Services.Interfaces;
 
 namespace GST_API.Extensions
 {

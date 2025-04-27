@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -31,5 +32,13 @@ namespace GST_API_Library.Services
             appKey = _httpContextAccessor.HttpContext.Items["appKey"] as byte[];
             baseAppKey = _httpContextAccessor.HttpContext.Items["baseAppKey"] as string;
         }
+        protected string UserId
+        {
+            get
+            {
+                return _httpContextAccessor?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            }
+        }
+
     }
-    }
+}

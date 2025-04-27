@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace GST_API_DAL.Models
 {
-    public class Gstr1
+    public class Gstr1 : BaseEntity
     {
         public long Id { get; set; }
 

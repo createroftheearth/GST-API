@@ -3,7 +3,7 @@ using GST_API.Middlewares;
 using GST_API.Services;
 using GST_API_DAL.Models;
 using GST_API_Library.Models.GSTR1DTO;
-using GST_API_Library.Services;
+using GST_API_Library.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
