@@ -30,12 +30,9 @@ mat-sidenav {
 }
 
 mat-sidenav-container {
-  height: 90vh;
+  height: 100vh;
 }
-mat-sidenav {
-  background-color: #2196F3; /* Material Blue */
-  color: white; /* Text color */
-}
+
 .active {
   font-weight: bold;
   color: #2196F3;
