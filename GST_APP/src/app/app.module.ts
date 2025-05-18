@@ -50,6 +50,12 @@ import { UploadGstr1Component } from './components/gstr1/upload-gstr1/upload-gst
 import { Gsrt1ListComponent } from './components/gstr1/gsrt1-list/gsrt1-list.component';
 import { GenerateOtpComponent } from './components/generate-otp/generate-otp.component';
 
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
+
+
 @NgModule({
   declarations: [
     AppComponent,

@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { LOCAL_STORAGE_KEYS } from './constants';
 import { filter } from 'rxjs/operators';
+import { MatSidenav } from '@angular/material/sidenav';
 
 @Component({
   selector: 'app-root',
@@ -11,6 +12,8 @@ import { filter } from 'rxjs/operators';
 })
 export class AppComponent implements OnInit {
   title: string = 'My App';
+  @ViewChild('sidenav') sidenav!: MatSidenav;
+  isExpanded = true;
 
   constructor(private router: Router, private titleService: Title) {
     this.router.events
@@ -25,6 +28,10 @@ export class AppComponent implements OnInit {
           this.title = 'My App';
         }
       });
+  }
+
+  toggleSidenav() {
+    this.sidenav.toggle();
   }
 
   ngOnInit() {}

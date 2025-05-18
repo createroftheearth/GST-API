@@ -22,10 +22,36 @@
 </mat-toolbar>
 
 <!-- Main Content -->
-<mat-sidenav-container class="content-container">
+<!-- <mat-sidenav-container class="content-container">
   <mat-sidenav-content>
     <div class="content">
       <router-outlet></router-outlet>
     </div>
+  </mat-sidenav-content>
+</mat-sidenav-container> -->
+
+<mat-sidenav-container  class="full-height">
+  <mat-sidenav #sidenav mode="side"  [opened]="isExpanded">
+    <mat-nav-list>
+      <a mat-list-item routerLink="/login">Login</a>
+      <a mat-list-item routerLink="/generate-otp">Generate OTP</a>
+      <a mat-list-item routerLink="/register" >Register</a>
+      <a mat-list-item routerLink="/public/register">Public Register</a>
+      <a mat-list-item routerLink="/dashboard">Dashboard</a>
+      <a mat-list-item routerLink="/gstr1/add">Add GSTR1</a>
+      <a mat-list-item routerLink="/gstr1/list">GSTR1 List</a>
+      <a mat-list-item routerLink="/gstr1/upload">Upload GSTR1</a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar>
+      <button mat-icon-button (click)="toggleSidenav()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <!-- <span>My App</span> -->
+    </mat-toolbar>
+      <div class="content">
+        <router-outlet></router-outlet>
+      </div>
   </mat-sidenav-content>
 </mat-sidenav-container>
