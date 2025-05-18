@@ -18,5 +18,6 @@ namespace GST_API_Library.Services.Interfaces
 
         Task<(bool IsSucess, string Message)> SubmitGSTR1(int id, string url);
         Task<(bool IsSucess, string Message)> ProceedToFile(int id, string url);
-    }
+        Task<(bool? isSuccess, string message)> GenerateEVCOTP();
+    }  
 }

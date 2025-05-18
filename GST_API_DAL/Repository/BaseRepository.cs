@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using System;
 using System.Linq.Expressions;
 using System.Security.Claims;
 
@@ -25,7 +26,7 @@ namespace GST_API_DAL.Repository
         {
             get
             {
-                return _httpContextAccessor?.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                return _httpContextAccessor?.HttpContext?.User?.Claims.FirstOrDefault(x => x.Type == "Id")?.Value;
             }
         }
 
@@ -89,18 +90,23 @@ namespace GST_API_DAL.Repository
                 return match;
             }
             // x => x.CreatedById == userId
-            var parameter = match.Parameters[0]; // Use the original parameter from the match expression
+            var parameter = match?.Parameters!=null? match.Parameters[0]: Expression.Parameter(typeof(T), "x");
             var createdByProperty = Expression.Property(parameter, nameof(BaseEntity.CreatedById));
             var userIdConstant = Expression.Constant(userId);
             var createdByCheck = Expression.Equal(createdByProperty, userIdConstant);
+            if (match == null)
+            {
+                return Expression.Lambda<Func<T, bool>>(createdByCheck, parameter);
+            }
 
             // Combine with original match: x => (x.CreatedById == userId) && match(x)
             var userFilterLambda = Expression.Lambda<Func<T, bool>>(createdByCheck, parameter);
-            var combined = Expression.Lambda<Func<T, bool>>(
-                Expression.AndAlso(userFilterLambda.Body, Expression.Invoke(match, userFilterLambda.Parameters)),
-                userFilterLambda.Parameters
-            );
-            return combined;
+            var combinedBody = Expression.AndAlso(
+                  createdByCheck,
+                  Expression.Invoke(match, parameter)
+              );
+
+            return Expression.Lambda<Func<T, bool>>(combinedBody, parameter);
         }
 
         public IQueryable<T> Filter(Expression<Func<T, bool>> match)
@@ -114,12 +120,16 @@ namespace GST_API_DAL.Repository
         {
             filter = AddUserIdCheckInMatch(filter);
             int skipCount = index * size;
-            var _resetSet = filter != null ? DbSet.Where(filter).AsQueryable() :
-                DbSet.AsQueryable();
-            _resetSet = skipCount == 0 ? _resetSet.Take(size) :
-                _resetSet.Skip(skipCount).Take(size);
-            total = _resetSet.Count();
-            return _resetSet.AsQueryable();
+            var query = filter!= null ? DbSet.Where(filter) : DbSet;
+            total = query.Count();
+
+            if (skipCount > 0)
+                query = query.Skip(skipCount);
+
+            query = query.Take(size);
+
+            return query;
+
         }
 
         public async Task<bool> AnyAsync(Expression<Func<T, bool>> match)
