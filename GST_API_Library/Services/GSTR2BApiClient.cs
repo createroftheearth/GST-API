@@ -63,5 +63,37 @@ namespace GST_API_Library.Services
             var model2 = this.BuildResult<Gen2BonDemandResp>(info, output);
             return model2;
         }
+
+        private Dictionary<string, string> prepareGSTR2BGenstatusDictionary(APIRequestParameters apiRequestParameters)
+        {
+            if (apiRequestParameters == null || string.IsNullOrEmpty(apiRequestParameters.gstin))
+            {
+                throw new Exception("gstin and ret_period is required");
+            }
+            var dic = new Dictionary<string, string>
+            {
+                { "gstin", apiRequestParameters.gstin },
+                { "int_tran_id", apiRequestParameters.int_tran_id },
+                { "action", "GENSTS2B" }
+            };
+
+            if (!string.IsNullOrEmpty(apiRequestParameters.file_num))
+            {
+                dic.Add("file_num", apiRequestParameters.file_num);
+            }
+
+            return dic;
+        }
+
+        public async Task<GSTNResult<List<GetGSTR2BGenStatus>>> GetGSTR2BGenStatus(APIRequestParameters apiRequestParameters)
+        {
+            Dictionary<string, string> dic = this.prepareGSTR2BGenstatusDictionary(apiRequestParameters);
+            this.PrepareQueryString(dic);
+            var info = await this.GetAsync<ResponseDataInfo>();
+            var output = this.Decrypt<GSTR2BTotal>(info.Data);
+            var model = this.BuildResult<List<GetGSTR2BGenStatus>>(info, output.GetGSTR2BGenStatus);
+            return model;
+
+        }
     }
 }

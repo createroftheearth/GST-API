@@ -32,7 +32,12 @@ namespace GST_API_Library.Models.GSTRIMSTotal
         //public double gt { get; set; }
         
         public List<GetIMSInvoiceCountResp> invoicecount { get; set; }
+        public List<GetIMSInvoices> invoices { get; set; }
 
-        
+        public List<GetIMSRequestStatus> imsrequeststatus { get; set; }
+
+        public List<GetIMSSUPInvoices> IMSSUPInvoices { get; set; }
+
+
     }
 }

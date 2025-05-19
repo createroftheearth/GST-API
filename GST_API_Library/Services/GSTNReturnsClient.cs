@@ -4,6 +4,7 @@ using GST_API_Library.Models.GSTR1;
 using GST_API_Library.Models.GSTR3B;
 using GST_API_Library.Models.GSTR1A;
 using GST_API_Library.Models.GSTRIMS;
+using GST_API_Library.Models.GSTR2A;
 using Newtonsoft.Json;
 using Org.BouncyCastle.Asn1.Ocsp;
 using System;
@@ -288,6 +289,7 @@ namespace GST_API_Library.Services
             data1.st = "EVC";
             data1.sign = EncryptionUtils.GenerateHMAC(base64Payload, PAN + "|" + OTP);
             data1.sid = PAN + "|" + OTP;
+            //data1.sid = PAN;
 
             string jsonData = JsonConvert.SerializeObject(data1);
             var info = await this.PostAsync<string, ResponseDataInfo>(jsonData);
