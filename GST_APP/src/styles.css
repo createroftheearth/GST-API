@@ -24,3 +24,5 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .mb-25{
     margin-bottom: 25px;
 }
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

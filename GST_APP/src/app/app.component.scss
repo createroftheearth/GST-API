@@ -24,3 +24,16 @@ button {
 .content {
   padding:20px;
 }
+
+mat-sidenav {
+  width: 250px;
+}
+
+mat-sidenav-container {
+  height: 100vh;
+}
+
+.active {
+  font-weight: bold;
+  color: #2196F3;
+}

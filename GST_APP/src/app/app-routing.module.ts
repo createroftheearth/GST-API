@@ -8,9 +8,11 @@ import { authGuard } from './auth.guard';
 import { AddEditGstr1Component } from './components/gstr1/save/add-edit-gstr1/add-edit-gstr1.component';
 import { UploadGstr1Component } from './components/gstr1/upload-gstr1/upload-gstr1.component';
 import { Gsrt1ListComponent } from './components/gstr1/gsrt1-list/gsrt1-list.component';
+import { GenerateOtpComponent } from './components/generate-otp/generate-otp.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
+  { path: 'generate-otp', component: GenerateOtpComponent },
   { path: 'register', component: RegistrationComponent },
   { path: 'public/register', component: PublicRegistrationComponent },
   {

@@ -31,7 +31,7 @@
           mat-mini-fab
           color="secondary"
           (click)="onSaveGSTR1(item.id)"
-          matTooltip="Save"
+          matTooltip="GSTR1 Save"
           *ngIf="item.saveGstr1Status === -1 || item.saveGstr1Status === 0"
         >
           <mat-icon>cloud_upload</mat-icon>
@@ -45,6 +45,16 @@
           style="margin-left: 5px"
         >
           <mat-icon>description</mat-icon>
+        </button>
+        <button
+          mat-mini-fab
+          color="primary"
+          (click)="generateOTP()"
+          matTooltip="Generate OTP to File"
+          *ngIf="item.saveGstr1Status === 1"
+          style="margin-left: 5px"
+        >
+          <mat-icon>key</mat-icon>
         </button>
       </td>
     </ng-container>

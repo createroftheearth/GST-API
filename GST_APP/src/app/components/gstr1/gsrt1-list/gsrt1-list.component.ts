@@ -85,4 +85,15 @@ export class Gsrt1ListComponent implements OnInit {
       });
     });
   }
+
+  generateOTP() {
+    this.gstr1Service.generateOTP().subscribe((data) => {
+      if (data.isSuccess) {
+        this.loadData();
+      }
+      this.snackBar.open(data.message, 'Close', {
+        duration: 5000,
+      });
+    });
+  }
 }

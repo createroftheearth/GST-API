@@ -3,7 +3,7 @@ using GST_API.Middlewares;
 using GST_API.Services;
 using GST_API_DAL.Models;
 using GST_API_Library.Models.GSTR1DTO;
-using GST_API_Library.Services;
+using GST_API_Library.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -31,7 +31,7 @@ namespace GST_API.Controllers.ASPController
             _gstr1Service = gstr1Service;
         }
 
-        [HttpPost("savegstr1")]
+        [HttpPost("save-gstr1")]
         public async Task<IActionResult> SaveGSTR1([FromBody] Gstr1Dto gstr1SaveRequestData)
         {
             // Call the service method and capture the result
@@ -56,7 +56,7 @@ namespace GST_API.Controllers.ASPController
             }
         }
 
-        [HttpGet("getallgstr1")]
+        [HttpGet("get-all-gstr1")]
         public async Task<IActionResult> GetAllGstr1Data([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
             var gstr1Data = _gstr1Service.GetAllGstr1Data(page, pageSize, out int totalRecords);
@@ -75,10 +75,24 @@ namespace GST_API.Controllers.ASPController
             });
         }
 
-        [HttpPost("proceedToFile")]
+        [HttpPost("proceed-to-file")]
         public async Task<IActionResult> ProceedToFile([FromBody] request data)
         {
             var (isSuccess, message) = await _gstr1Service.ProceedToFile(data.id, Constants.GSTR1_NewProceedToFile_URL);
+            return Ok(new ResponseModel
+            {
+                isSuccess = isSuccess,
+                message = message,
+                data = isSuccess
+            });
+        }
+
+
+        [HttpPost("generate-evc-otp")]
+        public async Task<IActionResult> GenerateEVCOTP()
+        {
+
+            var (isSuccess, message) = await _gstr1Service.GenerateEVCOTP();
             return Ok(new ResponseModel
             {
                 isSuccess = isSuccess,

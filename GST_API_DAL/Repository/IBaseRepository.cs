@@ -20,7 +20,6 @@ namespace GST_API_DAL.Repository
         Task<int> DeleteAsyn(T entity);
         void Dispose();
         IQueryable<T> Filter(Expression<Func<T, bool>> match);
-        IQueryable<T> FilterAsyn(Expression<Func<T, bool>> match);
         IQueryable<T> Filter(Expression<Func<T, bool>> filter, out int total, int index = 0, int size = 50);
         Task<bool> AnyAsync(Expression<Func<T, bool>> match);
         T Find(Expression<Func<T, bool>> match);
@@ -29,12 +28,6 @@ namespace GST_API_DAL.Repository
         Task<T> FindAsync(Expression<Func<T, bool>> match);
         IQueryable<T> FindBy(Expression<Func<T, bool>> predicate);
         Task<ICollection<T>> FindByAsyn(Expression<Func<T, bool>> predicate);
-        T Get(int id);
-
-        IQueryable<T> GetAll();
-        Task<ICollection<T>> GetAllAsyn();
-        IQueryable<T> GetAllIncluding(params Expression<Func<T, object>>[] includeProperties);
-        Task<T> GetAsync(int id);
         void Save();
         Task<int> SaveAsync();
         Task<int> UpdateAsyn(T t, object key);

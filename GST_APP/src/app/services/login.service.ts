@@ -10,7 +10,10 @@ import { EncryptDecryptService } from './encrypt-decrypt.service';
 export class LoginService {
   baseUrl = environment.appRoot + '/auth';
 
-  constructor(private httpService: HttpClient, private encryptDecryptService : EncryptDecryptService) {}
+  constructor(
+    private httpService: HttpClient,
+    private encryptDecryptService: EncryptDecryptService
+  ) {}
 
   login(loginData: { username: string; password: string; isASPUser: boolean }) {
     loginData.isASPUser = true;
@@ -19,7 +22,9 @@ export class LoginService {
 
   generateGSTNToken(otp: string) {
     const encryptedOTP = this.encryptDecryptService.encryptUsingAES256(otp);
-    const token = localStorage.getItem(LOCAL_STORAGE_KEYS.INTERNAL_AUTH_TOKEN);
-    return this.httpService.post(`${this.baseUrl}/${encryptedOTP}/request-token`, {});
+    return this.httpService.post(
+      `${this.baseUrl}/request-token?otp=${encodeURI(encryptedOTP)}`,
+      {}
+    );
   }
 }

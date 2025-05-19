@@ -4,7 +4,6 @@ using Integrated.API.GSTN.GSTR1;
 using Newtonsoft.Json;
 using System.Globalization;
 using System.Text;
-using FileInfo = GST_API_Library.Models.FileInfo;
 
 namespace GST_API_Library.Services
 {
@@ -17,7 +16,7 @@ namespace GST_API_Library.Services
         {
         }
 
-        public async Task<GSTNResult<SaveInfo>> Save(SaveRequest data)
+        public async Task<GSTNResult<SaveInfo>> Save(dynamic data)
         {
             var model = this.Encrypt(data);
             model.action = "RETSAVE";

@@ -5,6 +5,9 @@ using Newtonsoft.Json;
 using Microsoft.VisualBasic;
 using Microsoft.AspNetCore.Http;
 using GST_API_Library.Models.GSTR1;
+using GST_API_Library.Services.Interfaces;
+using Microsoft.AspNetCore.Identity;
+using GST_API_Library.Models;
 
 namespace GST_API_Library.Services.Implementation
 {
@@ -19,10 +22,14 @@ namespace GST_API_Library.Services.Implementation
     public class Gstr1Service : BaseService, IGstr1Service
     {
         private readonly IGSTR1Repository _gSTR1Repository;
-
-        public Gstr1Service(IGSTR1Repository gSTR1Repository, IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
+        private readonly UserManager<User> _userManager;
+        public Gstr1Service(IGSTR1Repository gSTR1Repository,
+            IHttpContextAccessor httpContextAccessor,
+            UserManager<User> userManager
+            ) : base(httpContextAccessor)
         {
             _gSTR1Repository = gSTR1Repository;
+            _userManager = userManager;
         }
 
         public async Task<(bool IsSuccess, string Message)> SaveGSTR1Async(Gstr1Dto gstr1SaveDto)
@@ -53,12 +60,11 @@ namespace GST_API_Library.Services.Implementation
 
         public List<Gstr1> GetAllGstr1Data(int page, int pageSize, out int totalRecords)
         {
-            return _gSTR1Repository.Filter(filter => true, out totalRecords, page - 1, pageSize).ToList();
+            return _gSTR1Repository.Filter(null, out totalRecords, page - 1, pageSize).ToList();
         }
 
         public async Task<(bool IsSucess, string Message)> SubmitGSTR1(int id, string url)
         {
-            resolveValues();
             var gstr1Data = await _gSTR1Repository.FindAsync(match => match.Id == id);
             if (gstr1Data == null)
             {
@@ -85,7 +91,6 @@ namespace GST_API_Library.Services.Implementation
 
         public async Task<(bool IsSucess, string Message)> ProceedToFile(int id, string url)
         {
-            resolveValues();
             var gstr1Data = await _gSTR1Repository.FindAsync(match => match.Id == id);
             if (gstr1Data == null)
             {
@@ -116,7 +121,23 @@ namespace GST_API_Library.Services.Implementation
             return (true, "Proceed to File Successfully on GSTR1 server");
         }
 
+        public async Task<(bool? isSuccess, string message)> GenerateEVCOTP()
+        {
+            var user = await _userManager.FindByIdAsync(UserId);
+            if (user == null)
+            {
+                return (false, message :"User not found");
+            }
+            GSTNAuthClient client = new GSTNAuthClient(gstin, gstinUsername, appKey);
+            var data = new EVCAuthenticationModel
+            {
+                form_type = "R1",
+                gstin = user.GSTNNo,
+                pan = user.Organization_PAN
+            };
+            var result = await client.RequestOTPForEVC(data, GSTINToken);
+            return (true, message: "Success");
 
-
+        }
     }
 }
