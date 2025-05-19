@@ -1,28 +1,25 @@
 ﻿using GST_API.APIModels;
 using GST_API.Services;
 using GST_API_Library.Models;
-using GST_API_Library.Models.GSTR2B;
+using GST_API_Library.Models.GSTR2A;
 using GST_API_Library.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 namespace GST_API.Controllers
 {
-    [Route("api/gstr2b")]
+    [Route("api/gstr2a")]
     [ApiController]
     [Authorize(Roles = "APIUser")]
-    public class GSTR2BController : BaseController
+    public class GSTR2AController : BaseController
     {
         private readonly ILogger<AuthenticationController> _logger;
-        public GSTR2BController(ILogger<AuthenticationController> logger)
+        public GSTR2AController(ILogger<AuthenticationController> logger)
         {
             _logger = logger;
         }
-        /// <summary>
-        /// This API will be used to fetch the GSTR2B details for given GSTIN, Return Period
-        /// </summary>
-        /// <param name="">gstin={}, ret_period={}, file_num={}</param>
-        [HttpGet("GetGSTR2BDetails")]
-        public async Task<ResponseModel> GetGSTR2BDetails([FromQuery] APIRequestParameters model)
+
+        [HttpGet("GetECOMAgstr2A")]
+        public async Task<ResponseModel> GetECOMAgstr2A([FromQuery] APIRequestParameters model)
         {
             if (string.IsNullOrEmpty(this.GSTINToken) || string.IsNullOrEmpty(this.GSTINSek))
             {
@@ -40,8 +37,8 @@ namespace GST_API.Controllers
             };
             try
             {
-                GSTR2BApiClient client2 = new GSTR2BApiClient(client, gstin, model.ret_period, Constants.GSTR2B_Get2BDetails_URL);
-                var info = await client2.GetGSTR2B(model);
+                GSTR2AApiClient client2 = new GSTR2AApiClient(client, gstin, model.ret_period, Constants.GSTR2A);
+                var info = await client2.GetECOMA2A(model);
                 return new ResponseModel
                 {
                     data = info,
@@ -59,36 +56,8 @@ namespace GST_API.Controllers
             }
         }
 
-        [HttpPut("Gen2BOnDemand")]
-        public async Task<ResponseModel> Gen2BOnDemand([FromBody] Gen2BonDemand model)
-        {
-            if (string.IsNullOrEmpty(this.GSTINToken) || string.IsNullOrEmpty(this.GSTINSek))
-            {
-                return new ResponseModel
-                {
-                    isSuccess = false,
-                    message = "Please send 'GSTIN-Token' or 'GSTIN-Sek' in headers"
-                };
-            }
-            GSTNAuthClient client = new GSTNAuthClient(gstin, this.gstinUsername, this.appKey)
-            {
-                AuthToken = this.GSTINToken,
-                DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, this.appKey)
-
-            };
-            GSTR2BApiClient client2 = new GSTR2BApiClient(client, gstin, model.itcprd, Constants.GSTR2B_GenOnDemand_URL);
-            var info = await client2.Gen2BonDemand(model);
-            return new ResponseModel
-            {
-                data = info,
-                isSuccess = true,
-                message = "success"
-            };
-        }
-
-
-        [HttpGet("GetGSTR2BGenStatus")]
-        public async Task<ResponseModel> GetGSTR2BGenStatus([FromQuery] APIRequestParameters model)
+        [HttpGet("GetIMPGAgstr2A")]
+        public async Task<ResponseModel> GetIMPGAgstr2A([FromQuery] APIRequestParameters model)
         {
             if (string.IsNullOrEmpty(this.GSTINToken) || string.IsNullOrEmpty(this.GSTINSek))
             {
@@ -106,8 +75,8 @@ namespace GST_API.Controllers
             };
             try
             {
-                GSTR2BApiClient client2 = new GSTR2BApiClient(client, gstin, "042024", Constants.GSTR2B_GenStatus_URL);
-                var info = await client2.GetGSTR2BGenStatus(model);
+                GSTR2AApiClient client2 = new GSTR2AApiClient(client, gstin, model.ret_period, Constants.GSTR2A);
+                var info = await client2.GetIMPG2A(model);
                 return new ResponseModel
                 {
                     data = info,
@@ -124,5 +93,8 @@ namespace GST_API.Controllers
                 };
             }
         }
+
+
+
     }
 }

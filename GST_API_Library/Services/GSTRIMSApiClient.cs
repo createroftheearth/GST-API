@@ -18,6 +18,33 @@ namespace GST_API_Library.Services
         {
         }
 
+        public async Task<GSTNResult<SaveInfo>> SaveIMS(SaveRequestIMS data)
+        {
+            var model = this.Encrypt(data);
+            model.action = "SAVE";
+            var info = await this.PutAsync<UnsignedDataInfo, ResponseDataInfo>(model);
+            if (info == null)
+            {
+                throw new Exception("Unable to get the details from server");
+            }
+            var output = this.Decrypt<SaveInfo>(info.Data);
+            var model2 = this.BuildResult<SaveInfo>(info, output);
+            return model2;
+        }
+
+        public async Task<GSTNResult<SaveInfo>> ResetIMS(SaveRequestIMS data)
+        {
+            var model = this.Encrypt(data);
+            model.action = "RESETIMS";
+            var info = await this.PutAsync<UnsignedDataInfo, ResponseDataInfo>(model);
+            if (info == null)
+            {
+                throw new Exception("Unable to get the details from server");
+            }
+            var output = this.Decrypt<SaveInfo>(info.Data);
+            var model2 = this.BuildResult<SaveInfo>(info, output);
+            return model2;
+        }
         private Dictionary<string, string> prepareInvoiceCountDictionary(APIRequestParameters apiRequestParameters)
         {
             if (apiRequestParameters == null || string.IsNullOrEmpty(apiRequestParameters.gstin))
@@ -41,6 +68,90 @@ namespace GST_API_Library.Services
             var info = await this.GetAsync<ResponseDataInfo>();
             var output = this.Decrypt<GSTRIMSTotal>(info.Data);
             var model = this.BuildResult<List<GetIMSInvoiceCountResp>>(info,output.invoicecount);
+            return model;
+
+        }
+
+        private Dictionary<string, string> prepareSupInvoiceDictionary(APIRequestParameters apiRequestParameters)
+        {
+            if (apiRequestParameters == null || string.IsNullOrEmpty(apiRequestParameters.gstin))
+            {
+                throw new Exception("gstin is required");
+            }
+            var dic = new Dictionary<string, string>
+            {
+                { "gstin", apiRequestParameters.gstin },
+                { "ret_period", apiRequestParameters.ret_period },
+                { "section", apiRequestParameters.section },
+                { "rtn_typ", apiRequestParameters.rtn_typ },
+                { "action", "SUPVIEW" }
+            };
+
+            return dic;
+        }
+
+        public async Task<GSTNResult<List<GetIMSSUPInvoices>>> GetIMSSupInvoice(APIRequestParameters apiRequestParameters)
+        {
+            Dictionary<string, string> dic = this.prepareSupInvoiceDictionary(apiRequestParameters);
+            this.PrepareQueryString(dic);
+            var info = await this.GetAsync<ResponseDataInfo>();
+            var output = this.Decrypt<GSTRIMSTotal>(info.Data);
+            var model = this.BuildResult<List<GetIMSSUPInvoices>>(info, output.IMSSUPInvoices);
+            return model;
+
+        }
+
+        private Dictionary<string, string> prepareInvoicesDictionary(APIRequestParameters apiRequestParameters)
+        {
+            if (apiRequestParameters == null || string.IsNullOrEmpty(apiRequestParameters.gstin))
+            {
+                throw new Exception("gstin is required");
+            }
+            var dic = new Dictionary<string, string>
+            {
+                { "gstin", apiRequestParameters.gstin },
+                { "section", apiRequestParameters.section },
+                { "status", apiRequestParameters.status },
+                { "action", "GETINV" }
+            };
+
+            return dic;
+        }
+
+        public async Task<GSTNResult<List<GetIMSInvoices>>> GetIMSInvoices(APIRequestParameters apiRequestParameters)
+        {
+            Dictionary<string, string> dic = this.prepareInvoicesDictionary(apiRequestParameters);
+            this.PrepareQueryString(dic);
+            var info = await this.GetAsync<ResponseDataInfo>();
+            var output = this.Decrypt<GSTRIMSTotal>(info.Data);
+            var model = this.BuildResult<List<GetIMSInvoices>>(info, output.invoices);
+            return model;
+
+        }
+
+        private Dictionary<string, string> prepareIMSRequestStatusDictionary(APIRequestParameters apiRequestParameters)
+        {
+            if (apiRequestParameters == null || string.IsNullOrEmpty(apiRequestParameters.gstin))
+            {
+                throw new Exception("gstin is required");
+            }
+            var dic = new Dictionary<string, string>
+            {
+                { "gstin", apiRequestParameters.gstin },
+                { "int_tran_id", apiRequestParameters.int_tran_id },
+                { "action", "REQSTS" }
+            };
+
+            return dic;
+        }
+
+        public async Task<GSTNResult<List<GetIMSRequestStatus>>> GetIMSRequestStatus(APIRequestParameters apiRequestParameters)
+        {
+            Dictionary<string, string> dic = this.prepareIMSRequestStatusDictionary(apiRequestParameters);
+            this.PrepareQueryString(dic);
+            var info = await this.GetAsync<ResponseDataInfo>();
+            var output = this.Decrypt<GSTRIMSTotal>(info.Data);
+            var model = this.BuildResult<List<GetIMSRequestStatus>>(info, output.imsrequeststatus);
             return model;
 
         }

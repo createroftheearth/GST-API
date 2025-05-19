@@ -10,6 +10,7 @@
         public static string GSTR1_V3_RETURN_URL = "/taxpayerapi/v3.0/returns/gstr1";
         public static string GSTR2B_Get2BDetails_URL = "/taxpayerapi/v2.0/returns/gstr2b";
         public static string GSTR2B_GenOnDemand_URL = "/taxpayerapi/v4.0/returns/gstr2b";
+        public static string GSTR2B_GenStatus_URL = "/taxpayerapi/v4.0/returns/gstr2b";
         public static string GSTR3B_Get3B_URL = "/taxpayerapi/v6.0/returns/gstr3b";
         public static string CommomAPIDocDownload_URL = "/taxpayerapi/v1.1/document";
 
@@ -65,6 +66,15 @@
 
         public static string GSTRIMS_InvoiceCount_URL = "/taxpayerapi/v1.0/returns/ims";
         public static string GSTRIMS_Reset_URL = "/taxpayerapi/v1.0/returns/ims";
+        public static string GSTRIMS_Save_URL = "/taxpayerapi/v1.2/returns/ims";
+        public static string GSTRIMS_SUPInvoice_URL = "/taxpayerapi/v1.0/returns/ims";
+
+
+        //GSTR2A
+
+        public static string GSTR2A = "/taxpayerapi/v2.2/returns/gstr2a";
+        public static string GSTR2A_OTH = "/taxpayerapi/v2.1/returns/gstr2a";
+
 
     }
 }
