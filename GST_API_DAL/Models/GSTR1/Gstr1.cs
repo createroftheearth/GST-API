@@ -24,6 +24,8 @@ namespace GST_API_DAL.Models
         public string? SaveGstr1Reponse { get; set; }
         public string? NewProceedToFileGstr1Request { get; set; }
         public string? NewProceedToFileGstr1Reponse { get; set; }
+        public string? GetSummaryResponse{ get; set; }
+
     }
 
 }

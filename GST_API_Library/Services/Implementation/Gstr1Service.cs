@@ -167,6 +167,7 @@ namespace GST_API_Library.Services.Implementation
 
             else if (result?.Data.status_cd == "1")
             {
+                //TO-DO: create new column GetSummaryResonse and save info.Data here 
                 return (true, message: "Success",info.Data);
             }
             else

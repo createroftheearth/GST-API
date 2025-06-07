@@ -102,6 +102,8 @@ namespace GST_API.Controllers.ASPController
             });
         }
 
+        //TO-DO make new endpoint here and create call for file gstr1 copy from GSTR1 controller
+
         //[HttpPost("generate-summary")]
         //public async Task<IActionResult> GenerateSummary([FromBody] string id)
         //{

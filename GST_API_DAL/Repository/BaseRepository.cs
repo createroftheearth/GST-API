@@ -105,10 +105,7 @@ namespace GST_API_DAL.Repository
             var replacedMatchBody = new ParameterReplacer(match.Parameters[0], parameter)
                             .Visit(match.Body);
 
-            var combinedBody = Expression.AndAlso(
-                  createdByCheck,
-                  Expression.Invoke(match, parameter)
-              );
+            var combinedBody = Expression.AndAlso(createdByCheck,replacedMatchBody);
 
             return Expression.Lambda<Func<T, bool>>(combinedBody, parameter);
         }

@@ -11,6 +11,8 @@ import { ItmDetail  } from 'src/app/models/b2bInvoice.model';
   styleUrls: ['./gsrt1-list.component.css'],
 })
 export class Gsrt1ListComponent implements OnInit {
+
+  //TO-DO: Add OTP for 5 digits only which supports alphanumeric characters, 
   ddlOptions = ['ALL', 'B2B', 'HSN', 'DOC Issue'];
   displayedColumns: string[] = ['Document Number', 'From Invoice', 'To Invoice', 'Net Issue', 'Total Issued'];
   selectedOptions = 'ALL';
@@ -227,6 +229,8 @@ public data: any[] = [];
     if (this.EVCForm.valid) {
       this.gstr1Service.generateOTP(this.EVCForm.value.PAN,gstnId).subscribe((data) => {
         if (data.isSuccess) {
+          this.closePopup();
+          //TO-DO: open a new popup for OTP and send data.data in otp dialog so you can use it when sending request to Visual Studio Server. 
           this.isSubmit = true;
           this.otpSent = true;
           // this.loadData();
