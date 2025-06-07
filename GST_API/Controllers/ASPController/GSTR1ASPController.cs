@@ -2,6 +2,7 @@
 using GST_API.Middlewares;
 using GST_API.Services;
 using GST_API_DAL.Models;
+using GST_API_Library.Models;
 using GST_API_Library.Models.GSTR1DTO;
 using GST_API_Library.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -64,7 +65,7 @@ namespace GST_API.Controllers.ASPController
         }
 
         [HttpPost("submit")]
-        public async Task<IActionResult> Submit([FromBody] request data)
+        public async Task<IActionResult> Submit([FromBody] Request data)
         {
             var (isSuccess, message) = await _gstr1Service.SubmitGSTR1(data.id, Constants.GSTR1_SAVE_URL);
             return Ok(new ResponseModel
@@ -76,7 +77,7 @@ namespace GST_API.Controllers.ASPController
         }
 
         [HttpPost("proceed-to-file")]
-        public async Task<IActionResult> ProceedToFile([FromBody] request data)
+        public async Task<IActionResult> ProceedToFile([FromBody] Request data)
         {
             var (isSuccess, message) = await _gstr1Service.ProceedToFile(data.id, Constants.GSTR1_NewProceedToFile_URL);
             return Ok(new ResponseModel
@@ -89,22 +90,29 @@ namespace GST_API.Controllers.ASPController
 
 
         [HttpPost("generate-evc-otp")]
-        public async Task<IActionResult> GenerateEVCOTP()
+        public async Task<IActionResult> GenerateEVCOTP([FromBody] PanRequest request)
         {
 
-            var (isSuccess, message) = await _gstr1Service.GenerateEVCOTP();
+            var (isSuccess, message, data) = await _gstr1Service.GenerateEVCOTP(request, Constants.GSTR1_V4_RETURN_URL);
             return Ok(new ResponseModel
             {
                 isSuccess = isSuccess,
                 message = message,
-                data = isSuccess
+                data = data
             });
         }
 
-    }
+        //[HttpPost("generate-summary")]
+        //public async Task<IActionResult> GenerateSummary([FromBody] string id)
+        //{
+        //    var (isSuccess, message) = await _gstr1Service.GenerateSummary(id)
+        //    return Ok(new ResponseModel
+        //    {
+        //        isSuccess = isSuccess,
+        //        message = message,
+        //        data = isSuccess
+        //    });
+        //}
 
-    public class request
-    {
-        public int id { get; set; }
     }
 }

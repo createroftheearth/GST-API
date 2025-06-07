@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using GST_API_DAL;
 using GST_API_DAL.Models;
+using GST_API_Library.Models;
+using GST_API_Library.Models.GSTR1;
 using GST_API_Library.Models.GSTR1DTO;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,6 +20,8 @@ namespace GST_API_Library.Services.Interfaces
 
         Task<(bool IsSucess, string Message)> SubmitGSTR1(int id, string url);
         Task<(bool IsSucess, string Message)> ProceedToFile(int id, string url);
-        Task<(bool? isSuccess, string message)> GenerateEVCOTP();
+        Task<(bool? isSuccess, string message, GetGSTR1SummaryRes? data)> GenerateEVCOTP(PanRequest request, string getSumURL);
+
+        //Task<(bool isSuccess, string message)> GenerateSummary(string id);
     }  
 }

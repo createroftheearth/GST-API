@@ -30,14 +30,20 @@ export class GSTR1Service {
     });
   }
 
-  generateOTP() {
-    return this.httpService.post<any>(`${this.baseUrl}/generate-evc-otp`, {});
+  generateOTP(panNo: string,gstnId: number) {
+    return this.httpService.post<any>(`${this.baseUrl}/generate-evc-otp`, {panNo : panNo,id:gstnId});
   }
 
   fileGSTR1(id: number, otp: string) {
     return this.httpService.post<any>(`${this.baseUrl}/file-gstr1`, {
       id: id,
       otp: otp,
+    });
+  }
+
+    generateSummary(id: number) {
+    return this.httpService.post<any>(`${this.baseUrl}/generate-summary`, {
+      id: id,
     });
   }
 }

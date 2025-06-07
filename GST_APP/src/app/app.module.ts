@@ -54,6 +54,8 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatRadioModule } from '@angular/material/radio';
 
 
 @NgModule({
@@ -108,6 +110,8 @@ import { MatListModule } from '@angular/material/list';
     HttpClientModule,
     NgOtpInputModule,
     ...MaterialModules,
+    MatDialogModule,
+    MatRadioModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },

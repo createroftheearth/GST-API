@@ -34,3 +34,19 @@
     position: relative; /* Ensure child elements are positioned relative to this container */
     overflow: hidden; /* Optional: prevents content overflow */
   }
+
+  .button-container {
+  display: flex;
+  justify-content: space-between; /* Aligns buttons horizontally */
+  width: 100%;
+  margin-top: 10px; /* Adds spacing above the buttons */
+}
+
+.login-btn {
+  width: 45%;
+}
+
+.register-btn {
+  width: 45%;
+  margin-left: auto; /* Moves the button to the right */
+}

@@ -83,6 +83,7 @@ namespace GST_API_DAL.Repository
             //return newEntry;
         }
 
+
         private Expression<Func<T, bool>> AddUserIdCheckInMatch(Expression<Func<T, bool>> match)
         {
             if (!typeof(BaseEntity).IsAssignableFrom(typeof(T)))
@@ -101,6 +102,9 @@ namespace GST_API_DAL.Repository
 
             // Combine with original match: x => (x.CreatedById == userId) && match(x)
             var userFilterLambda = Expression.Lambda<Func<T, bool>>(createdByCheck, parameter);
+            var replacedMatchBody = new ParameterReplacer(match.Parameters[0], parameter)
+                            .Visit(match.Body);
+
             var combinedBody = Expression.AndAlso(
                   createdByCheck,
                   Expression.Invoke(match, parameter)
@@ -292,6 +296,23 @@ namespace GST_API_DAL.Repository
             GC.SuppressFinalize(this);
         }
 
+    }
+
+    public class ParameterReplacer : ExpressionVisitor
+    {
+        private readonly ParameterExpression _oldParameter;
+        private readonly ParameterExpression _newParameter;
+
+        public ParameterReplacer(ParameterExpression oldParameter, ParameterExpression newParameter)
+        {
+            _oldParameter = oldParameter;
+            _newParameter = newParameter;
+        }
+
+        protected override Expression VisitParameter(ParameterExpression node)
+        {
+            return node == _oldParameter ? _newParameter : base.VisitParameter(node);
+        }
     }
 
 }

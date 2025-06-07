@@ -118,7 +118,7 @@ namespace GST_API_Library.Models
     public class RequestPTF : BaseErrorData
     {
         //change by amit as per version 2.2
-        
+
 
         public string action { get; set; }
         public string data { get; set; }
@@ -155,114 +155,118 @@ namespace GST_API_Library.Models
     {
         public string message { get; set; }
         public string error_cd { get; set; }
+        public string? status_cd
+        {
+            get; set;
+        }
     }
 
-    //Created By Himanshu
-    public class ResponseDataInfoGSTR1
-    {
-        public string ack_num { get; set; }
-    }
+        //Created By Himanshu
+        public class ResponseDataInfoGSTR1
+        {
+            public string ack_num { get; set; }
+        }
 
-    public class UnsignedDataInfo
-    {
-        public string data { get; set; }
-        public HeaderData hdr { get; set; }
-        public string action { get; set; }
-        public string hmac { get; set; }
-    }
+        public class UnsignedDataInfo
+        {
+            public string data { get; set; }
+            public HeaderData hdr { get; set; }
+            public string action { get; set; }
+            public string hmac { get; set; }
+        }
 
-    public class UnsignedDataInfo2
-    {
-        public string data { get; set; }
-        public HeaderData1 hdr { get; set; }
-        public string action { get; set; }
-        public string hmac { get; set; }
-    }
+        public class UnsignedDataInfo2
+        {
+            public string data { get; set; }
+            public HeaderData1 hdr { get; set; }
+            public string action { get; set; }
+            public string hmac { get; set; }
+        }
 
-    public class UnsignedDataInfo1
-    {
-        public string data { get; set; }
-        //public HeaderData hdr { get; set; }
-        //public string action { get; set; }
+        public class UnsignedDataInfo1
+        {
+            public string data { get; set; }
+            //public HeaderData hdr { get; set; }
+            //public string action { get; set; }
 
-    }
-    public class SignedDataInfo
-    {
-        public string action { get; set; }
-        public string data { get; set; }
-        public string sign { get; set; }
-        public string st { get; set; }
-        public string sid { get; set; }
-        //public HeaderData hdr { get; set; }
-        //public string hmac { get; set; }
-    }
+        }
+        public class SignedDataInfo
+        {
+            public string action { get; set; }
+            public string data { get; set; }
+            public string sign { get; set; }
+            public string st { get; set; }
+            public string sid { get; set; }
+            //public HeaderData hdr { get; set; }
+            //public string hmac { get; set; }
+        }
     public class GSTNResult<T>: BaseErrorData
-    {
-        public int HttpStatusCode { get; set; }
+        {
+            public int HttpStatusCode { get; set; }
 
-        public T Data { get; set; }
-        
+            public T Data { get; set; }
 
+
+        }
+
+        public class GSTNResult1<T>
+        {
+            //internal string SerializedData;
+
+            public T Data { get; set; }
+            //public T SerializedData { get; set; }
+            //public string serjson { get; set; }
+        }
+
+        //Garima
+        public class GSTR9CHashGenerate
+        {
+            public string hash { get; set; }
+        }
+
+        //Garima Common API
+        public class SavePreference : BaseErrorData
+        {
+            public string status_cd { get; set; }
+        }
+
+        public class UploadDocumentResp
+        {
+            public string doc_id { get; set; }
+        }
+        public class UploadDocumentResponse
+        {
+            public string doc_id { get; set; }
+        }
+
+        public class SavePreferenceResponse
+        {
+            public string status_cd { get; set; }
+        }
+
+        public class CreateNotificationResponse
+        {
+            public string notify_id { get; set; }
+        }
+
+        public class DeleteNotiByIDsResponse
+        {
+            public string status_cd { get; set; }
+        }
+
+        public class Gen2BonDemandResp
+        {
+            public string reference_id { get; set; }
+
+        }
+
+        public class GSTRIMS_Reset_Response
+        {
+            public string reference_id { get; set; }
+        }
+
+        public class GSTR3B_ACKNUM
+        {
+            public string ack_num { get; set; }
+        }
     }
-
-    public class GSTNResult1<T>
-    {
-        //internal string SerializedData;
-
-        public T Data { get; set; }
-        //public T SerializedData { get; set; }
-        //public string serjson { get; set; }
-    }
-
-    //Garima
-    public class GSTR9CHashGenerate
-    {
-        public string hash { get; set; }
-    }
-
-    //Garima Common API
-    public class SavePreference : BaseErrorData
-    {
-        public string status_cd { get; set; }
-    }
-
-    public class UploadDocumentResp
-    {
-        public string doc_id { get; set; }
-    }
-    public class UploadDocumentResponse
-    {
-        public string doc_id { get; set; }
-    }
-
-    public class SavePreferenceResponse
-    {
-        public string status_cd { get; set; }
-    }
-
-    public class CreateNotificationResponse
-    {
-        public string notify_id { get; set; }
-    }
-
-    public class DeleteNotiByIDsResponse
-    {
-        public string status_cd { get; set; }
-    }
-
-    public class Gen2BonDemandResp
-    {
-        public string reference_id { get; set; }
-
-    }
-
-    public class GSTRIMS_Reset_Response
-    {
-        public string reference_id { get; set; }
-    }
-
-    public class GSTR3B_ACKNUM
-    {
-        public string ack_num { get; set; }
-    }
-}

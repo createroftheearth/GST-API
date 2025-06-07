@@ -8,6 +8,7 @@ using GST_API_Library.Models.GSTR1;
 using GST_API_Library.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using GST_API_Library.Models;
+using Newtonsoft.Json.Linq;
 
 namespace GST_API_Library.Services.Implementation
 {
@@ -65,28 +66,40 @@ namespace GST_API_Library.Services.Implementation
 
         public async Task<(bool IsSucess, string Message)> SubmitGSTR1(int id, string url)
         {
-            var gstr1Data = await _gSTR1Repository.FindAsync(match => match.Id == id);
-            if (gstr1Data == null)
+            try
             {
-                return (false, "Data does not exists");
+                var gstr1Data = await _gSTR1Repository.FindAsync(match => match.Id == id);
+                if (gstr1Data == null)
+                {
+                    return (false, "Data does not exists");
+                }
+                string json = gstr1Data.Gstr1SaveRequest;
+                // dynamic gstr1Payload = JsonConvert.DeserializeObject<dynamic>(json);
+                JObject gstr1Payload = JObject.Parse(json);
+                string gstin = gstr1Payload["gstin"].ToString();
+                string fp = gstr1Payload["fp"].ToString();
+
+                GSTNAuthClient client = new GSTNAuthClient(gstin, this.gstinUsername, appKey)
+                {
+                    AuthToken = this.GSTINToken,
+                    DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, appKey)
+                };
+                GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, fp, url);
+                var info = await client2.Save(gstr1Payload);
+                if (string.IsNullOrEmpty(info?.Data?.reference_id))
+                {
+                    var errorMessage = (info?.error?.error_cd ?? "") + " :: " + (info?.error?.message ?? "");
+                    return (false, string.IsNullOrEmpty(errorMessage) ? "Failed to save on GSTR1 server" : errorMessage);
+                }
+                gstr1Data.SaveGstr1Status = (int)GSTR1Status.save;
+                gstr1Data.SaveGstr1Reponse = JsonConvert.SerializeObject(info.Data);
+                await _gSTR1Repository.UpdateAsyn(gstr1Data, gstr1Data.Id);
+                return (true, "Successfully saved on GSTR1 server");
             }
-            dynamic gstr1Payload = JsonConvert.DeserializeObject<dynamic>(gstr1Data.Gstr1SaveRequest);
-            GSTNAuthClient client = new GSTNAuthClient(gstin, this.gstinUsername, appKey)
+            catch(Exception ex)
             {
-                AuthToken = this.GSTINToken,
-                DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, appKey)
-            };
-            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstr1Payload.gstin, gstr1Payload.fp, url);
-            var info = await client2.Save(gstr1Payload);
-            if (string.IsNullOrEmpty(info?.Data?.reference_id))
-            {
-                var errorMessage = (info?.error?.error_cd ?? "") + " :: " + (info?.error?.message ?? "");
-                return (false, string.IsNullOrEmpty(errorMessage)?"Failed to save on GSTR1 server":errorMessage);
+                throw ex;
             }
-            gstr1Data.SaveGstr1Status = (int)GSTR1Status.save;
-            gstr1Data.SaveGstr1Reponse = JsonConvert.SerializeObject(info.Data);
-            await _gSTR1Repository.UpdateAsyn(gstr1Data, gstr1Data.Id);
-            return (true, "Successfully saved on GSTR1 server");
         }
 
         public async Task<(bool IsSucess, string Message)> ProceedToFile(int id, string url)
@@ -121,22 +134,45 @@ namespace GST_API_Library.Services.Implementation
             return (true, "Proceed to File Successfully on GSTR1 server");
         }
 
-        public async Task<(bool? isSuccess, string message)> GenerateEVCOTP()
+        public async Task<(bool? isSuccess, string message, GetGSTR1SummaryRes? data)> GenerateEVCOTP(PanRequest request, string getSumURL)
         {
-            var user = await _userManager.FindByIdAsync(UserId);
-            if (user == null)
+            var gstr1Data = await _gSTR1Repository.FindAsync(match => match.Id == request.id);
+            if (gstr1Data == null)
             {
-                return (false, message :"User not found");
+                return (false, "Data does not exists",null);
             }
+            var ret_period = gstr1Data.FinancialPeriod.ToString("MMyyyy");
             GSTNAuthClient client = new GSTNAuthClient(gstin, gstinUsername, appKey);
+            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin,ret_period , getSumURL);
+            var info = await client2.GetGSTR1Summary1(new APIRequestParameters
+            {
+                gstin = gstr1Data.GSTINNo,
+                ret_period = ret_period,
+            });
+            if(info?.Data == null)
+            {
+                return (false, "Unable to Get Summary", null);
+            }
             var data = new EVCAuthenticationModel
             {
                 form_type = "R1",
-                gstin = user.GSTNNo,
-                pan = user.Organization_PAN
+                gstin = gstr1Data.GSTINNo,
+                pan = request.panNo
             };
-            var result = await client.RequestOTPForEVC(data, GSTINToken);
-            return (true, message: "Success");
+            GSTNResult<BaseResponseModel> result = await client.RequestOTPForEVC(data, GSTINToken);
+            if (result?.Data?.error?.error_cd == "OTP0010")
+            {
+                return (false, message: result?.Data?.error?.message,null);
+            }
+
+            else if (result?.Data.status_cd == "1")
+            {
+                return (true, message: "Success",info.Data);
+            }
+            else
+            {
+                return (false, message: result?.error?.message,null);
+            }
 
         }
     }

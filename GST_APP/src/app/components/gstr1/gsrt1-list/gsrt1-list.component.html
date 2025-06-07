@@ -27,61 +27,262 @@
     <ng-container matColumnDef="action">
       <th mat-header-cell *matHeaderCellDef>Action</th>
       <td mat-cell *matCellDef="let item">
-        <button
-          mat-mini-fab
-          color="secondary"
-          (click)="onSaveGSTR1(item.id)"
-          matTooltip="GSTR1 Save"
-          *ngIf="item.saveGstr1Status === -1 || item.saveGstr1Status === 0"
-        >
+        <button mat-mini-fab color="secondary" (click)="onSaveGSTR1(item.id)" matTooltip="GSTR1 Save"
+          *ngIf="item.saveGstr1Status === -1 || item.saveGstr1Status === 0">
           <mat-icon>cloud_upload</mat-icon>
         </button>
-        <button
-          mat-mini-fab
-          color="accent"
-          (click)="onProceedToFile(item.id)"
-          matTooltip="Proceed To File"
-          *ngIf="item.saveGstr1Status === 0"
-          style="margin-left: 5px"
-        >
+        <!-- *ngIf="item.saveGstr1Status === 0" -->
+        <button mat-mini-fab color="accent" (click)="onProceedToFile(item.id)" matTooltip="Proceed To File"
+          style="margin-left: 5px">
           <mat-icon>description</mat-icon>
         </button>
-        <button
-          mat-mini-fab
-          color="primary"
-          (click)="generateOTP()"
-          matTooltip="Generate OTP to File"
-          *ngIf="item.saveGstr1Status === 1"
-          style="margin-left: 5px"
-        >
+
+        <button mat-mini-fab color="accent" matTooltip="Generate Summary" (click)="onGenerateSummary(item.id)"
+          style="margin-left: 5px">
+          <mat-icon>summarize</mat-icon>
+        </button>
+        <button mat-mini-fab color="primary" (click)="openPopupEVC(item.id)" matTooltip="GSTR1 File"
+          *ngIf="item.saveGstr1Status === -1" style="margin-left: 5px">
           <mat-icon>key</mat-icon>
         </button>
       </td>
     </ng-container>
 
-    <tr
-      mat-header-row
-      *matHeaderRowDef="[
+    <tr mat-header-row *matHeaderRowDef="[
         'id',
         'gstinNo',
         'financialPeriod',
         'grossTurnOver',
         'action'
-      ]"
-    ></tr>
-    <tr
-      mat-row
-      *matRowDef="
+      ]"></tr>
+    <tr mat-row *matRowDef="
         let row;
         columns: ['id', 'gstinNo', 'financialPeriod', 'grossTurnOver', 'action']
-      "
-    ></tr>
+      "></tr>
   </table>
 
-  <mat-paginator
-    [length]="totalRecords"
-    [pageSize]="pageSize"
-    (page)="onPageChange($event.pageIndex + 1)"
-  >
+  <mat-paginator [length]="totalRecords" [pageSize]="pageSize" (page)="onPageChange($event.pageIndex + 1)">
   </mat-paginator>
 </div>
+<br />
+<div class="form-container">
+  <div class="dropdown-container">
+    <mat-form-field appearance="outline">
+      <mat-label>Select an Option</mat-label>
+      <mat-select [(value)]="selectedOptions" (selectionChange)="showTable($event)">
+        <mat-option *ngFor="let option of ddlOptions" [value]="option">
+          {{ option }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+</div>
+
+
+<br />
+<div class="container" *ngIf="selectedTable === 'B2B' || selectedTable === 'ALL'">
+  <div class="b2b-header">B2B Data</div>
+  <table mat-table [dataSource]="b2bData" class="mat-elevation-z8">
+    <ng-container matColumnDef="inum">
+      <th mat-header-cell *matHeaderCellDef>INUM</th>
+           <td mat-cell *matCellDef="let item">
+        <a href="#" (click)="openPopupB2BItem(item.itms, $event)">{{ item.inum }}</a>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="idt">
+      <th mat-header-cell *matHeaderCellDef>IDT</th>
+      <td mat-cell *matCellDef="let item">{{ item.idt }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="val">
+      <th mat-header-cell *matHeaderCellDef>VALUE</th>
+      <td mat-cell *matCellDef="let item">{{ item.val }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="pos">
+      <th mat-header-cell *matHeaderCellDef>POS</th>
+      <td mat-cell *matCellDef="let item">{{ item.pos }}</td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="[
+        'inum',
+        'idt',
+        'val',
+        'pos',
+      ]"></tr>
+    <tr mat-row *matRowDef="
+        let row;
+        columns: ['inum', 'idt', 'val', 'pos']
+      "></tr>
+  </table>
+</div>
+<br />
+<div class="container"  *ngIf="selectedTable === 'HSN' || selectedTable === 'ALL'">
+  <div class="b2b-header">HSN Data</div>
+  <table mat-table [dataSource]="hsnData" class="mat-elevation-z8">
+
+    <!-- HSN Code Column -->
+    <ng-container matColumnDef="HSN Code">
+      <th mat-header-cell *matHeaderCellDef> HSN Code </th>
+      <td mat-cell *matCellDef="let element"> {{ element.hsn_sc }} </td>
+    </ng-container>
+
+    <!-- Taxable Value Column -->
+    <ng-container matColumnDef="Taxable Value">
+      <th mat-header-cell *matHeaderCellDef> Taxable Value </th>
+      <td mat-cell *matCellDef="let element"> ₹{{ element.txval }} </td>
+    </ng-container>
+
+    <!-- CGST Column -->
+    <ng-container matColumnDef="CGST">
+      <th mat-header-cell *matHeaderCellDef> CGST </th>
+      <td mat-cell *matCellDef="let element"> ₹{{ element.camt }} </td>
+    </ng-container>
+
+    <!-- SGST Column -->
+    <ng-container matColumnDef="SGST">
+      <th mat-header-cell *matHeaderCellDef> SGST </th>
+      <td mat-cell *matCellDef="let element"> ₹{{ element.samt }} </td>
+    </ng-container>
+
+    <!-- Description Column -->
+    <ng-container matColumnDef="Description">
+      <th mat-header-cell *matHeaderCellDef> Description </th>
+      <td mat-cell *matCellDef="let element"> {{ element.desc || 'N/A' }} </td>
+    </ng-container>
+
+    <!-- Table Headers & Row Definitions -->
+    <tr mat-header-row *matHeaderRowDef="['HSN Code', 'Taxable Value', 'CGST', 'SGST', 'Description']"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['HSN Code', 'Taxable Value', 'CGST', 'SGST', 'Description'];"></tr>
+
+  </table>
+
+</div>
+
+<br />
+<div class="container" *ngIf="selectedTable === 'DOC Issue' || selectedTable === 'ALL'">
+  <div class="b2b-header">DOC Issue Data</div>
+  <table mat-table [dataSource]="docIssueData" class="mat-elevation-z8">
+
+    <!-- Document Number Column -->
+    <ng-container matColumnDef="Document Number">
+      <th mat-header-cell *matHeaderCellDef> Document Number </th>
+      <td mat-cell *matCellDef="let element"> {{ element.doc_num }} </td>
+    </ng-container>
+
+    <!-- From Invoice Column -->
+    <ng-container matColumnDef="From Invoice">
+      <th mat-header-cell *matHeaderCellDef> From Invoice </th>
+      <td mat-cell *matCellDef="let element"> {{ element.from }} </td>
+    </ng-container>
+
+    <!-- To Invoice Column -->
+    <ng-container matColumnDef="To Invoice">
+      <th mat-header-cell *matHeaderCellDef> To Invoice </th>
+      <td mat-cell *matCellDef="let element"> {{ element.to }} </td>
+    </ng-container>
+
+    <!-- Net Issue Column -->
+    <ng-container matColumnDef="Net Issue">
+      <th mat-header-cell *matHeaderCellDef> Net Issue </th>
+      <td mat-cell *matCellDef="let element"> {{ element.net_issue }} </td>
+    </ng-container>
+
+    <!-- Total Issued Column -->
+    <ng-container matColumnDef="Total Issued">
+      <th mat-header-cell *matHeaderCellDef> Total Issued </th>
+      <td mat-cell *matCellDef="let element"> {{ element.totnum }} </td>
+    </ng-container>
+
+    <!-- Define Headers and Rows -->
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+  </table>
+</div>
+
+<ng-template #popupTemplateB2BItem>
+   <div class="b2b-header">Item Details</div>
+<table mat-table [dataSource]="data" class="mat-elevation-z8">
+  
+  <ng-container matColumnDef="num">
+    <th mat-header-cell *matHeaderCellDef> Item No </th>
+    <td mat-cell *matCellDef="let item">{{ item.num }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="txval">
+    <th mat-header-cell *matHeaderCellDef> Taxable Value </th>
+    <td mat-cell *matCellDef="let item"> ₹{{ item.itm_det.txval }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="rt">
+    <th mat-header-cell *matHeaderCellDef> Rate </th>
+    <td mat-cell *matCellDef="let item">{{ item.itm_det.rt }}%</td>
+  </ng-container>
+
+  <ng-container matColumnDef="camt">
+    <th mat-header-cell *matHeaderCellDef> CGST Amount </th>
+    <td mat-cell *matCellDef="let item"> ₹{{ item.itm_det.camt }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="samt">
+    <th mat-header-cell *matHeaderCellDef> SGST Amount </th>
+    <td mat-cell *matCellDef="let item"> ₹{{ item.itm_det.samt }}</td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="['num', 'txval', 'rt', 'camt', 'samt']"></tr>
+  <tr mat-row *matRowDef="let row; columns: ['num', 'txval', 'rt', 'camt', 'samt'];"></tr>
+</table>
+<br />
+<button mat-button (click)="closePopup()">Close</button>
+</ng-template>
+
+<ng-template #popupTemplateGS>
+  <div mat-dialog-title class="header-title">Generate Summary</div>
+  <div mat-dialog-content>
+    <mat-radio-group aria-label="Select an option" class="radio-group">
+      <mat-radio-button value="1">Nil</mat-radio-button>
+      <mat-radio-button value="2">GSTIN FP</mat-radio-button>
+    </mat-radio-group>
+  </div>
+  <div mat-dialog-actions class="center-actions">
+    <button mat-raised-button color="primary">Submit</button>
+    <button mat-raised-button color="primary" (click)="closeDialog()">Cancel</button>
+  </div>
+</ng-template>
+
+<ng-template #popupTemplateEVC let-data>
+  <div mat-dialog-title class="header-title">GSTR1 File</div>
+  <div class="center-container" *ngIf="!isSubmit">
+    <form [formGroup]="EVCForm">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Authorised PAN</mat-label>
+        <input matInput formControlName="PAN" placeholder="Enter Authorised PAN" required />
+        <mat-error *ngIf="getErrorMessage('PAN')">{{
+          getErrorMessage("PAN")
+          }}</mat-error>
+      </mat-form-field>
+    </form>
+  </div>
+  <div mat-dialog-actions class="center-actions" *ngIf="!isSubmit">
+    <button mat-raised-button color="primary" type="submit" (click)="onSubmit(data.gstnId)">Submit</button>
+
+    <button mat-raised-button color="primary" (click)="closeDialog()">Cancel</button>
+  </div>
+
+  <!-- *ngIf="otpSent" -->
+  <div class="card-content otp-content col" *ngIf="otpSent">
+    <h1>Verify OTP</h1>
+    <p>An OTP has been sent to your registered mobile number</p>
+    <div class="otp-container">
+      <ng-otp-input (onInputChange)="onOtpChange($event)"
+        [config]="{ length: 6, allowNumbersOnly: true }"></ng-otp-input>
+    </div>
+    <mat-error *ngIf="invalidOtpMessage">
+      {{ invalidOtpMessage }}
+    </mat-error>
+  </div>
+  <div class="picture-content col"></div>
+</ng-template>
+<!-- <button mat-button (click)="openPopup()">Open Popup</button> -->
