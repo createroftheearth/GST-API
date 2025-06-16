@@ -89,7 +89,7 @@ namespace GST_API_Library.Models.GSTR9
         public int csamt { get; set; }
     }
 
-    public class Cgst
+    public class Cgst10
     {
         public int tx { get; set; }
         public int intr { get; set; }
@@ -395,8 +395,8 @@ namespace GST_API_Library.Models.GSTR9
 
     public class PdByCash
     {
-        public Sgst sgst { get; set; }
-        public Cgst cgst { get; set; }
+        public Sgst10 sgst { get; set; }
+        public Cgst10 cgst { get; set; }
         public int liab_id { get; set; }
         public string debit_id { get; set; }
         public int trancd { get; set; }
@@ -518,7 +518,7 @@ namespace GST_API_Library.Models.GSTR9
     //    public int csamt { get; set; }
     //}
 
-    public class Sgst
+    public class Sgst10
     {
         public int tx { get; set; }
         public int intr { get; set; }
@@ -787,8 +787,8 @@ namespace GST_API_Library.Models.GSTR9
 
     public class TaxPay
     {
-        public Sgst sgst { get; set; }
-        public Cgst cgst { get; set; }
+        public Sgst10 sgst { get; set; }
+        public Cgst10 cgst { get; set; }
         public int liab_id { get; set; }
         public int trancd { get; set; }
         public string trandate { get; set; }

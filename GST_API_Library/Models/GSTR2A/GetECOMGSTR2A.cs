@@ -7,11 +7,12 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace GST_API_Library.Models.GSTR2A
 {
-    public class GetECOMAGSTR2A
+    public class GetECOMGSTR2A
     {
-        public List<Ecoma2A> ecoma { get; set; }
+        public List<Ecom> ecom { get; set; }
     }
-    public class Ecoma2A
+
+    public class Ecom
     {
         public string ctin { get; set; }
         public string cfs { get; set; }
@@ -19,32 +20,30 @@ namespace GST_API_Library.Models.GSTR2A
         public string cfs3b { get; set; }
         public string fldtr1 { get; set; }
         public string flprdr1 { get; set; }
-        public List<Inv2A> inv { get; set; }
+        public List<Inv5> inv { get; set; }
     }
 
-    public class Inv2A
+    public class Inv5
     {
         public string chksum { get; set; }
         public string inum { get; set; }
         public string idt { get; set; }
-        public string oinum { get; set; }
-        public string oidt { get; set; }
         public double val { get; set; }
         public string pos { get; set; }
         public string inv_typ { get; set; }
         public string aspd { get; set; }
         public string atyp { get; set; }
         public string rchrg { get; set; }
-        public List<Itm7> itms { get; set; }
+        public List<Itm5> itms { get; set; }
     }
 
-    public class Itm7
+    public class Itm5
     {
         public int num { get; set; }
-        public ItmDet1 itm_det { get; set; }
+        public ItmDet5 itm_det { get; set; }
     }
 
-    public class ItmDet1
+    public class ItmDet5
     {
         public int rt { get; set; }
         public double txval { get; set; }

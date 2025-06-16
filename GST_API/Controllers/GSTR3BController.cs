@@ -53,33 +53,33 @@ namespace GST_API.Controllers
             };
         }
 
-        //[HttpPost("{otp}/file3b")]
-        //public async Task<ResponseModel> file3b([FromBody] GetGSTR3BDetails data, string otp)
-        //{
-        //    GSTNAuthClient client = new GSTNAuthClient(gstin, this.gstinUsername, appKey)
-        //    {
-        //        AuthToken = this.GSTINToken,
-        //        DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, appKey)
-        //    };
-        //    GSTR3BApiClient client2 = new GSTR3BApiClient(client, data.gstin, data.ret_period, Constants.GSTR3B_Get3B_URL);
-        //    string userId = User.Claims.FirstOrDefault(z => z.Type == "Id")?.Value;
-        //    if (string.IsNullOrEmpty(userId))
-        //    {
-        //        return new ResponseModel
-        //        {
-        //            isSuccess = false,
-        //            message = "Invalid user Request"
-        //        };
-        //    }
-        //    string PAN = (await _userManager.FindByIdAsync(userId))?.Organization_PAN;
-        //    var info = await client2.filegstr3b(data, otp, PAN);
-        //    return new ResponseModel
-        //    {
-        //        data = info,
-        //        isSuccess = true,
-        //        message = "success"
-        //    };
-        //}
+        [HttpPost("{otp}/file3b")]
+        public async Task<ResponseModel> file3b([FromBody] GetGSTR3BDetails data, string otp)
+        {
+            GSTNAuthClient client = new GSTNAuthClient(gstin, this.gstinUsername, appKey)
+            {
+                AuthToken = this.GSTINToken,
+                DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, appKey)
+            };
+            GSTR3BApiClient client2 = new GSTR3BApiClient(client, data.gstin, data.ret_period, Constants.GSTR3B_Get3B_URL);
+            string userId = User.Claims.FirstOrDefault(z => z.Type == "Id")?.Value;
+            if (string.IsNullOrEmpty(userId))
+            {
+                return new ResponseModel
+                {
+                    isSuccess = false,
+                    message = "Invalid user Request"
+                };
+            }
+            string PAN = (await _userManager.FindByIdAsync(userId))?.Organization_PAN;
+            var info = await client2.filegstr3b(data, otp, PAN);
+            return new ResponseModel
+            {
+                data = info,
+                isSuccess = true,
+                message = "success"
+            };
+        }
 
         // END AMIT 10FEB2025 SAVE GSTR3B
 
@@ -377,7 +377,7 @@ namespace GST_API.Controllers
                 AuthToken = this.GSTINToken,
                 DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, appKey)
             };
-            GSTR3BApiClient client2 = new GSTR3BApiClient(client, gstin, "052024", Constants.GSTR3B_Get3B_URL);
+            GSTR3BApiClient client2 = new GSTR3BApiClient(client, gstin, "042024", Constants.GSTR3B_Get3B_URL);
             var info = await client2.offsetliab(model);
 
 

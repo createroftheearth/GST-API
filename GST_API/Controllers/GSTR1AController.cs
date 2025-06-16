@@ -151,33 +151,33 @@ namespace GST_API.Controllers
             };
         }
 
-        //[HttpPost("{otp}/file1A")]
-        //public async Task<ResponseModel> file1A([FromBody] GetGSTR1ASummaryResp data, string otp)
-        //{
-        //    GSTNAuthClient client = new GSTNAuthClient(gstin, this.gstinUsername, appKey)
-        //    {
-        //        AuthToken = this.GSTINToken,
-        //        DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, appKey)
-        //    };
-        //    GSTR1ApiClient client2 = new GSTR1ApiClient(client, data.gstin, data.ret_period, Constants.GSTR1_V4_RETURN_URL);
-        //    string userId = User.Claims.FirstOrDefault(z => z.Type == "Id")?.Value;
-        //    if (string.IsNullOrEmpty(userId))
-        //    {
-        //        return new ResponseModel
-        //        {
-        //            isSuccess = false,
-        //            message = "Invalid user Request"
-        //        };
-        //    }
-        //    string PAN = (await _userManager.FindByIdAsync(userId))?.Organization_PAN;
-        //    var info = await client2.filegstr1A(data, otp, PAN);
-        //    return new ResponseModel
-        //    {
-        //        data = info,
-        //        isSuccess = true,
-        //        message = "success"
-        //    };
-        //}
+        [HttpPost("{otp}/file1A")]
+        public async Task<ResponseModel> file1A([FromBody] GetGSTR1ASummaryResp data, string otp)
+        {
+            GSTNAuthClient client = new GSTNAuthClient(gstin, this.gstinUsername, appKey)
+            {
+                AuthToken = this.GSTINToken,
+                DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, appKey)
+            };
+            GSTR1ApiClient client2 = new GSTR1ApiClient(client, data.gstin, data.ret_period, Constants.GSTR1_V4_RETURN_URL);
+            string userId = User.Claims.FirstOrDefault(z => z.Type == "Id")?.Value;
+            if (string.IsNullOrEmpty(userId))
+            {
+                return new ResponseModel
+                {
+                    isSuccess = false,
+                    message = "Invalid user Request"
+                };
+            }
+            string PAN = (await _userManager.FindByIdAsync(userId))?.Organization_PAN;
+            var info = await client2.filegstr1A(data, otp, PAN);
+            return new ResponseModel
+            {
+                data = info,
+                isSuccess = true,
+                message = "success"
+            };
+        }
 
         [HttpGet("GetAT")]
         public async Task<ResponseModel> GetAT([FromQuery] APIRequestParameters1A model)

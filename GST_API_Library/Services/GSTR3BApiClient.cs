@@ -78,13 +78,13 @@ namespace GST_API_Library.Services
             return dic;
         }
 
-        public async Task<GSTNResult1<GetGSTR3BDetails>> GetGSTR3BDetails(APIRequestParameters apiRequestParameters)
+        public async Task<GSTNResult<GetGSTR3BDetails>> GetGSTR3BDetails(APIRequestParameters apiRequestParameters)
         {
             Dictionary<string, string> dic = this.prepareGSTR3BDetailsDictionary(apiRequestParameters);
             this.PrepareQueryString(dic);
-            var info = await this.GetAsync1<ResponseDataInfo>();
+            var info = await this.GetAsync<ResponseDataInfo>();
             var output = this.Decrypt<GetGSTR3BDetails>(info.Data);
-            var model = this.BuildResult1<GetGSTR3BDetails>(info, output);
+            var model = this.BuildResult<GetGSTR3BDetails>(info, output);
             return model;
 
         }

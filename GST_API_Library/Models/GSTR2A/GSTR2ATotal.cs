@@ -32,9 +32,21 @@ namespace GST_API_Library.Models.GSTR2A
 
         public string ret_period { get; set; }
 
+        public List<GetAMDHISTGSTR2A> GetAMDHISTGSTR2A { get; set; }
+
+        public List<GetB2BGSTR2A> GetB2BGSTR2A { get; set; }
+
+        public List<GetB2BAGSTR2A> GetB2BAGSTR2A { get; set; }
+
+        public List<GetCDNInvGSTR2A> GetCDNInvGSTR2A { get; set; }
+
+        public List<GetCDNAInvGSTR2A> GetCDNAInvGSTR2A { get; set; }
+
+        public List<GetECOMGSTR2A> GetECOMGSTR2A { get; set; }
+
         public List<GetECOMAGSTR2A> GetECOMAGSTR2A { get; set; }
         public List<GetIMPGGSTR2A> GetIMPGGSTR2A { get; set; }
-        public List<GetIMPGZGSTR2A> GetIMPGZGSTR2A { get; set; }
+        public List<GetIMPGSEZGSTR2A> GetIMPGSEZGSTR2A { get; set; }
         public List<GetISDCreditGSTR2A> GetISDCreditGSTR2A { get; set; }
         public List<GetTCSCreditGSTR2A> GetTCSCreditGSTR2A { get; set; }
         public List<GetTDSCreditGSTR2A> GetTDSCreditGSTR2A { get; set; }

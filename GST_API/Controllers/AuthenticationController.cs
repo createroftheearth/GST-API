@@ -199,7 +199,7 @@ namespace GST_API.Controllers
 
         [HttpGet("otp-evc-request")]
         public async Task<ResponseModel> InitiateRequestOTPForEVC([FromQuery]EVCAuthenticationModel model)
-        {
+        {   
             if (ModelState.IsValid)
             {
                 GSTNAuthClient client = new GSTNAuthClient(gstin, gstinUsername, appKey);

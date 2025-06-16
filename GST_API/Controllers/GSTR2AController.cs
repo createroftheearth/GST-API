@@ -56,8 +56,8 @@ namespace GST_API.Controllers
             }
         }
 
-        [HttpGet("GetIMPGAgstr2A")]
-        public async Task<ResponseModel> GetIMPGAgstr2A([FromQuery] APIRequestParameters model)
+        [HttpGet("GetIMPGgstr2A")]
+        public async Task<ResponseModel> GetIMPGgstr2A([FromQuery] APIRequestParameters model)
         {
             if (string.IsNullOrEmpty(this.GSTINToken) || string.IsNullOrEmpty(this.GSTINSek))
             {
@@ -75,7 +75,7 @@ namespace GST_API.Controllers
             };
             try
             {
-                GSTR2AApiClient client2 = new GSTR2AApiClient(client, gstin, model.ret_period, Constants.GSTR2A);
+                GSTR2AApiClient client2 = new GSTR2AApiClient(client, gstin, model.ret_period, Constants.GSTR2A_OTH);
                 var info = await client2.GetIMPG2A(model);
                 return new ResponseModel
                 {
@@ -94,7 +94,157 @@ namespace GST_API.Controllers
             }
         }
 
+        [HttpGet("GetIMPGSEZgstr2A")]
+        public async Task<ResponseModel> GetIMPGSEZgstr2A([FromQuery] APIRequestParameters model)
+        {
+            if (string.IsNullOrEmpty(this.GSTINToken) || string.IsNullOrEmpty(this.GSTINSek))
+            {
+                return new ResponseModel
+                {
+                    isSuccess = false,
+                    message = "Please send 'GSTIN-Token' or 'GSTIN-Sek' in headers"
+                };
+            }
+            GSTNAuthClient client = new GSTNAuthClient(gstin, this.gstinUsername, this.appKey)
+            {
+                AuthToken = this.GSTINToken,
+                DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, this.appKey)
 
+            };
+            try
+            {
+                GSTR2AApiClient client2 = new GSTR2AApiClient(client, gstin, model.ret_period, Constants.GSTR2A_OTH);
+                var info = await client2.GetIMPGSEZ2A(model);
+                return new ResponseModel
+                {
+                    data = info,
+                    isSuccess = true,
+                    message = "success"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    isSuccess = false,
+                    message = ex.Message
+                };
+            }
+        }
+
+        [HttpGet("GetISDCREDITgstr2A")]
+        public async Task<ResponseModel> GetISDCREDITgstr2A([FromQuery] APIRequestParameters model)
+        {
+            if (string.IsNullOrEmpty(this.GSTINToken) || string.IsNullOrEmpty(this.GSTINSek))
+            {
+                return new ResponseModel
+                {
+                    isSuccess = false,
+                    message = "Please send 'GSTIN-Token' or 'GSTIN-Sek' in headers"
+                };
+            }
+            GSTNAuthClient client = new GSTNAuthClient(gstin, this.gstinUsername, this.appKey)
+            {
+                AuthToken = this.GSTINToken,
+                DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, this.appKey)
+
+            };
+            try
+            {
+                GSTR2AApiClient client2 = new GSTR2AApiClient(client, gstin, model.ret_period, Constants.GSTR2A_OTH);
+                var info = await client2.GetISD2A(model);
+                return new ResponseModel
+                {
+                    data = info,
+                    isSuccess = true,
+                    message = "success"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    isSuccess = false,
+                    message = ex.Message
+                };
+            }
+        }
+
+        [HttpGet("GetTCSCREDITgstr2A")]
+        public async Task<ResponseModel> GetTCSCREDITgstr2A([FromQuery] APIRequestParameters model)
+        {
+            if (string.IsNullOrEmpty(this.GSTINToken) || string.IsNullOrEmpty(this.GSTINSek))
+            {
+                return new ResponseModel
+                {
+                    isSuccess = false,
+                    message = "Please send 'GSTIN-Token' or 'GSTIN-Sek' in headers"
+                };
+            }
+            GSTNAuthClient client = new GSTNAuthClient(gstin, this.gstinUsername, this.appKey)
+            {
+                AuthToken = this.GSTINToken,
+                DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, this.appKey)
+
+            };
+            try
+            {
+                GSTR2AApiClient client2 = new GSTR2AApiClient(client, gstin, model.ret_period, Constants.GSTR2A_OTH);
+                var info = await client2.GetTCS2A(model);
+                return new ResponseModel
+                {
+                    data = info,
+                    isSuccess = true,
+                    message = "success"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    isSuccess = false,
+                    message = ex.Message
+                };
+            }
+        }
+
+        [HttpGet("GetTDSCREDITgstr2A")]
+        public async Task<ResponseModel> GetTDSCREDITgstr2A([FromQuery] APIRequestParameters model)
+        {
+            if (string.IsNullOrEmpty(this.GSTINToken) || string.IsNullOrEmpty(this.GSTINSek))
+            {
+                return new ResponseModel
+                {
+                    isSuccess = false,
+                    message = "Please send 'GSTIN-Token' or 'GSTIN-Sek' in headers"
+                };
+            }
+            GSTNAuthClient client = new GSTNAuthClient(gstin, this.gstinUsername, this.appKey)
+            {
+                AuthToken = this.GSTINToken,
+                DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, this.appKey)
+
+            };
+            try
+            {
+                GSTR2AApiClient client2 = new GSTR2AApiClient(client, gstin, model.ret_period, Constants.GSTR2A_OTH);
+                var info = await client2.GetTDS2A(model);
+                return new ResponseModel
+                {
+                    data = info,
+                    isSuccess = true,
+                    message = "success"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    isSuccess = false,
+                    message = ex.Message
+                };
+            }
+        }
 
     }
 }
