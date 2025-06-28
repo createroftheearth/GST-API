@@ -149,10 +149,10 @@ if (!Directory.Exists(baseLogPath))
     Directory.CreateDirectory(baseLogPath);
 }
 
-var logger = new LoggerConfiguration()
+Log.Logger = new LoggerConfiguration()
     .WriteTo.File(baseLogPath + "\\ApiLogs-.log", rollingInterval: RollingInterval.Day).CreateLogger();
 
-builder.Logging.AddSerilog(logger);
+builder.Logging.AddSerilog(Log.Logger);
 
 builder.Services.Configure<ApiBehaviorOptions>(options
     => options.SuppressModelStateInvalidFilter = true);
@@ -194,7 +194,7 @@ app.Run();
 
 void ApplyMigration()
 {
-    logger.Information("Environment fetched >>>>>> "+env);
+    Log.Information("Environment fetched >>>>>> "+env);
     if (!EncryptionUtils.isProduction)
     {
         return;
@@ -204,7 +204,7 @@ void ApplyMigration()
         var _Db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
         if (_Db != null)
         {
-            logger.Information("Using Connection String >>>> " + connectionString);
+            Log.Information("Using Connection String >>>> " + connectionString);
             if (_Db.Database.GetPendingMigrations().Any())
             {
                 _Db.Database.Migrate();

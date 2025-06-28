@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Headers;
+﻿using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using GST_API_Library.Models;
 using Newtonsoft.Json;
 using Microsoft.Owin.Infrastructure;
+using Serilog;
 
 namespace GST_API_Library.Services
 {
@@ -69,7 +65,7 @@ namespace GST_API_Library.Services
             using (var client = GetHttpClient())
             {
                 //url2 to url3 amit
-                System.Console.WriteLine("GET:" + url2);
+                Log.Information("GET:" + url2);
                 HttpResponseMessage response = await client.GetAsync(url2);
                 return BuildResponse<TOutput>(response);
             }
@@ -81,7 +77,7 @@ namespace GST_API_Library.Services
             using (var client = GetHttpClient())
             {
                 //url2 to url3 amit
-                System.Console.WriteLine("GET:" + url2);
+                Log.Information("GET:" + url2);
                 HttpResponseMessage response = await client.GetAsync(url2);
                 return BuildResponse1<TOutput>(response);
             }
@@ -92,7 +88,7 @@ namespace GST_API_Library.Services
         {
             using (var client = GetHttpClient(returnType,apiVersion))
             {
-                System.Console.WriteLine("POST:" + url2);
+                Log.Information("POST:" + url2);
                 HttpResponseMessage response;
                 if (typeof(TInput) == typeof(string))
                 {
@@ -112,7 +108,7 @@ namespace GST_API_Library.Services
         {
             using (var client = GetHttpClient(returnType,apiVersion))
             {
-                System.Console.WriteLine("PUT:" + url2);
+                Log.Information("PUT:" + url2);
                 HttpResponseMessage response;
                 if (typeof(TInput) == typeof(string))
                 {
@@ -132,7 +128,7 @@ namespace GST_API_Library.Services
         //{
         //    using (var client = GetHttpClient(returnType, apiVersion))
         //    {
-        //        System.Console.WriteLine("PUT:" + url2);
+        //        Log.Information("PUT:" + url2);
         //        HttpResponseMessage response;
         //        if (typeof(TInput) == typeof(string))
         //        {
@@ -152,7 +148,7 @@ namespace GST_API_Library.Services
         //{
         //    using (var client = GetHttpClient())
         //    {
-        //        System.Console.WriteLine("PUT:" + url2);
+        //        Log.Information("PUT:" + url2);
         //        HttpResponseMessage response = await client.PutAsJsonAsync(url2, data);
         //        return BuildResponse<TOutput>(response);
         //    }
@@ -206,7 +202,7 @@ namespace GST_API_Library.Services
                 HttpStatusCode = Convert.ToInt32(response.StatusCode.ToString("D"))
             };
             var str1 = response.Content.ReadAsStringAsync().Result;
-            System.Console.WriteLine("Obtained Result:" + str1 + System.Environment.NewLine);
+            Log.Information("Obtained Result:" + str1 + System.Environment.NewLine);
             if (resultInfo.HttpStatusCode == (int)HttpStatusCode.OK)
             {
                 if (typeof(TOutput) == typeof(String))
@@ -230,7 +226,7 @@ namespace GST_API_Library.Services
                 //    HttpStatusCode = Convert.ToInt32(response.StatusCode.ToString("D"))
             };
             var str1 = response.Content.ReadAsStringAsync().Result;
-            System.Console.WriteLine("Obtained Result:" + str1 + System.Environment.NewLine);
+            Log.Information("Obtained Result:" + str1 + System.Environment.NewLine);
             //if (resultInfo.HttpStatusCode == (int)HttpStatusCode.OK)
             {
                 if (typeof(TOutput) == typeof(String))
