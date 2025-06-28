@@ -134,7 +134,91 @@ namespace GST_API_Library.Services.Implementation
             return (true, "Proceed to File Successfully on GSTR1 server");
         }
 
-        public async Task<(bool? isSuccess, string message, GetGSTR1SummaryRes? data)> GenerateEVCOTP(PanRequest request, string getSumURL)
+
+
+        public async Task<(bool IsSucess, string Message)> GSTR1File(Gstr1Request request, string getFileURL)
+        {
+            var gstr1Data = await _gSTR1Repository.FindAsync(match => match.Id == request.id);
+            if (gstr1Data == null)
+            {
+                return (false, "Data does not exists");
+            }
+            var ret_period = gstr1Data.FinancialPeriod.ToString("MMyyyy");
+
+            GSTNAuthClient client = new GSTNAuthClient(gstin, gstinUsername, appKey)
+            {
+                AuthToken = this.GSTINToken,
+                DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, appKey)
+            };
+            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, ret_period, getFileURL);
+
+            // var info = await client2.filegstr1(request.Data, request.OTP, request.PAN);
+
+            var info = await client2.filegstr1(new GetGSTR1SummaryRes
+            {
+                gstin = request.Data.gstin,
+                ret_period = request.Data.ret_period,
+                chksum = request.Data.chksum,
+                //smryTyp = request.Data.smryTyp,
+                newSumFlag = request.Data.newSumFlag,
+                sec_sum = request.Data.sec_sum?.Select(dto => new SecSum
+                {
+                    sec_nm = dto.sec_nm,
+                    chksum = dto.chksum,
+                    ttl_rec = dto.ttl_rec,
+                    ttl_tax = dto.ttl_tax,
+                    ttl_igst = dto.ttl_igst,
+                    ttl_sgst = dto.ttl_sgst,
+                    ttl_cgst = dto.ttl_cgst,
+                    ttl_val = dto.ttl_val,
+                    ttl_cess = dto.ttl_cess,
+                    act_tax = dto.act_tax,
+                    act_igst = dto.act_igst,
+                    act_sgst = dto.act_sgst,
+                    act_cgst = dto.act_cgst,
+                    act_val = dto.act_val,
+                    act_cess = dto.act_cess,
+                    cpty_sum = dto.cpty_sum?.Select(cs => new CptySum
+                    {
+                        ctin = cs.ctin,
+                        chksum = cs.chksum,
+                        ttl_rec = cs.ttl_rec,
+                        ttl_tax = cs.ttl_tax,
+                        ttl_igst = cs.ttl_igst,
+                        ttl_sgst = cs.ttl_sgst,
+                        ttl_cgst = cs.ttl_cgst,
+                        ttl_val = cs.ttl_val,
+                        ttl_cess = cs.ttl_cess
+                    }).ToList() ?? new List<CptySum>(),
+                    sub_sections = dto.sub_sections?.Select(ss => new SubSection
+                    {
+                        sec_nm = ss.sec_nm,
+                        chksum = ss.chksum,
+                        ttl_rec = ss.ttl_rec,
+                        ttl_tax = ss.ttl_tax,
+                        ttl_igst = ss.ttl_igst,
+                        ttl_sgst = ss.ttl_sgst,
+                        ttl_cgst = ss.ttl_cgst,
+                        ttl_val = ss.ttl_val,
+                        ttl_cess = ss.ttl_cess,
+                        act_tax = ss.act_tax,
+                        act_igst = ss.act_igst,
+                        act_sgst = ss.act_sgst,
+                        act_cgst = ss.act_cgst,
+                        act_val = ss.act_val,
+                        act_cess = ss.act_cess,
+                        typ = ss.typ,
+                    }).ToList() ?? new List<SubSection>(),
+                }).ToList() ?? new List<SecSum>()
+            }, request.OTP, request.PAN);
+            if (info == null || info?.Data.status == null || info?.Data.error != null)
+            {
+                return (IsSucess: false, Message: info?.Data.error.message);
+            }
+            return (IsSucess: true, Message: "success");
+        }
+
+        public async Task<(bool IsSucess, string Message, GetGSTR1SummaryRes? data)> GenerateEVCOTP(PanRequest request, string getSumURL)
         {
             var gstr1Data = await _gSTR1Repository.FindAsync(match => match.Id == request.id);
             if (gstr1Data == null)
@@ -142,14 +226,30 @@ namespace GST_API_Library.Services.Implementation
                 return (false, "Data does not exists",null);
             }
             var ret_period = gstr1Data.FinancialPeriod.ToString("MMyyyy");
-            GSTNAuthClient client = new GSTNAuthClient(gstin, gstinUsername, appKey);
-            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin,ret_period , getSumURL);
+            //GSTNAuthClient client = new GSTNAuthClient(gstin, gstinUsername, appKey);
+
+            GSTNAuthClient client = new GSTNAuthClient(gstin, this.gstinUsername, appKey)
+            {
+                AuthToken = this.GSTINToken,
+                DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, appKey)
+            };
+
+            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, ret_period, getSumURL);
             var info = await client2.GetGSTR1Summary1(new APIRequestParameters
             {
                 gstin = gstr1Data.GSTINNo,
                 ret_period = ret_period,
+                action_required = null,
+                ctin = null,
+                from_time = null,
+                state_cd = null,
+                file_num = null,
+                smrytyp = null,
+                sub_section = null,
+                rtin = null,
+                sec = null
             });
-            if(info?.Data == null)
+            if(info?.Data?.gstin == null && info?.Data?.chksum == null && info?.Data?.ret_period == null)
             {
                 return (false, "Unable to Get Summary", null);
             }
@@ -162,17 +262,19 @@ namespace GST_API_Library.Services.Implementation
             GSTNResult<BaseResponseModel> result = await client.RequestOTPForEVC(data, GSTINToken);
             if (result?.Data?.error?.error_cd == "OTP0010")
             {
-                return (false, message: result?.Data?.error?.message,null);
+                return (false, Message: result?.Data?.error?.message,null);
             }
 
             else if (result?.Data.status_cd == "1")
             {
                 //TO-DO: create new column GetSummaryResonse and save info.Data here 
-                return (true, message: "Success",info.Data);
+                gstr1Data.GetSummaryResponse = JsonConvert.SerializeObject(info.Data);
+                await _gSTR1Repository.UpdateAsyn(gstr1Data, gstr1Data.Id);
+                return (true, Message: "Success", info.Data);
             }
             else
             {
-                return (false, message: result?.error?.message,null);
+                return (false, Message: result?.error?.message, null);
             }
 
         }

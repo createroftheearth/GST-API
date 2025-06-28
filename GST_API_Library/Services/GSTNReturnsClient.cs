@@ -83,21 +83,27 @@ namespace GST_API_Library.Services
          
         protected internal SignedDataInfo Encrypt2<T>(T input)
         {
-            SignedDataInfo info = new SignedDataInfo();
-            if (input != null)
+            try
             {
-                string finalJson = JsonConvert.SerializeObject(input, Newtonsoft.Json.Formatting.Indented,
-                            new JsonSerializerSettings
-                            {
-                                NullValueHandling = NullValueHandling.Ignore
-                            });
-                byte[] encodeJson = UTF8Encoding.UTF8.GetBytes(finalJson);
-                string base64Payload = Convert.ToBase64String(encodeJson);
-                byte[] jsonData = UTF8Encoding.UTF8.GetBytes(base64Payload);
-                info.data = EncryptionUtils.AesEncrypt(jsonData, provider.DecryptedKey);
-                //info.hmac = EncryptionUtils.GenerateHMAC(jsonData, provider.DecryptedKey);
+                SignedDataInfo info = new SignedDataInfo();
+                if (input != null)
+                {
+                    string finalJson = JsonConvert.SerializeObject(input, Newtonsoft.Json.Formatting.Indented,
+                                new JsonSerializerSettings
+                                {
+                                    NullValueHandling = NullValueHandling.Ignore
+                                });
+                    byte[] encodeJson = UTF8Encoding.UTF8.GetBytes(finalJson);
+                    string base64Payload = Convert.ToBase64String(encodeJson);
+                    byte[] jsonData = UTF8Encoding.UTF8.GetBytes(base64Payload);
+                    info.data = EncryptionUtils.AesEncrypt(jsonData, provider.DecryptedKey);
+                    //info.hmac = EncryptionUtils.GenerateHMAC(jsonData, provider.DecryptedKey);
+                }
+                return info;
+            }catch(Exception ex)
+            {
+                throw ex;
             }
-            return info;
         }
 
         protected internal UnsignedDataInfo Encrypt<T>(T input)

@@ -3,7 +3,9 @@ using GST_API.Middlewares;
 using GST_API.Services;
 using GST_API_DAL.Models;
 using GST_API_Library.Models;
+using GST_API_Library.Models.GSTR1;
 using GST_API_Library.Models.GSTR1DTO;
+using GST_API_Library.Services;
 using GST_API_Library.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -116,5 +118,18 @@ namespace GST_API.Controllers.ASPController
         //    });
         //}
 
+        [HttpPost("file-gstr1")]
+        public async Task<IActionResult> GstrFile([FromBody] Gstr1Request data)
+        {
+            var (isSuccess, message) = await _gstr1Service.GSTR1File(data, Constants.GSTR1_V4_RETURN_URL);
+
+                return Ok(new ResponseModel
+                {
+                    isSuccess = isSuccess,
+                    message = message, 
+                    data = data
+                });
+            
+        }
     }
 }

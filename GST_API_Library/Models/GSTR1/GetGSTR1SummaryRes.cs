@@ -27,9 +27,9 @@ namespace GST_API_Library.Models.GSTR1
         [JsonPropertyName("chksum")]
         public string chksum { get; set; }
 
-        [JsonProperty("smryTyp", NullValueHandling = NullValueHandling.Ignore)]
-        [JsonPropertyName("smryTyp")]
-        public string smryTyp { get; set; }
+        //[JsonProperty("smryTyp", NullValueHandling = NullValueHandling.Ignore)]
+        //[JsonPropertyName("smryTyp")]
+        //public string smryTyp { get; set; }
 
         [JsonProperty("newSumFlag", NullValueHandling = NullValueHandling.Ignore)]
         [JsonPropertyName("newSumFlag")]

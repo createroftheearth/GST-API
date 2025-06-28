@@ -27,23 +27,13 @@
     <ng-container matColumnDef="action">
       <th mat-header-cell *matHeaderCellDef>Action</th>
       <td mat-cell *matCellDef="let item">
-        <button
-          mat-mini-fab
-          color="secondary"
-          (click)="onSaveGSTR1(item.id)"
-          matTooltip="GSTR1 Save"
-          *ngIf="item.saveGstr1Status === -1"
-        >
+        <button mat-mini-fab color="secondary" (click)="onSaveGSTR1(item.id)" matTooltip="GSTR1 Save">
+          <!-- *ngIf="item.saveGstr1Status === -1" -->
           <mat-icon>cloud_upload</mat-icon>
         </button>
-        <button
-          *ngIf="item.saveGstr1Status === 0"
-          mat-mini-fab
-          color="accent"
-          (click)="onProceedToFile(item.id)"
-          matTooltip="Proceed To File"
-          style="margin-left: 5px"
-        >
+        <!-- *ngIf="item.saveGstr1Status === 0"  -->
+        <button mat-mini-fab color="accent" (click)="onProceedToFile(item.id)" matTooltip="Proceed To File"
+          style="margin-left: 5px">
           <mat-icon>description</mat-icon>
         </button>
         <!-- 
@@ -55,44 +45,28 @@
           style="margin-left: 5px"
         >
           <mat-icon>summarize</mat-icon>
-        </button> -->
-        <button
-          mat-mini-fab
-          color="primary"
-          (click)="openPopupEVC(item.id)"
-          matTooltip="GSTR1 File"
-          *ngIf="item.saveGstr1Status === 1"
-          style="margin-left: 5px"
-        >
+        </button> *ngIf="item.saveGstr1Status === 1" -->
+        <button mat-mini-fab color="primary" (click)="openPopupPAN(item.id)" matTooltip="GSTR1 File"
+          style="margin-left: 5px">
           <mat-icon>key</mat-icon>
         </button>
       </td>
     </ng-container>
 
-    <tr
-      mat-header-row
-      *matHeaderRowDef="[
+    <tr mat-header-row *matHeaderRowDef="[
         'id',
         'gstinNo',
         'financialPeriod',
         'grossTurnOver',
         'action'
-      ]"
-    ></tr>
-    <tr
-      mat-row
-      *matRowDef="
+      ]"></tr>
+    <tr mat-row *matRowDef="
         let row;
         columns: ['id', 'gstinNo', 'financialPeriod', 'grossTurnOver', 'action']
-      "
-    ></tr>
+      "></tr>
   </table>
 
-  <mat-paginator
-    [length]="totalRecords"
-    [pageSize]="pageSize"
-    (page)="onPageChange($event.pageIndex + 1)"
-  >
+  <mat-paginator [length]="totalRecords" [pageSize]="pageSize" (page)="onPageChange($event.pageIndex + 1)">
   </mat-paginator>
 </div>
 <br />
@@ -100,10 +74,7 @@
   <div class="dropdown-container">
     <mat-form-field appearance="outline">
       <mat-label>Select an Option</mat-label>
-      <mat-select
-        [(value)]="selectedOptions"
-        (selectionChange)="showTable($event)"
-      >
+      <mat-select [(value)]="selectedOptions" (selectionChange)="showTable($event)">
         <mat-option *ngFor="let option of ddlOptions" [value]="option">
           {{ option }}
         </mat-option>
@@ -113,48 +84,360 @@
 </div>
 
 <br />
-<div
-  class="container"
-  *ngIf="selectedTable === 'B2B' || selectedTable === 'ALL'"
->
+<!--B2B List-->
+<div class="container" *ngIf="selectedTable === 'B2B' || selectedTable === 'ALL'">
   <div class="b2b-header">B2B Data</div>
-  <table mat-table [dataSource]="b2bData" class="mat-elevation-z8">
+  <table mat-table [dataSource]="b2bList" class="mat-elevation-z8">
     <ng-container matColumnDef="inum">
       <th mat-header-cell *matHeaderCellDef>INUM</th>
       <td mat-cell *matCellDef="let item">
         <a href="#" (click)="openPopupB2BItem(item.itms, $event)">{{
           item.inum
-        }}</a>
+          }}</a>
       </td>
+         <td mat-footer-cell *matFooterCellDef></td>
     </ng-container>
 
     <ng-container matColumnDef="idt">
       <th mat-header-cell *matHeaderCellDef>IDT</th>
       <td mat-cell *matCellDef="let item">{{ item.idt }}</td>
+        <td mat-footer-cell *matFooterCellDef><strong>Total</strong> :</td>
     </ng-container>
 
     <ng-container matColumnDef="val">
       <th mat-header-cell *matHeaderCellDef>VALUE</th>
       <td mat-cell *matCellDef="let item">{{ item.val }}</td>
+      <td mat-footer-cell *matFooterCellDef>{{ b2bTotalAmt }}</td>
     </ng-container>
 
     <ng-container matColumnDef="pos">
       <th mat-header-cell *matHeaderCellDef>POS</th>
       <td mat-cell *matCellDef="let item">{{ item.pos }}</td>
+        <td mat-footer-cell *matFooterCellDef></td>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="['inum', 'idt', 'val', 'pos']"></tr>
-    <tr
-      mat-row
-      *matRowDef="let row; columns: ['inum', 'idt', 'val', 'pos']"
-    ></tr>
+    <ng-container matColumnDef="totalAmount">
+      <th mat-header-cell *matHeaderCellDef>Total Amount</th>
+      <td mat-cell *matCellDef="let item">{{item.totalAmount}}</td>
+        <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="['inum', 'idt', 'val', 'pos', 'totalAmount']"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['inum', 'idt', 'val', 'pos', 'totalAmount']"></tr>
+    <tr mat-footer-row *matFooterRowDef="['inum', 'idt', 'val', 'pos', 'totalAmount']"></tr>
   </table>
 </div>
 <br />
-<div
-  class="container"
-  *ngIf="selectedTable === 'HSN' || selectedTable === 'ALL'"
->
+<!-- B2BA Section -->
+ <div class="container" *ngIf="selectedTable === 'B2BA' || selectedTable === 'ALL'">
+  <div class="b2b-header">B2BA Data</div>
+  <table mat-table [dataSource]="b2baList" class="mat-elevation-z8">
+    <ng-container matColumnDef="inum">
+      <th mat-header-cell *matHeaderCellDef>INUM</th>
+      <td mat-cell *matCellDef="let item">
+        <a href="#" (click)="openPopupB2BItem(item.itms, $event)">{{
+          item.inum
+          }}</a>
+      </td>
+         <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <ng-container matColumnDef="idt">
+      <th mat-header-cell *matHeaderCellDef>IDT</th>
+      <td mat-cell *matCellDef="let item">{{ item.idt }}</td>
+        <td mat-footer-cell *matFooterCellDef><strong>Total</strong> :</td>
+    </ng-container>
+
+    <ng-container matColumnDef="val">
+      <th mat-header-cell *matHeaderCellDef>VALUE</th>
+      <td mat-cell *matCellDef="let item">{{ item.val }}</td>
+      <td mat-footer-cell *matFooterCellDef>{{ b2bTotalAmt }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="pos">
+      <th mat-header-cell *matHeaderCellDef>POS</th>
+      <td mat-cell *matCellDef="let item">{{ item.pos }}</td>
+        <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+     <ng-container matColumnDef="inv_typ">
+      <th mat-header-cell *matHeaderCellDef>Invoice Type</th>
+      <td mat-cell *matCellDef="let item">{{ item.inv_typ }}</td>
+        <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <ng-container matColumnDef="totalAmount">
+      <th mat-header-cell *matHeaderCellDef>Total Amount</th>
+      <td mat-cell *matCellDef="let item">{{item.totalAmount}}</td>
+        <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="['inum', 'idt', 'val', 'pos', 'inv_typ', 'totalAmount']"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['inum', 'idt', 'val', 'pos', 'inv_typ', 'totalAmount']"></tr>
+    <tr mat-footer-row *matFooterRowDef="['inum', 'idt', 'val', 'pos', 'inv_typ', 'totalAmount']"></tr>
+  </table>
+</div>
+<!-- END Section-->
+<br/>
+<!-- B2CL Section -->
+ <div class="container" *ngIf="selectedTable === 'B2CL' || selectedTable === 'ALL'">
+  <div class="b2b-header">B2B Data</div>
+  <table mat-table [dataSource]="b2clList" class="mat-elevation-z8">
+    <ng-container matColumnDef="inum">
+      <th mat-header-cell *matHeaderCellDef>INUM</th>
+      <td mat-cell *matCellDef="let item">
+        <a href="#" (click)="openPopupB2BItem(item.itms, $event)">{{
+          item.inum
+          }}</a>
+      </td>
+         <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <ng-container matColumnDef="idt">
+      <th mat-header-cell *matHeaderCellDef>IDT</th>
+      <td mat-cell *matCellDef="let item">{{ item.idt }}</td>
+        <td mat-footer-cell *matFooterCellDef><strong>Total</strong> :</td>
+    </ng-container>
+
+    <ng-container matColumnDef="val">
+      <th mat-header-cell *matHeaderCellDef>VALUE</th>
+      <td mat-cell *matCellDef="let item">{{ item.val }}</td>
+      <td mat-footer-cell *matFooterCellDef>{{ b2bTotalAmt }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="pos">
+      <th mat-header-cell *matHeaderCellDef>POS</th>
+      <td mat-cell *matCellDef="let item">{{ item.pos }}</td>
+        <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+     <ng-container matColumnDef="inv_typ">
+      <th mat-header-cell *matHeaderCellDef>Invoice Type</th>
+      <td mat-cell *matCellDef="let item">{{ item.inv_typ }}</td>
+        <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <ng-container matColumnDef="totalAmount">
+      <th mat-header-cell *matHeaderCellDef>Total Amount</th>
+      <td mat-cell *matCellDef="let item">{{item.totalAmount}}</td>
+        <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="['inum', 'idt', 'val', 'pos', 'inv_typ', 'totalAmount']"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['inum', 'idt', 'val', 'pos', 'inv_typ', 'totalAmount']"></tr>
+    <tr mat-footer-row *matFooterRowDef="['inum', 'idt', 'val', 'pos', 'inv_typ', 'totalAmount']"></tr>
+  </table>
+</div>
+<!-- END Section-->
+ <br/>
+<!-- B2CLA Section -->
+ <div class="container" *ngIf="selectedTable === 'B2CLA' || selectedTable === 'ALL'">
+  <div class="b2b-header">B2CLA Data</div>
+  <table mat-table [dataSource]="b2claList" class="mat-elevation-z8">
+    <ng-container matColumnDef="inum">
+      <th mat-header-cell *matHeaderCellDef>INUM</th>
+      <td mat-cell *matCellDef="let item">
+        <a href="#" (click)="openPopupB2BItem(item.itms, $event)">{{
+          item.inum
+          }}</a>
+      </td>
+         <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <ng-container matColumnDef="idt">
+      <th mat-header-cell *matHeaderCellDef>IDT</th>
+      <td mat-cell *matCellDef="let item">{{ item.idt }}</td>
+        <td mat-footer-cell *matFooterCellDef><strong>Total</strong> :</td>
+    </ng-container>
+
+    <ng-container matColumnDef="val">
+      <th mat-header-cell *matHeaderCellDef>VALUE</th>
+      <td mat-cell *matCellDef="let item">{{ item.val }}</td>
+      <td mat-footer-cell *matFooterCellDef>{{ b2bTotalAmt }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="pos">
+      <th mat-header-cell *matHeaderCellDef>POS</th>
+      <td mat-cell *matCellDef="let item">{{ item.pos }}</td>
+        <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+     <ng-container matColumnDef="inv_typ">
+      <th mat-header-cell *matHeaderCellDef>Invoice Type</th>
+      <td mat-cell *matCellDef="let item">{{ item.inv_typ }}</td>
+        <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <ng-container matColumnDef="totalAmount">
+      <th mat-header-cell *matHeaderCellDef>Total Amount</th>
+      <td mat-cell *matCellDef="let item">{{item.totalAmount}}</td>
+        <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="['inum', 'idt', 'val', 'pos', 'inv_typ', 'totalAmount']"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['inum', 'idt', 'val', 'pos', 'inv_typ', 'totalAmount']"></tr>
+    <tr mat-footer-row *matFooterRowDef="['inum', 'idt', 'val', 'pos', 'inv_typ', 'totalAmount']"></tr>
+  </table>
+</div>
+<!-- END Section-->
+
+  <br/>
+<!-- B2CS Section -->
+ <div class="container" *ngIf="selectedTable === 'B2CS' || selectedTable === 'ALL'">
+  <div class="b2b-header">B2CS Data</div>
+  <table mat-table [dataSource]="b2csList" class="mat-elevation-z8">
+    <ng-container matColumnDef="etin">
+      <th mat-header-cell *matHeaderCellDef>ETIN</th>
+      <td mat-cell *matCellDef="let item">
+        <a href="#" (click)="openPopupB2BItem(item.itms, $event)">{{
+          item.inum
+          }}</a>
+      </td>
+         <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <ng-container matColumnDef="pos">
+      <th mat-header-cell *matHeaderCellDef>POS</th>
+      <td mat-cell *matCellDef="let item">{{ item.pos }}</td>
+        <td mat-footer-cell *matFooterCellDef><strong>Total</strong> :</td>
+    </ng-container>
+
+    <ng-container matColumnDef="txval">
+      <th mat-header-cell *matHeaderCellDef>Tx Value</th>
+      <td mat-cell *matCellDef="let item">{{ item.val }}</td>
+      <td mat-footer-cell *matFooterCellDef>{{ b2bTotalAmt }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="iamt">
+      <th mat-header-cell *matHeaderCellDef>IAMT</th>
+      <td mat-cell *matCellDef="let item">{{ item.iamt }}</td>
+        <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <ng-container matColumnDef="csamt">
+      <th mat-header-cell *matHeaderCellDef>csamt</th>
+      <td mat-cell *matCellDef="let item">{{ item.csamt }}</td>
+        <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <ng-container matColumnDef="totalAmount">
+      <th mat-header-cell *matHeaderCellDef>Total Amount</th>
+      <td mat-cell *matCellDef="let item">{{item.totalAmount}}</td>
+        <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="['etin', 'pos', 'txval', 'iamt', 'csamt', 'totalAmount']"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['etin', 'pos', 'txval', 'iamt', 'csamt', 'totalAmount']"></tr>
+    <tr mat-footer-row *matFooterRowDef="['etin', 'pos', 'txval', 'iamt', 'csamt', 'totalAmount']"></tr>
+  </table>
+</div>
+<!-- END Section-->
+
+  <br/>
+<!-- EXP Section -->
+ <div class="container" *ngIf="selectedTable === 'EXP' || selectedTable === 'ALL'">
+  <div class="b2b-header">EXP Data</div>
+  <table mat-table [dataSource]="expList" class="mat-elevation-z8">
+    <ng-container matColumnDef="inum">
+      <th mat-header-cell *matHeaderCellDef>INUM</th>
+      <td mat-cell *matCellDef="let item">
+        <a href="#" (click)="openPopupB2BItem(item.itms, $event)">{{
+          item.inum
+          }}</a>
+      </td>
+         <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <ng-container matColumnDef="idt">
+      <th mat-header-cell *matHeaderCellDef>IDT</th>
+      <td mat-cell *matCellDef="let item">{{ item.idt }}</td>
+        <td mat-footer-cell *matFooterCellDef><strong>Total</strong> :</td>
+    </ng-container>
+
+    <ng-container matColumnDef="val">
+      <th mat-header-cell *matHeaderCellDef>VALUE</th>
+      <td mat-cell *matCellDef="let item">{{ item.val }}</td>
+      <td mat-footer-cell *matFooterCellDef>{{ b2bTotalAmt }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="sbnum">
+      <th mat-header-cell *matHeaderCellDef>SB Number</th>
+      <td mat-cell *matCellDef="let item">{{ item.sbnum }}</td>
+        <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+     <ng-container matColumnDef="sbdt">
+      <th mat-header-cell *matHeaderCellDef>SB Date</th>
+      <td mat-cell *matCellDef="let item">{{ item.sbdt }}</td>
+        <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <ng-container matColumnDef="totalAmount">
+      <th mat-header-cell *matHeaderCellDef>Total Amount</th>
+      <td mat-cell *matCellDef="let item">{{item.totalAmount}}</td>
+        <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="['inum', 'idt', 'val', 'sbnum', 'sbdt', 'totalAmount']"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['inum', 'idt', 'val', 'sbnum', 'sbdt', 'totalAmount']"></tr>
+    <tr mat-footer-row *matFooterRowDef="['inum', 'idt', 'val', 'sbnum', 'sbdt', 'totalAmount']"></tr>
+  </table>
+</div>
+<!-- END Section-->
+
+  <br/>
+<!-- EXP Section -->
+ <div class="container" *ngIf="selectedTable === 'EXPA' || selectedTable === 'ALL'">
+  <div class="b2b-header">EXPA Data</div>
+  <table mat-table [dataSource]="expList" class="mat-elevation-z8">
+    <ng-container matColumnDef="inum">
+      <th mat-header-cell *matHeaderCellDef>INUM</th>
+      <td mat-cell *matCellDef="let item">
+        <a href="#" (click)="openPopupB2BItem(item.itms, $event)">{{
+          item.inum
+          }}</a>
+      </td>
+         <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <ng-container matColumnDef="idt">
+      <th mat-header-cell *matHeaderCellDef>IDT</th>
+      <td mat-cell *matCellDef="let item">{{ item.idt }}</td>
+        <td mat-footer-cell *matFooterCellDef><strong>Total</strong> :</td>
+    </ng-container>
+
+    <ng-container matColumnDef="val">
+      <th mat-header-cell *matHeaderCellDef>VALUE</th>
+      <td mat-cell *matCellDef="let item">{{ item.val }}</td>
+      <td mat-footer-cell *matFooterCellDef>{{ b2bTotalAmt }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="sbnum">
+      <th mat-header-cell *matHeaderCellDef>SB Number</th>
+      <td mat-cell *matCellDef="let item">{{ item.sbnum }}</td>
+        <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+     <ng-container matColumnDef="sbdt">
+      <th mat-header-cell *matHeaderCellDef>SB Date</th>
+      <td mat-cell *matCellDef="let item">{{ item.sbdt }}</td>
+        <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <ng-container matColumnDef="totalAmount">
+      <th mat-header-cell *matHeaderCellDef>Total Amount</th>
+      <td mat-cell *matCellDef="let item">{{item.totalAmount}}</td>
+        <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="['inum', 'idt', 'val', 'sbnum', 'sbdt', 'totalAmount']"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['inum', 'idt', 'val', 'sbnum', 'sbdt', 'totalAmount']"></tr>
+    <tr mat-footer-row *matFooterRowDef="['inum', 'idt', 'val', 'sbnum', 'sbdt', 'totalAmount']"></tr>
+  </table>
+</div>
+<!-- END Section-->
+<br/>
+<div class="container" *ngIf="selectedTable === 'HSN' || selectedTable === 'ALL'">
   <div class="b2b-header">HSN Data</div>
   <table mat-table [dataSource]="hsnData" class="mat-elevation-z8">
     <!-- HSN Code Column -->
@@ -188,31 +471,22 @@
     </ng-container>
 
     <!-- Table Headers & Row Definitions -->
-    <tr
-      mat-header-row
-      *matHeaderRowDef="[
+    <tr mat-header-row *matHeaderRowDef="[
         'HSN Code',
         'Taxable Value',
         'CGST',
         'SGST',
         'Description'
-      ]"
-    ></tr>
-    <tr
-      mat-row
-      *matRowDef="
+      ]"></tr>
+    <tr mat-row *matRowDef="
         let row;
         columns: ['HSN Code', 'Taxable Value', 'CGST', 'SGST', 'Description']
-      "
-    ></tr>
+      "></tr>
   </table>
 </div>
 
 <br />
-<div
-  class="container"
-  *ngIf="selectedTable === 'DOC Issue' || selectedTable === 'ALL'"
->
+<div class="container" *ngIf="selectedTable === 'DOC Issue' || selectedTable === 'ALL'">
   <div class="b2b-header">DOC Issue Data</div>
   <table mat-table [dataSource]="docIssueData" class="mat-elevation-z8">
     <!-- Document Number Column -->
@@ -279,21 +553,16 @@
       <td mat-cell *matCellDef="let item">₹{{ item.itm_det.samt }}</td>
     </ng-container>
 
-    <tr
-      mat-header-row
-      *matHeaderRowDef="['num', 'txval', 'rt', 'camt', 'samt']"
-    ></tr>
-    <tr
-      mat-row
-      *matRowDef="let row; columns: ['num', 'txval', 'rt', 'camt', 'samt']"
-    ></tr>
+    <tr mat-header-row *matHeaderRowDef="['num', 'txval', 'rt', 'camt', 'samt']"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['num', 'txval', 'rt', 'camt', 'samt']"></tr>
   </table>
   <br />
   <button mat-button (click)="closePopup()">Close</button>
 </ng-template>
 
 <ng-template #popupTemplateGS>
-  <div mat-dialog-title class="header-title">Generate Summary</div>
+  <div class="b2b-header">Generate Summary</div>
+  <!-- <div mat-dialog-title class="header-title">Generate Summary</div> -->
   <div mat-dialog-content>
     <mat-radio-group aria-label="Select an option" class="radio-group">
       <mat-radio-button value="1">Nil</mat-radio-button>
@@ -308,31 +577,21 @@
   </div>
 </ng-template>
 
-<ng-template #popupTemplateEVC let-data>
-  <div mat-dialog-title class="header-title">GSTR1 File</div>
+<ng-template #popupTemplatePAN let-data>
+  <div class="b2b-header">GSTR1 File</div>
   <div class="center-container" *ngIf="!isSubmit">
     <form [formGroup]="EVCForm">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label>Authorised PAN</mat-label>
-        <input
-          matInput
-          formControlName="PAN"
-          placeholder="Enter Authorised PAN"
-          required
-        />
+        <input matInput formControlName="PAN" placeholder="Enter Authorised PAN" required />
         <mat-error *ngIf="getErrorMessage('PAN')">{{
           getErrorMessage("PAN")
-        }}</mat-error>
+          }}</mat-error>
       </mat-form-field>
     </form>
   </div>
   <div mat-dialog-actions class="center-actions" *ngIf="!isSubmit">
-    <button
-      mat-raised-button
-      color="primary"
-      type="submit"
-      (click)="onSubmit(data.gstnId)"
-    >
+    <button mat-raised-button color="primary" type="submit" (click)="onSubmit(data.gstnId)">
       Submit
     </button>
 
@@ -340,21 +599,16 @@
       Cancel
     </button>
   </div>
-
-  <!-- *ngIf="otpSent" -->
-  <div class="card-content otp-content col" *ngIf="otpSent">
-    <h1>Verify OTP</h1>
-    <p>An OTP has been sent to your registered mobile number</p>
-    <div class="otp-container">
-      <ng-otp-input
-        (onInputChange)="onOtpChange($event)"
-        [config]="{ length: 6, allowNumbersOnly: true }"
-      ></ng-otp-input>
-    </div>
-    <mat-error *ngIf="invalidOtpMessage">
-      {{ invalidOtpMessage }}
-    </mat-error>
+</ng-template>
+<ng-template #popupTemplateEVC let-data>
+  <div class="b2b-header">Verify OTP</div>
+  <p class="otp-container">An OTP has been sent to your registered mobile number</p>
+  <div class="otp-container">
+    <ng-otp-input (onInputChange)="onOtpChange($event, data.data, data.pan, data.gstnId)"
+      [config]="{ length: 6, allowNumbersOnly: false}"></ng-otp-input>
   </div>
+  <mat-error  class="otp-container" *ngIf="invalidOtpMessage">
+    {{ invalidOtpMessage }}
+  </mat-error>
   <div class="picture-content col"></div>
 </ng-template>
-<!-- <button mat-button (click)="openPopup()">Open Popup</button> -->

@@ -34,10 +34,12 @@ export class GSTR1Service {
     return this.httpService.post<any>(`${this.baseUrl}/generate-evc-otp`, {panNo : panNo,id:gstnId});
   }
 
-  fileGSTR1(id: number, otp: string) {
+  fileGSTR1(id: number, data: any, otp: string, panNo: string) {
     return this.httpService.post<any>(`${this.baseUrl}/file-gstr1`, {
       id: id,
-      otp: otp,
+      Data : { gstin: data.gstin, ret_period: data.ret_period, chksum: data.chksum, newSumFlag: data.newSumFlag, sec_sum: data.sec_sum},
+      OTP: otp,
+      PAN : panNo
     });
   }
 

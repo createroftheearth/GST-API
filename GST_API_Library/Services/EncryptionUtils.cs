@@ -94,7 +94,8 @@ namespace GST_API_Library.Services
         }
 
 
-        public static byte[] AesDecrypt(byte[] dataToDecrypt, byte[] keyBytes)
+       
+ public static byte[] AesDecrypt(byte[] dataToDecrypt, byte[] keyBytes)
         {
             AesManaged tdes = new AesManaged();
             tdes.KeySize = 256;
@@ -107,7 +108,6 @@ namespace GST_API_Library.Services
             tdes.Clear();
             return deCipher;
         }
-
 
 
 
