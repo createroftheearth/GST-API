@@ -9,6 +9,8 @@ import { AddEditGstr1Component } from './components/gstr1/save/add-edit-gstr1/ad
 import { UploadGstr1Component } from './components/gstr1/upload-gstr1/upload-gstr1.component';
 import { Gsrt1ListComponent } from './components/gstr1/gsrt1-list/gsrt1-list.component';
 import { GenerateOtpComponent } from './components/generate-otp/generate-otp.component';
+import { ViewSummaryComponent } from './components/gstr1/view-summary/view-summary.component';
+import { ViewListItemsComponent } from './components/gstr1/view-list-items/view-list-items.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -38,6 +40,18 @@ const routes: Routes = [
     canMatch: [authGuard],
     data: { title: 'Upload GSTR1' },
   },
+  {
+    path: 'gstr1/viewSummary',
+    component: ViewSummaryComponent,
+    canMatch: [authGuard],
+    data: { title: 'View Summary' },
+  },
+  {
+    path: 'gstr1/viewItemList',
+    component: ViewListItemsComponent,
+    canMatch: [authGuard],
+    data: { title: 'View Item Details' },
+  },
   { path: '**', redirectTo: 'login' },
 ];
 
@@ -45,4 +59,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

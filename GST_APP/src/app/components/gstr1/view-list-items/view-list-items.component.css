@@ -1,0 +1,67 @@
+
+.center-actions {
+  display: flex;
+  justify-content: center; /* Center buttons */
+  align-items: flex-end; /* Align to bottom */
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+
+.radio-group {
+  display: flex;
+  justify-content: center; /* Centers horizontally */
+  align-items: center; /* Centers vertically */
+  gap: 16px; /* Adds space between buttons */
+  margin-top: 50px !important; /* Adjust as needed */
+}
+
+.header-title {
+  font-size: 16px; /* Reduce font size */
+  background-color: #3f51b5; /* Optional: Keep color */
+  color: white;
+  text-align: center;
+}
+
+.custom-dialog-container .mat-dialog-container {
+  background-color: #f5f5f5; /* Example: Light gray background */
+  padding: 40px;
+  border-radius: 8px;
+}
+
+.center-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 25px; /* Adjust the space from the header */
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column; 
+  align-items: center; 
+  justify-content: center;
+  text-align: center; 
+ 
+}
+
+.b2b-header {
+  font-size: 24px;
+  /* font-weight: bold; */
+  text-align: center;
+  background-color: #D3D3D3; /* Light gray background */
+  padding: 10px;
+  border-radius: 5px; /* Optional: Adds rounded corners */
+}
+
+.form-container {
+  display: flex;
+  justify-content: flex-end; /* Aligns dropdown to the right */
+  margin-bottom: 5px;
+  margin-right: 20px;
+}
+
+.otp-container {
+  display: flex;
+  justify-content: center;
+      margin-top: 10px;
+}

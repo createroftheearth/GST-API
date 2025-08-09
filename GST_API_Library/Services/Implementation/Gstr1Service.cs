@@ -109,17 +109,21 @@ namespace GST_API_Library.Services.Implementation
             {
                 return (false, "Data does not exists");
             }
-            dynamic gstr1Payload = JsonConvert.DeserializeObject<dynamic>(gstr1Data.Gstr1SaveRequest);
+            //dynamic gstr1Payload = JsonConvert.DeserializeObject<dynamic>(gstr1Data.Gstr1SaveRequest);
+            string json = gstr1Data.Gstr1SaveRequest;
+            JObject gstr1Payload = JObject.Parse(json);
+            string gstin = gstr1Payload["gstin"].ToString();
+            string fp = gstr1Payload["fp"].ToString();
             GSTNAuthClient client = new GSTNAuthClient(gstin, this.gstinUsername, appKey)
             {
                 AuthToken = this.GSTINToken,
                 DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, appKey)
             };
-            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstr1Payload.gstin, gstr1Payload.fp, url);
+            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, fp, url);
             var newProceedToFileRequest = new Models.GenerateRequestInfo
             {
-                gstin = gstr1Payload.gstin,
-                ret_period = gstr1Payload.fp,
+                gstin = gstin,
+                ret_period = fp,
             };
             var info = await client2.NewProceedToFile_GSTR1(newProceedToFileRequest);
             if (string.IsNullOrEmpty(info?.Data?.reference_id))
@@ -143,14 +147,16 @@ namespace GST_API_Library.Services.Implementation
             {
                 return (false, "Data does not exists");
             }
-            var ret_period = gstr1Data.FinancialPeriod.ToString("MMyyyy");
-
+            string json = gstr1Data.Gstr1SaveRequest;
+            JObject gstr1Payload = JObject.Parse(json);
+            string gstin = gstr1Payload["gstin"].ToString();
+            string fp = gstr1Payload["fp"].ToString();
             GSTNAuthClient client = new GSTNAuthClient(gstin, gstinUsername, appKey)
             {
                 AuthToken = this.GSTINToken,
                 DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, appKey)
             };
-            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, ret_period, getFileURL);
+            GSTR1ApiClient client2 = new GSTR1ApiClient(client, gstin, fp, getFileURL);
 
             // var info = await client2.filegstr1(request.Data, request.OTP, request.PAN);
 

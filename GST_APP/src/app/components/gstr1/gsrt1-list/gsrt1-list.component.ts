@@ -5,7 +5,18 @@ import { MatDialog } from '@angular/material/dialog';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { ItmDetail } from 'src/app/models/b2bInvoice.model';
 import { Gstr1FileRequest } from 'src/app/models/gstr1FileRequest.model';
+import { Router } from '@angular/router';
 
+type SectionTotals = {
+  sec_nm: string;
+  ttl_rec: number;
+  ttl_val: number;
+  ttl_tax: number;
+  ttl_igst: number;
+  ttl_cgst: number;
+  ttl_sgst: number;
+  ttl_cess: number;
+};
 @Component({
   selector: 'app-gsrt1-list',
   templateUrl: './gsrt1-list.component.html',
@@ -14,7 +25,7 @@ import { Gstr1FileRequest } from 'src/app/models/gstr1FileRequest.model';
 export class Gsrt1ListComponent implements OnInit {
 
   //TO-DO: Add OTP for 5 digits only which supports alphanumeric characters, 
-  ddlOptions = ['ALL', 'B2B', 'HSN', 'DOC Issue'];
+  ddlOptions = ['ALL', 'B2B', 'B2BA', 'HSN', 'B2CL', 'B2CLA', 'B2CS', 'EXP', 'EXPA', 'HSN', 'NIL', 'DOC Issue', 'CDNUR', 'CDNURA'];
   displayedColumns: string[] = ['Document Number', 'From Invoice', 'To Invoice', 'Net Issue', 'Total Issued'];
   selectedOptions = 'ALL';
   EVCForm: FormGroup;
@@ -39,12 +50,17 @@ export class Gsrt1ListComponent implements OnInit {
   b2claList: any[] = [];
   expList: any[] = [];
   expaList: any[] = [];
+  nilList: any[] = [];
   b2b: any[] = [];
   hsnData: any[] = [];
   b2baData: any[] = [];
   b2csList: any[] = [];
   docIssueData: any[] = [];
+  cdnurList: any[] = [];
+  cdnuraList: any[] = [];
   items: ItmDetail[] = [];
+  sectionSummaries: any[] = [];
+  sectionGroups: SectionTotals[] = [];
 
   totalRecords = 0;
   page = 1;
@@ -65,7 +81,8 @@ export class Gsrt1ListComponent implements OnInit {
     private gstr1Service: GSTR1Service,
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private router: Router
   ) {
     this.EVCForm = this.fb.group({
       PAN: [
@@ -77,6 +94,7 @@ export class Gsrt1ListComponent implements OnInit {
         ]),
       ],
     });
+
   }
 
 
@@ -89,225 +107,38 @@ export class Gsrt1ListComponent implements OnInit {
       .getAllGSTR1(this.page, this.pageSize)
       .subscribe((response) => {
         this.gstr1Data = this.transformData(response.gstr1Data);
-        const parsedData = JSON.parse(this.gstr1Data[0].gstr1SaveRequest);
-
-        // This is for B2B List
-        this.b2bList = parsedData.b2b.flatMap((b2bItem: { inv: any[] }) =>
-          b2bItem.inv.map(inv => {
-            const taxTotals = inv.itms.reduce(
-              (sum: { iamt: number; camt: number; samt: number }, itm: any) => {
-                const det = itm.itm_det;
-                return {
-                  iamt: sum.iamt + (det.iamt || 0),
-                  camt: sum.camt + (det.camt || 0),
-                  samt: sum.samt + (det.samt || 0),
-                };
-              },
-              { iamt: 0, camt: 0, samt: 0 }
-            );
-
-            return {
-              itms: inv.itms,
-              inum: inv.inum,
-              idt: inv.idt,
-              val: inv.val,
-              pos: inv.pos,
-              totalAmount: taxTotals.iamt + taxTotals.camt + taxTotals.samt,
-            };
-          })
-        );
-        this.b2bTotalAmt = this.getTotalValue();
-        // 
-
-        // This is for B2BA List
-        this.b2baList = parsedData.b2ba.flatMap((b2baItem: { inv: any[] }) =>
-          b2baItem.inv.map(inv => {
-            const taxTotals = inv.itms.reduce(
-              (sum: { iamt: number; camt: number; samt: number }, itm: any) => {
-                const det = itm.itm_det;
-                return {
-                  iamt: sum.iamt + (det.iamt || 0),
-                  camt: sum.camt + (det.camt || 0),
-                  samt: sum.samt + (det.samt || 0),
-                };
-              },
-              { iamt: 0, camt: 0, samt: 0 }
-            );
-
-            return {
-              itms: inv.itms,
-              inum: inv.inum,
-              idt: inv.idt,
-              val: inv.val,
-              pos: inv.pos,
-              inv_typ: inv.inv_typ,
-              totalAmount: taxTotals.iamt + taxTotals.camt + taxTotals.samt,
-            };
-          })
-        );
-        //
-
-        // This is for B2CL List
-        this.b2clList = parsedData.b2ba.flatMap((b2clItem: { inv: any[] }) =>
-          b2clItem.inv.map(inv => {
-            const taxTotals = inv.itms.reduce(
-              (sum: { iamt: number; camt: number; samt: number }, itm: any) => {
-                const det = itm.itm_det;
-                return {
-                  iamt: sum.iamt + (det.iamt || 0),
-                  camt: sum.camt + (det.camt || 0),
-                  samt: sum.samt + (det.samt || 0),
-                };
-              },
-              { iamt: 0, camt: 0, samt: 0 }
-            );
-
-            return {
-              itms: inv.itms,
-              inum: inv.inum,
-              idt: inv.idt,
-              val: inv.val,
-              pos: inv.pos,
-              inv_typ: inv.inv_typ,
-              totalAmount: taxTotals.iamt + taxTotals.camt + taxTotals.samt,//TODO:Needs to be update
-            };
-          })
-        );
-        //
-
-        // This is for B2CL List
-        this.b2claList = parsedData.b2ba.flatMap((b2claItem: { inv: any[] }) =>
-          b2claItem.inv.map(inv => {
-            const taxTotals = inv.itms.reduce(
-              (sum: { iamt: number; camt: number; samt: number }, itm: any) => {
-                const det = itm.itm_det;
-                return {
-                  iamt: sum.iamt + (det.iamt || 0),
-                  camt: sum.camt + (det.camt || 0),
-                  samt: sum.samt + (det.samt || 0),
-                };
-              },
-              { iamt: 0, camt: 0, samt: 0 }
-            );
-
-            return {
-              itms: inv.itms,
-              inum: inv.inum,
-              idt: inv.idt,
-              val: inv.val,
-              pos: inv.pos,
-              inv_typ: inv.inv_typ,
-              totalAmount: taxTotals.iamt + taxTotals.camt + taxTotals.samt,//TODO:Needs to be update
-            };
-          })
-        );
-        //
-
-        // This is for B2CS List
-        this.b2csList = parsedData.b2cs.flatMap((b2csItem: any) =>
-          b2csItem.map((bcs: any) => {
-            const taxTotals = bcs.reduce(
-              (sum: { iamt: number; camt: number; samt: number }) => {
-                return {
-                  iamt: sum.iamt + (bcs.iamt || 0),
-                  camt: sum.camt + (bcs.camt || 0),
-                  samt: sum.samt + (bcs.samt || 0),
-                };
-              },
-              { iamt: 0, camt: 0, samt: 0 }
-            );
-
-            return {
-              inum: bcs.inum,
-              idt: bcs.idt,
-              val: bcs.val,
-              pos: bcs.pos,
-              inv_typ: bcs.inv_typ,
-              totalAmount: taxTotals.iamt + taxTotals.camt + taxTotals.samt,//TODO:Needs to be update
-            };
-          })
-        );
-        //
-
-        // This is for EXP List
-        this.expList = parsedData.b2ba.flatMap((expItem: { inv: any[] }) =>
-          expItem.inv.map(inv => {
-            const taxTotals = inv.itms.reduce(
-              (sum: { iamt: number; csamt: number; samt: number }, itm: any) => {
-                const det = itm.itm_det;
-                return {
-                  iamt: sum.iamt + (det.iamt || 0),
-                  camt: sum.csamt + (det.csamt || 0),
-                  samt: sum.samt + (det.samt || 0),
-                };
-              },
-              { iamt: 0, camt: 0, samt: 0 }
-            );
-
-            return {
-              itms: inv.itms,
-              inum: inv.inum,
-              idt: inv.idt,
-              val: inv.val,
-              sbnum: inv.sbnum,
-              sbdt: inv.sbdt,
-              totalAmount: taxTotals.iamt + taxTotals.camt + taxTotals.samt,//TODO:Needs to be update
-            };
-          })
-        );
-
-        //
-
-        // This is for EXPA List
-        this.expaList = parsedData.b2ba.flatMap((expaItem: { inv: any[] }) =>
-          expaItem.inv.map(inv => {
-            const taxTotals = inv.itms.reduce(
-              (sum: { iamt: number; csamt: number; samt: number }, itm: any) => {
-                const det = itm.itm_det;
-                return {
-                  iamt: sum.iamt + (det.iamt || 0),
-                  camt: sum.csamt + (det.csamt || 0),
-                  samt: sum.samt + (det.samt || 0),
-                };
-              },
-              { iamt: 0, camt: 0, samt: 0 }
-            );
-
-            return {
-              itms: inv.itms,
-              inum: inv.inum,
-              idt: inv.idt,
-              val: inv.val,
-              sbnum: inv.sbnum,
-              sbdt: inv.sbdt,
-              totalAmount: taxTotals.iamt + taxTotals.camt + taxTotals.samt,//TODO:Needs to be update
-            };
-          })
-        );
-
-        //
-
-        this.hsnData = parsedData.hsn.hsn_b2b;
-        //   this.b2baData = parsedData.b2ba.inv;
-
-        // Extract required fields
-        this.docIssueData = parsedData.doc_issue.doc_det.flatMap((doc: { docs: any[]; doc_num: any; }) =>
-          doc.docs.map(d => ({
-            doc_num: doc.doc_num,
-            from: d.from,
-            to: d.to,
-            net_issue: d.net_issue,
-            totnum: d.totnum
-          }))
-        );
-
-        this.totalRecords = response.totalRecords;
       });
   }
 
   getTotalValue(): number {
     return this.b2bList?.reduce((acc, curr) => acc + (Number(curr.val) || 0), 0);
   }
+
+  sectionTitleMap: Record<string, string> = {
+    AT: 'Advance Tax',
+    ATA: 'Amended Advance Tax',
+    B2B: '4A, 4B, 4C, 6B, 6C, SEZWOP, SEZWP - B2B Invoices',
+    B2BA: '4A, 4B, 6C, SEZWOP, SEZWP - B2BA Invoices',
+    B2CL: 'B2C (Large) Invoices',
+    B2CLA: 'B2CLA',
+    B2CS: 'B2CS',
+    B2CSA: 'B2CSA',
+    ECOM: 'ECOM, ECOM_DE, ECOM_REG, ECOM_SEZWOP, ECOM_SEZWP, ECOM_UNREG',
+    ECOMA: 'ECOMA, ECOMA_DE, ECOMA_REG, ECOMA_SEZWOP, ECOMA_SEZWP, ECOMA_UNREG',
+    HSN: 'HSN-wise summary of outward supplies',
+    NIL: 'Nil rated, exempted and non GST outward supplies',
+    TTL_LIAB: 'Tax Liability (Advance Received)',
+    TXPD: 'TXPD, TXPDA',
+    DOC_ISSUE: 'Documents Issued',
+    CDNR: 'CDNR, CDNRA',
+    CDNUR: 'CDNUR',
+    CDNURA: 'CDNURA',
+    EXP: 'EXP',
+    EXPA: 'EXPA',
+    SUPECOM: 'SUPECOM',
+    // Add more mappings as needed
+  };
+
 
   transformData(gstr1Data: any[]) {
     const transformedData = [];
@@ -318,6 +149,8 @@ export class Gsrt1ListComponent implements OnInit {
 
       const parsedJSONData = JSON.parse(data.gstr1SaveRequest);
       data.grossTurnOver = parsedJSONData.gt;
+      const isGetSummaryRes = data?.getSummaryResponse !== undefined && data.getSummaryResponse !== null ? true : false;
+      data.getSummaryResponse = isGetSummaryRes;
       transformedData.push(data);
     }
     return transformedData;
@@ -387,6 +220,7 @@ export class Gsrt1ListComponent implements OnInit {
       width: '500px',
       height: '230px',
       panelClass: 'custom-dialog-container',
+      disableClose: true
     });
   }
 
@@ -398,6 +232,7 @@ export class Gsrt1ListComponent implements OnInit {
       width: '500px',
       height: '230px',
       panelClass: 'custom-dialog-container',
+      disableClose: true
     });
   }
 
@@ -474,7 +309,7 @@ export class Gsrt1ListComponent implements OnInit {
     } else {
       this.invalidOtpMessage = '';
     }
-    if (+otp && otp.length === 6) {
+    if (otp.length == 6) {
       this.gstr1Service.fileGSTR1(gstnId, data, otp, pan).subscribe((data) => {
         if (data.isSuccess) {
           this.closePopup();
@@ -500,8 +335,36 @@ export class Gsrt1ListComponent implements OnInit {
   closePopup() {
     this.dialog.closeAll();
   }
+
+viewSummary(id: string): void {
+  this.router.navigate(['/gstr1/viewSummary'], { queryParams: { id } });
 }
 
+openItemList(id: string): void {
+  this.router.navigate(['/gstr1/viewItemList'], { queryParams: { id } });
+}
+
+}
+const sectionGroupsMap: Record<string, string> = {
+  B2BA: 'B2BA',
+  B2B: 'B2B',
+  B2CLA: 'B2CL',
+  B2CL: 'B2CL',
+  B2CSA: 'B2CSA',
+  B2CS: 'B2CS',
+  ATA: 'ATA',
+  AT: 'AT',
+  ECOMA: 'ECOMA',
+  ECOM: 'ECOM',
+  CDNURA: 'CDNURA',
+  CDNUR: 'CDNUR',
+  CDNR: 'CDNR',
+  EXPA: 'EXPA',
+  EXP: 'EXP',
+  HSN: 'HSN',
+  TXPD: 'TXPD'
+  // Add more as needed
+};
 
 
 

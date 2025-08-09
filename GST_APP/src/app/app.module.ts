@@ -49,6 +49,8 @@ import { InvoiceB2claComponent } from './components/gstr1/save/b2cla/invoice-b2c
 import { UploadGstr1Component } from './components/gstr1/upload-gstr1/upload-gstr1.component';
 import { Gsrt1ListComponent } from './components/gstr1/gsrt1-list/gsrt1-list.component';
 import { GenerateOtpComponent } from './components/generate-otp/generate-otp.component';
+import { ViewSummaryComponent } from './components/gstr1/view-summary/view-summary.component';
+import { ViewListItemsComponent } from './components/gstr1/view-list-items/view-list-items.component';
 
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -101,6 +103,8 @@ import { MatTableModule } from '@angular/material/table';
     ItemB2claComponent,
     UploadGstr1Component,
     Gsrt1ListComponent,
+    ViewSummaryComponent,
+    ViewListItemsComponent
   ],
   imports: [
     BrowserModule,
