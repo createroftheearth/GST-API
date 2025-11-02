@@ -38,7 +38,7 @@ namespace GST_API_Library.Models
 
         public bool? newSumFlag { get; set; }
 
-        public List<SecSumDto> sec_sum { get; set; }
+        public List<SecSumDto>? sec_sum { get; set; }
 
     }
     //public class Gstr1FileRequest: Request
