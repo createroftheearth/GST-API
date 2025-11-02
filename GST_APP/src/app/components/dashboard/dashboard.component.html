@@ -1,1 +1,46 @@
-<p>dashboard works!</p>
+
+<div style="display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 24px;">
+  <mat-card class="metric-card blue">
+    <h3>GSTR1A</h3>
+    <p>150</p>
+  </mat-card>
+
+  <mat-card class="metric-card green">
+    <h3>Amount</h3>
+    <p>53%</p>
+  </mat-card>
+
+  <mat-card class="metric-card yellow">
+    <h3>User Registrations</h3>
+    <p>44</p>
+  </mat-card>
+
+  <mat-card class="metric-card red">
+    <h3>Rejected Invoices</h3>
+    <p>65</p>
+  </mat-card>
+</div>
+
+<div style="margin-top: 32px; display: flex; gap: 32px; flex-wrap: wrap;">
+  <!-- Doughnut Chart -->
+  <mat-card style="flex: 1;">
+    <h3>Doughnut Chart</h3>
+   <canvas
+  baseChart
+  [data]="doughnutChartData"
+  [type]="'doughnut'">
+</canvas>
+  </mat-card>
+
+<!-- Bar Chart -->
+<mat-card style="flex: 2;">
+  <h3>Bar Chart</h3>
+  <canvas
+    baseChart
+    [type]="'bar'"
+    [data]="barChartData"
+    [options]="barChartOptions">
+  </canvas>
+</mat-card>
+
+</div>

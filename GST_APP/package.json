@@ -22,9 +22,11 @@
     "@angular/router": "^16.1.0",
     "ajv": "^8.17.1",
     "ajv-errors": "^3.0.0",
+    "chart.js": "^3.9.1",
     "crypto-js": "^4.2.0",
     "jest-editor-support": "*",
     "ng-otp-input": "^2.0.5",
+    "ng2-charts": "^4.1.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.13.0"

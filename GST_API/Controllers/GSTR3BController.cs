@@ -98,7 +98,6 @@ namespace GST_API.Controllers
             {
                 AuthToken = this.GSTINToken,
                 DecryptedKey = EncryptionUtils.AesDecrypt(this.GSTINSek, this.appKey)
-
             };
             try
             {

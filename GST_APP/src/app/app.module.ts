@@ -51,6 +51,10 @@ import { Gsrt1ListComponent } from './components/gstr1/gsrt1-list/gsrt1-list.com
 import { GenerateOtpComponent } from './components/generate-otp/generate-otp.component';
 import { ViewSummaryComponent } from './components/gstr1/view-summary/view-summary.component';
 import { ViewListItemsComponent } from './components/gstr1/view-list-items/view-list-items.component';
+import { Gstr3bListComponent } from './components/gstr3b/gstr3b-list/gstr3b-list.component';
+import { Gstr3bComponent } from './components/gstr3b/gstr3b/gstr3b.component';
+import { NilReturnComponent } from './components/gstr1/nil-return/nil-return.component';
+import { Gstr3bNilReturnComponent } from './components/gstr3b/gstr3b-nil-return/gstr3b-nil-return.component';
 
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -59,6 +63,14 @@ import { MatListModule } from '@angular/material/list';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatTableModule } from '@angular/material/table';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+
+import { MatCardModule } from '@angular/material/card';
+import { MatSelectModule } from '@angular/material/select';
+import { NgChartsModule } from 'ng2-charts';
+
 
 
 @NgModule({
@@ -104,7 +116,11 @@ import { MatTableModule } from '@angular/material/table';
     UploadGstr1Component,
     Gsrt1ListComponent,
     ViewSummaryComponent,
-    ViewListItemsComponent
+    ViewListItemsComponent,
+    Gstr3bListComponent,
+    Gstr3bComponent,
+    NilReturnComponent,
+    Gstr3bNilReturnComponent
   ],
   imports: [
     BrowserModule,
@@ -117,7 +133,13 @@ import { MatTableModule } from '@angular/material/table';
     ...MaterialModules,
     MatDialogModule,
     MatRadioModule,
-    MatTableModule
+    MatTableModule,
+    MatInputModule,
+    MatButtonModule,
+    MatCardModule,
+    MatSelectModule,
+    NgChartsModule,
+    MatCheckboxModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },

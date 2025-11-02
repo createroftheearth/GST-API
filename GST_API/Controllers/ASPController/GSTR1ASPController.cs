@@ -5,6 +5,7 @@ using GST_API_DAL.Models;
 using GST_API_Library.Models;
 using GST_API_Library.Models.GSTR1;
 using GST_API_Library.Models.GSTR1DTO;
+using GST_API_Library.Models.GSTR2B;
 using GST_API_Library.Services;
 using GST_API_Library.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -81,7 +82,7 @@ namespace GST_API.Controllers.ASPController
         [HttpPost("proceed-to-file")]
         public async Task<IActionResult> ProceedToFile([FromBody] Request data)
         {
-            var (isSuccess, message) = await _gstr1Service.ProceedToFile(data.id, Constants.GSTR1_NewProceedToFile_URL);
+            var (isSuccess, message) = await _gstr1Service.ProceedToFile(data, Constants.GSTR1_NewProceedToFile_URL);
             return Ok(new ResponseModel
             {
                 isSuccess = isSuccess,
@@ -131,5 +132,20 @@ namespace GST_API.Controllers.ASPController
                 });
             
         }
+
+        [HttpPost("nil-file-gstr1")]
+        public async Task<IActionResult> Gstr1NilFile([FromBody] Gstr1NilRequest data)
+        {
+            var (isSuccess, message) = await _gstr1Service.GSTR1NilFile(data, Constants.GSTR1_V4_RETURN_URL);
+
+            return Ok(new ResponseModel
+            {
+                isSuccess = isSuccess,
+                message = message,
+                data = data
+            });
+
+        }
+
     }
 }

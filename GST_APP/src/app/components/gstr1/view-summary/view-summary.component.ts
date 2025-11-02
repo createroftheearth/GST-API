@@ -91,8 +91,7 @@ export class ViewSummaryComponent {
         const parsedData = JSON.parse(selectedItem.gstr1SaveRequest);
 
         //GetSummary
-        const getSummaryData = JSON.parse(this.gstr1Data[0].getSummaryResponse);
-        debugger;
+        const getSummaryData = JSON.parse(selectedItem.getSummaryResponse);
         this.sectionSummaries = getSummaryData.sec_sum || [];
         // Helper function to normalize section names
         const normalizeSection = (sec_nm: string): string => {
@@ -136,7 +135,7 @@ export class ViewSummaryComponent {
 
 
         // This is for B2B List
-        this.b2bList = parsedData.b2b.flatMap((b2bItem: { inv: any[] }) =>
+        this.b2bList = parsedData?.b2b?.flatMap((b2bItem: { inv: any[] }) =>
           b2bItem.inv.map(inv => {
             const taxTotals = inv.itms.reduce(
               (sum: { iamt: number; camt: number; samt: number }, itm: any) => {
@@ -164,7 +163,7 @@ export class ViewSummaryComponent {
         // 
 
         // This is for B2BA List
-        this.b2baList = parsedData.b2ba.flatMap((b2baItem: { inv: any[] }) =>
+        this.b2baList = parsedData?.b2ba?.flatMap((b2baItem: { inv: any[] }) =>
           b2baItem.inv.map(inv => {
             const taxTotals = inv.itms.reduce(
               (sum: { iamt: number; camt: number; samt: number }, itm: any) => {
@@ -192,7 +191,7 @@ export class ViewSummaryComponent {
         //
 
         // This is for B2CL List
-        this.b2clList = parsedData.b2ba.flatMap((b2clItem: { inv: any[] }) =>
+        this.b2clList = parsedData?.b2c?.flatMap((b2clItem: { inv: any[] }) =>
           b2clItem.inv.map(inv => {
             const taxTotals = inv.itms.reduce(
               (sum: { iamt: number; camt: number; samt: number }, itm: any) => {
@@ -220,7 +219,7 @@ export class ViewSummaryComponent {
         //
 
         // This is for B2CL List
-        this.b2claList = parsedData.b2ba.flatMap((b2claItem: { inv: any[] }) =>
+        this.b2claList = parsedData?.b2cla?.flatMap((b2claItem: { inv: any[] }) =>
           b2claItem.inv.map(inv => {
             const taxTotals = inv.itms.reduce(
               (sum: { iamt: number; camt: number; samt: number }, itm: any) => {
@@ -248,7 +247,7 @@ export class ViewSummaryComponent {
         //
 
         // This is for B2CS List
-        this.b2csList = response.b2cs.map((item: { txval: any; iamt: any; csamt: any; }) => ({
+        this.b2csList = response?.b2cs?.map((item: { txval: any; iamt: any; csamt: any; }) => ({
           ...item,
           totalAmount: (item.txval || 0) + (item.iamt || 0) + (item.csamt || 0)
         }));
@@ -256,7 +255,7 @@ export class ViewSummaryComponent {
         //
 
         // This is for EXP List
-        this.expList = parsedData.b2ba.flatMap((expItem: { inv: any[] }) =>
+        this.expList = parsedData?.exp?.flatMap((expItem: { inv: any[] }) =>
           expItem.inv.map(inv => {
             const taxTotals = inv.itms.reduce(
               (sum: { iamt: number; csamt: number; samt: number }, itm: any) => {
@@ -284,7 +283,7 @@ export class ViewSummaryComponent {
         //
 
         // This is for EXPA List
-        this.expaList = parsedData.b2ba.flatMap((expaItem: { inv: any[] }) =>
+        this.expaList = parsedData?.b2ba?.flatMap((expaItem: { inv: any[] }) =>
           expaItem.inv.map(inv => {
             const taxTotals = inv.itms.reduce(
               (sum: { iamt: number; csamt: number; samt: number }, itm: any) => {
@@ -312,7 +311,7 @@ export class ViewSummaryComponent {
         //
 
         // This is for NIL
-        this.nilList = parsedData.nil.flatMap((nilItem: { inv: any[] }) =>
+        this.nilList = parsedData?.nil?.flatMap((nilItem: { inv: any[] }) =>
           nilItem.inv.map(inv => {
             return {
               sply_ty: inv.sply_ty,
@@ -324,11 +323,11 @@ export class ViewSummaryComponent {
         ) || [];
         //
 
-        this.hsnData = parsedData.hsn.hsn_b2b;
+        this.hsnData = parsedData?.hsn?.hsn_b2b;
         //   this.b2baData = parsedData.b2ba.inv;
 
         // Extract required fields
-        this.docIssueData = parsedData.doc_issue.doc_det.flatMap((doc: { docs: any[]; doc_num: any; }) =>
+        this.docIssueData = parsedData?.doc_issue?.doc_det?.flatMap((doc: { docs: any[]; doc_num: any; }) =>
           doc.docs.map(d => ({
             doc_num: doc.doc_num,
             from: d.from,
@@ -338,10 +337,10 @@ export class ViewSummaryComponent {
           }))
         );
 
-        this.totalRecords = response.totalRecords;
+        this.totalRecords = response?.totalRecords;
         //
         // This is for CDNUR List
-        this.cdnurList = parsedData.cdnur.map((cdnurItem: { itms: any[]; typ: any; ntty: any; nt_num: any; nt_dt: any; pos: any; val: any; diff_percent: any; }) => {
+        this.cdnurList = parsedData?.cdnur?.map((cdnurItem: { itms: any[]; typ: any; ntty: any; nt_num: any; nt_dt: any; pos: any; val: any; diff_percent: any; }) => {
           const taxTotals = cdnurItem.itms.reduce(
             (sum: { iamt: number; csamt: number }, itm: any) => {
               const det = itm.itm_det;
@@ -371,8 +370,8 @@ export class ViewSummaryComponent {
         // 
 
         // This is for CDNURA List
-        this.cdnuraList = parsedData.cdnura.map((cdnurItem: { itms: any[]; ont_num: any; ont_dt: any; typ: any; ntty: any; nt_num: any; nt_dt: any; pos: any; val: any; diff_percent: any; }) => {
-          const taxTotals = cdnurItem.itms.reduce(
+        this.cdnuraList = parsedData?.cdnura?.map((cdnurItem: { itms: any[]; ont_num: any; ont_dt: any; typ: any; ntty: any; nt_num: any; nt_dt: any; pos: any; val: any; diff_percent: any; }) => {
+          const taxTotals = cdnurItem?.itms?.reduce(
             (sum: { iamt: number; csamt: number }, itm: any) => {
               const det = itm.itm_det;
               return {

@@ -21,7 +21,7 @@ namespace GST_API_Library.Services
         {
             this.path = path;
             this.gstin = gstin;
-            GSTNConstants.publicip = getPublicIp();
+            GSTNConstants.publicip = "122.160.221.204";//getPublicIp();
             url2 = GSTNConstants.base_url + path;
         }
 

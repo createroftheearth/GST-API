@@ -1,0 +1,39 @@
+.GSTR3b-header {
+  font-size: 24px;
+  /* font-weight: bold; */
+  text-align: center;
+  background-color: #D3D3D3; /* Light gray background */
+  padding: 10px;
+  border-radius: 5px; /* Optional: Adds rounded corners */
+}
+
+.mat-table {
+  width: 100%;
+  overflow: auto;
+}
+
+.mat-header-cell, .mat-cell {
+  padding: 8px;
+  text-align: left;
+}
+
+.b2b-header {
+  font-size: 18px;
+  /* font-weight: bold; */
+  background-color: #D3D3D3; /* Light gray background */
+  padding: 10px;
+  border-radius: 5px; /* Optional: Adds rounded corners */
+}
+
+
+.mat-header-cell, .mat-cell {
+  padding: 12px;
+  font-size: 14px;
+  text-align: left;
+}
+.wide-column {
+  min-width: 300px; /* You can adjust this value */
+  max-width: 600px;
+  white-space: normal; /* Allows wrapping */
+  word-wrap: break-word;
+}

@@ -1,0 +1,100 @@
+<div class="GSTR3b-header">GSTR 3B Details</div>
+<br />
+<!-- <div>3.1 Details of Outward supplies and inward supplies liable to reverse charge (other than those covered by Table 3.1.1)</div> -->
+<div class="section-table">
+  <div class="b2b-header">3.1 Details of Outward supplies and inward supplies liable to reverse charge (other than those
+    covered by Table 3.1.1)</div>
+  <mat-table [dataSource]="dataSource1" class="mat-elevation-z8">
+
+    <!-- Nature of Supplies Column -->
+    <ng-container matColumnDef="nature">
+      <mat-header-cell *matHeaderCellDef> Nature of Supplies </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.nature}} </mat-cell>
+    </ng-container>
+
+    <!-- Total Taxable Value Column -->
+    <ng-container matColumnDef="taxableValue">
+      <mat-header-cell *matHeaderCellDef> Total Taxable Value </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.taxableValue}} </mat-cell>
+    </ng-container>
+
+    <!-- Integrated Tax Column -->
+    <ng-container matColumnDef="integratedTax">
+      <mat-header-cell *matHeaderCellDef> Integrated Tax </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.integratedTax}} </mat-cell>
+    </ng-container>
+
+    <!-- Central Tax Column -->
+    <ng-container matColumnDef="centralTax">
+      <mat-header-cell *matHeaderCellDef> Central Tax </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.centralTax}} </mat-cell>
+    </ng-container>
+
+    <!-- State/UT Tax Column -->
+    <ng-container matColumnDef="stateTax">
+      <mat-header-cell *matHeaderCellDef> State/UT Tax </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.stateTax}} </mat-cell>
+    </ng-container>
+
+    <!-- Cess Column -->
+    <ng-container matColumnDef="cess">
+      <mat-header-cell *matHeaderCellDef> Cess </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.cess}} </mat-cell>
+    </ng-container>
+
+    <!-- Header and Row Declarations -->
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+  </mat-table>
+
+  <div class="b2b-header">
+    <h3>3.1.1 Details of Supplies notified under section 9(5) of the CGST Act, 2017</h3>
+  </div>
+  <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+    <!-- Nature of Supplies Column -->
+    <ng-container matColumnDef="nature">
+      <mat-header-cell *matHeaderCellDef class="wide-column"> Nature of Supplies </mat-header-cell>
+      <mat-cell *matCellDef="let element" class="wide-column"> {{element.nature}} </mat-cell>
+    </ng-container>
+
+    <!-- Total Taxable Value Column -->
+    <ng-container matColumnDef="taxableValue">
+      <mat-header-cell *matHeaderCellDef> Total Taxable Value </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.taxableValue}} </mat-cell>
+    </ng-container>
+
+    <!-- Integrated Tax Column -->
+    <ng-container matColumnDef="integratedTax">
+      <mat-header-cell *matHeaderCellDef> Integrated Tax </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.integratedTax}} </mat-cell>
+    </ng-container>
+
+    <!-- Central Tax Column -->
+    <ng-container matColumnDef="centralTax">
+      <mat-header-cell *matHeaderCellDef> Central Tax </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.centralTax}} </mat-cell>
+    </ng-container>
+
+    <!-- State/UT Tax Column -->
+    <ng-container matColumnDef="stateTax">
+      <mat-header-cell *matHeaderCellDef> State/UT Tax </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.stateTax}} </mat-cell>
+    </ng-container>
+
+    <!-- Cess Column -->
+    <ng-container matColumnDef="cess">
+      <mat-header-cell *matHeaderCellDef> Cess </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.cess}} </mat-cell>
+    </ng-container>
+
+    <!-- Header and Row Declarations -->
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+  </mat-table>
+
+
+
+</div>

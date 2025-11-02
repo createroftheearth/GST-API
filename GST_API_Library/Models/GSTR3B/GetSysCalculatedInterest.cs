@@ -23,7 +23,7 @@ namespace GST_API_Library.Models.GSTR3B
     public class Challan
     {
         public string ret_period { get; set; }
-        public Pdcash pdcash { get; set; }
+        public Pdcash1 pdcash { get; set; }
     }
 
     public class Interest
@@ -90,6 +90,4 @@ namespace GST_API_Library.Models.GSTR3B
         public int camt { get; set; }
         public int csamt { get; set; }
     }
-
-
 }

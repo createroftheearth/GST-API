@@ -97,7 +97,7 @@
   <div class="b2b-header">Verify OTP</div>
   <p class="otp-container">An OTP has been sent to your registered mobile number</p>
   <div class="otp-container">
-    <ng-otp-input (onInputChange)="onOtpChange($event, data.data, data.pan, data.gstnId)"
+    <ng-otp-input (onInputChange)="onOtpChange($event, data.data, data.pan, data.id)"
       [config]="{ length: 6, allowNumbersOnly: false}"></ng-otp-input>
   </div>
   <mat-error class="otp-container" *ngIf="invalidOtpMessage">

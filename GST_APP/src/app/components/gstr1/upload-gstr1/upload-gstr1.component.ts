@@ -22,7 +22,7 @@ export class UploadGstr1Component implements OnInit {
     private snackBar: MatSnackBar,
     private gstr1Service: GSTR1Service,
     private router: Router
-  ) {}
+  ) { }
   async ngOnInit() {
     await this.loadJsonSchema();
   }
@@ -42,41 +42,36 @@ export class UploadGstr1Component implements OnInit {
       this.hideUploadButton = true;
       const reader = new FileReader();
       reader.onload = (e: any) => {
-        if (fileType === 'json') {
-          try {
-            const jsonData = JSON.parse(e.target.result);
-            this.jsonData = jsonData;
-            this.jsonString = JSON.stringify(jsonData, null, 2);
-            if (this.jsonSchema && !this.validateJson(jsonData)) {
-              this.snackBar.open('JSON validation failed.', 'Close', {
-                duration: 5000,
+          if (fileType === 'json') {
+            try {
+              const jsonData = JSON.parse(e.target.result);
+              this.jsonData = jsonData;
+              this.jsonString = JSON.stringify(jsonData, null, 2);
+              // if (this.jsonSchema && !this.validateJson(jsonData)) {
+            
+              this.snackBar.open(
+                'JSON file uploaded and validated successfully!',
+                'Close',
+                { duration: 3000 }
+              );
+            } catch (error) {
+              console.log(error);
+              this.snackBar.open('Invalid JSON file', 'Close', {
+                duration: 3000,
               });
               this.hideUploadButton = false;
-              return;
             }
+          } else if (fileType === 'excel') {
             this.snackBar.open(
-              'JSON file uploaded and validated successfully!',
+              'Excel file upload is not implemented yet.',
               'Close',
               { duration: 3000 }
             );
-          } catch (error) {
-            console.log(error);
-            this.snackBar.open('Invalid JSON file', 'Close', {
-              duration: 3000,
-            });
-            this.hideUploadButton = false;
           }
-        } else if (fileType === 'excel') {
-          this.snackBar.open(
-            'Excel file upload is not implemented yet.',
-            'Close',
-            { duration: 3000 }
-          );
-        }
-      };
-      reader.readAsText(file);
+        };
+        reader.readAsText(file);
+      }
     }
-  }
 
   triggerFileInput(inputId: string) {
     const fileInput = document.getElementById(inputId) as HTMLInputElement;

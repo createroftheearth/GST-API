@@ -14,6 +14,7 @@ namespace GST_API.Extensions
         {
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IGSTR1Repository, GSTR1Repository>();
+            services.AddTransient<IGSTR3Repository, GSTR3Repository>();
         }
 
         public static void AddServices(this IServiceCollection services)
@@ -22,6 +23,7 @@ namespace GST_API.Extensions
             services.AddScoped<EncryptionUtils,EncryptionUtils>();
             services.AddScoped<EncryptDecryptService, EncryptDecryptService>();
             services.AddScoped<IGstr1Service, Gstr1Service>();
+            services.AddScoped<IGstr3Service, Gstr3Service>();
         }
     }
 }

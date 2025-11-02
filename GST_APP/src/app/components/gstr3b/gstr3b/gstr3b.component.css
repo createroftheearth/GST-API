@@ -1,0 +1,10 @@
+::ng-deep .custom-purple-button {
+  background-color: #673ab7 !important; /* Deep Purple */
+  color: #ffffff !important;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+::ng-deep .custom-purple-button mat-icon {
+  color: #ffffff !important;
+}

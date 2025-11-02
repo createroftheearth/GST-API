@@ -16,62 +16,65 @@ namespace GST_API_Library.Models.GSTR3B
     {
         public string gstin { get; set; }
         public string ret_period { get; set; }
-        public SupDetails sup_details { get; set; }
-        public InterSup inter_sup { get; set; }
-        public EcoDtls eco_dtls { get; set; }
-        public ItcElg itc_elg { get; set; }
-        public InwardSup inward_sup { get; set; }
-        public TxPmt tx_pmt { get; set; }
-        public IntrLtfee intr_ltfee { get; set; }
-        public List<LiabBreakup> liab_breakup { get; set; }
+
+
+        public string isnil { get; set; }
+        public SupDetails44 sup_details { get; set; }
+        public InterSup44 inter_sup { get; set; }
+        public EcoDtls44 eco_dtls { get; set; }
+        public ItcElg44 itc_elg { get; set; }
+        public InwardSup44 inward_sup { get; set; }
+        public TxPmt44 tx_pmt { get; set; }
+        public IntrLtfee44 intr_ltfee { get; set; }
+        public List<LiabBreakup44> liab_breakup { get; set; }
     }
 
 
 
     // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
-    public class Adjnegliab
+    public class Adjnegliab44
     {
         public double trans_typ { get; set; }
-        public string tran_desc { get; set; }
+        public string trans_desc { get; set; }
         public double liab_ldg_id { get; set; }
-        public Sgst sgst { get; set; }
-        public Cgst cgst { get; set; }
-        public Cess cess { get; set; }
-        public Igst igst { get; set; }
+        public Sgst44 sgst { get; set; }
+        public Cgst44 cgst { get; set; }
+        public Cess44 cess { get; set; }
+        public Igst44 igst { get; set; }
     }
 
-    public class Cess
+    public class Cess44
     {
         public double intr { get; set; }
         public double tx { get; set; }
     }
 
-    public class Cgst
+    public class Cgst44
     {
         public double intr { get; set; }
         public double tx { get; set; }
         public double fee { get; set; }
     }
 
-    public class CompDetail
+    public class CompDetail44
     {
         public string pos { get; set; }
         public double txval { get; set; }
         public double iamt { get; set; }
     }
 
-    public class EcoDtls
+    public class EcoDtls44
     {
-        public EcoSup eco_sup { get; set; }
-        public EcoRegSup eco_reg_sup { get; set; }
+        public EcoSup44 eco_sup { get; set; }
+        public EcoRegSup44 eco_reg_sup { get; set; }
     }
 
-    public class EcoRegSup
+    public class EcoRegSup44
     {
         public double txval { get; set; }
     }
 
-    public class EcoSup
+    public class EcoSup44
     {
         public double txval { get; set; }
         public double iamt { get; set; }
@@ -80,20 +83,20 @@ namespace GST_API_Library.Models.GSTR3B
         public double csamt { get; set; }
     }
 
-    public class Igst
+    public class Igst44
     {
         public double intr { get; set; }
         public double tx { get; set; }
     }
 
-    public class InterSup
+    public class InterSup44
     {
-        public List<UnregDetail> unreg_details { get; set; }
-        public List<CompDetail> comp_details { get; set; }
-        public List<UinDetail> uin_details { get; set; }
+        public List<UnregDetail44> unreg_details { get; set; }
+        public List<CompDetail44> comp_details { get; set; }
+        public List<UinDetail44> uin_details { get; set; }
     }
 
-    public class IntrDetails
+    public class IntrDetails44
     {
         public double iamt { get; set; }
         public double camt { get; set; }
@@ -101,25 +104,25 @@ namespace GST_API_Library.Models.GSTR3B
         public double csamt { get; set; }
     }
 
-    public class IntrLtfee
+    public class IntrLtfee44
     {
-        public IntrDetails intr_details { get; set; }
-        public LtfeeDetails ltfee_details { get; set; }
+        public IntrDetails44 intr_details { get; set; }
+        public LtfeeDetails44 ltfee_details { get; set; }
     }
 
-    public class InwardSup
+    public class InwardSup44
     {
-        public List<IsupDetail> isup_details { get; set; }
+        public List<IsupDetail44> isup_details { get; set; }
     }
 
-    public class IsupDetail
+    public class IsupDetail44
     {
         public string ty { get; set; }
         public double inter { get; set; }
         public double intra { get; set; }
     }
 
-    public class IsupRev
+    public class IsupRev44
     {
         public double txval { get; set; }
         public double iamt { get; set; }
@@ -128,7 +131,7 @@ namespace GST_API_Library.Models.GSTR3B
         public double csamt { get; set; }
     }
 
-    public class ItcAvl
+    public class ItcAvl44
     {
         public string ty { get; set; }
         public double iamt { get; set; }
@@ -137,32 +140,15 @@ namespace GST_API_Library.Models.GSTR3B
         public double csamt { get; set; }
     }
 
-    public class ItcElg
+    public class ItcElg44
     {
-        public List<ItcAvl> itc_avl { get; set; }
-        public List<ItcRev> itc_rev { get; set; }
-        public ItcNet itc_net { get; set; }
-        public List<ItcInelg> itc_inelg { get; set; }
+        public List<ItcAvl44> itc_avl { get; set; }
+        public List<ItcRev44> itc_rev { get; set; }
+        public ItcNet44 itc_net { get; set; }
+        public List<ItcInelg44> itc_inelg { get; set; }
     }
 
-    public class ItcInelg
-    {
-        public string ty { get; set; }
-        public double iamt { get; set; }
-        public double camt { get; set; }
-        public double samt { get; set; }
-        public double csamt { get; set; }
-    }
-
-    public class ItcNet
-    {
-        public double iamt { get; set; }
-        public double camt { get; set; }
-        public double samt { get; set; }
-        public double csamt { get; set; }
-    }
-
-    public class ItcRev
+    public class ItcInelg44
     {
         public string ty { get; set; }
         public double iamt { get; set; }
@@ -171,13 +157,30 @@ namespace GST_API_Library.Models.GSTR3B
         public double csamt { get; set; }
     }
 
-    public class LiabBreakup
+    public class ItcNet44
+    {
+        public double iamt { get; set; }
+        public double camt { get; set; }
+        public double samt { get; set; }
+        public double csamt { get; set; }
+    }
+
+    public class ItcRev44
+    {
+        public string ty { get; set; }
+        public double iamt { get; set; }
+        public double camt { get; set; }
+        public double samt { get; set; }
+        public double csamt { get; set; }
+    }
+
+    public class LiabBreakup44
     {
         public string ret_period { get; set; }
-        public Liability liability { get; set; }
+        public Liability44 liability { get; set; }
     }
 
-    public class Liability
+    public class Liability44
     {
         public double iamt { get; set; }
         public double camt { get; set; }
@@ -185,24 +188,24 @@ namespace GST_API_Library.Models.GSTR3B
         public double csamt { get; set; }
     }
 
-    public class LtfeeDetails
+    public class LtfeeDetails44
     {
         public double camt { get; set; }
         public double samt { get; set; }
     }
 
-    public class Nettaxpay
+    public class Nettaxpay44
     {
         public double trans_typ { get; set; }
-        public string tran_desc { get; set; }
+        public string trans_desc { get; set; }
         public double liab_ldg_id { get; set; }
-        public Sgst sgst { get; set; }
-        public Cgst cgst { get; set; }
-        public Cess cess { get; set; }
-        public Igst igst { get; set; }
+        public Sgst44 sgst { get; set; }
+        public Cgst44 cgst { get; set; }
+        public Cess44 cess { get; set; }
+        public Igst44 igst { get; set; }
     }
 
-    public class OsupDet
+    public class OsupDet44
     {
         public double txval { get; set; }
         public double? iamt { get; set; }
@@ -211,24 +214,24 @@ namespace GST_API_Library.Models.GSTR3B
         public double? csamt { get; set; }
     }
 
-    public class OsupNilExmp
+    public class OsupNilExmp44
     {
         public double txval { get; set; }
     }
 
-    public class OsupNongst
+    public class OsupNongst44
     {
         public double txval { get; set; }
     }
 
-    public class OsupZero
+    public class OsupZero44
     {
         public double txval { get; set; }
         public double iamt { get; set; }
         public double csamt { get; set; }
     }
 
-    public class Pdcash
+    public class Pdcash44
     {
         public double liab_ldg_id { get; set; }
         public double trans_typ { get; set; }
@@ -244,7 +247,7 @@ namespace GST_API_Library.Models.GSTR3B
         public double s_lfeepd { get; set; }
     }
 
-    public class Pditc
+    public class Pditc44
     {
         public double liab_ldg_id { get; set; }
         public double trans_typ { get; set; }
@@ -258,351 +261,64 @@ namespace GST_API_Library.Models.GSTR3B
         public double cs_pdcs { get; set; }
     }
 
-    public class Pdnl
+    public class Pdnl44
     {
         public double trans_typ { get; set; }
-        public string tran_desc { get; set; }
+        public string trans_desc { get; set; }
         public double liab_ldg_id { get; set; }
         public double ipd { get; set; }
         public double spd { get; set; }
         public double cpd { get; set; }
         public double cspd { get; set; }
     }
-    public class Sgst
+    public class Sgst44
     {
         public double intr { get; set; }
         public double tx { get; set; }
         public double fee { get; set; }
     }
 
-    public class SupDetails
+    public class SupDetails44
     {
-        public OsupDet osup_det { get; set; }
-        public OsupZero osup_zero { get; set; }
-        public OsupNilExmp osup_nil_exmp { get; set; }
-        public IsupRev isup_rev { get; set; }
-        public OsupNongst osup_nongst { get; set; }
+        public OsupDet44 osup_det { get; set; }
+        public OsupZero44 osup_zero { get; set; }
+        public OsupNilExmp44 osup_nil_exmp { get; set; }
+        public IsupRev44 isup_rev { get; set; }
+        public OsupNongst44 osup_nongst { get; set; }
     }
 
-    public class TxPmt
+    public class TxPmt44
     {
-        public List<TxPy> tx_py { get; set; }
-        public List<Adjnegliab> adjnegliab { get; set; }
-        public List<Nettaxpay> nettaxpay { get; set; }
-        public List<Pdcash> pdcash { get; set; }
-        public Pditc pditc { get; set; }
-        public List<Pdnl> pdnls { get; set; }
+        public List<TxPy44> tx_py { get; set; }
+        public List<Adjnegliab44> adjnegliab { get; set; }
+        public List<Nettaxpay44> nettaxpay { get; set; }
+        public List<Pdcash44> pdcash { get; set; }
+        public Pditc44 pditc { get; set; }
+        public List<Pdnl44> pdnls { get; set; }
     }
 
-    public class TxPy
+    public class TxPy44
     {
         public double trans_typ { get; set; }
-        public string tran_desc { get; set; }
+        public string trans_desc { get; set; }
         public double liab_ldg_id { get; set; }
-        public Sgst sgst { get; set; }
-        public Cgst cgst { get; set; }
-        public Cess cess { get; set; }
-        public Igst igst { get; set; }
+        public Sgst44 sgst { get; set; }
+        public Cgst44 cgst { get; set; }
+        public Cess44 cess { get; set; }
+        public Igst44 igst { get; set; }
     }
 
-    public class UinDetail
+    public class UinDetail44
     {
         public string pos { get; set; }
         public double txval { get; set; }
         public double iamt { get; set; }
     }
 
-    public class UnregDetail
+    public class UnregDetail44
     {
         public string pos { get; set; }
         public double txval { get; set; }
         public double iamt { get; set; }
     }
 }
-
-
-//using Newtonsoft.Json;
-//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-//using System.Threading.Tasks;
-
-//namespace GST_API_Library.Models.GSTR3B
-//{
-//    //need to ask wit himanshu
-//    public class GetGSTR3BDetails
-//    {
-//        public string gstin { get; set; }
-//        public string ret_period { get; set; }
-//        public SupDetails sup_details { get; set; }
-//        public InterSup inter_sup { get; set; }
-//        public EcoDtls eco_dtls { get; set; }
-//        public ItcElg itc_elg { get; set; }
-//        public InwardSup inward_sup { get; set; }
-//        public TxPmt tx_pmt { get; set; }
-//        public IntrLtfee intr_ltfee { get; set; }
-//        public List<LiabBreakup> liab_breakup { get; set; }
-//    }
-//    // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
-//    public class Cess
-//    {
-//        public int intr { get; set; }
-//        public int tx { get; set; }
-//    }
-
-//    public class Cgst
-//    {
-//        public int intr { get; set; }
-//        public int tx { get; set; }
-//        public int fee { get; set; }
-//    }
-
-//    public class CompDetail
-//    {
-//        public string pos { get; set; }
-//        public int txval { get; set; }
-//        public int iamt { get; set; }
-//    }
-
-//    public class EcoDtls
-//    {
-//        public EcoSup eco_sup { get; set; }
-//        public EcoRegSup eco_reg_sup { get; set; }
-//    }
-
-//    public class EcoRegSup
-//    {
-//        public int txval { get; set; }
-//    }
-
-//    public class EcoSup
-//    {
-//        public int txval { get; set; }
-//        public int iamt { get; set; }
-//        public int camt { get; set; }
-//        public int samt { get; set; }
-//        public int csamt { get; set; }
-//    }
-
-//    public class Igst
-//    {
-//        public int intr { get; set; }
-//        public int tx { get; set; }
-//    }
-
-//    public class InterSup
-//    {
-//        public List<UnregDetail> unreg_details { get; set; }
-//        public List<CompDetail> comp_details { get; set; }
-//        public List<UinDetail> uin_details { get; set; }
-//    }
-
-//    public class IntrDetails
-//    {
-//        public int iamt { get; set; }
-//        public int camt { get; set; }
-//        public int samt { get; set; }
-//        public int csamt { get; set; }
-//    }
-
-//    public class IntrLtfee
-//    {
-//        public IntrDetails intr_details { get; set; }
-//        public LtfeeDetails ltfee_details { get; set; }
-//    }
-
-//    public class InwardSup
-//    {
-//        public List<IsupDetail> isup_details { get; set; }
-//    }
-
-//    public class IsupDetail
-//    {
-//        public string ty { get; set; }
-//        public int inter { get; set; }
-//        public int intra { get; set; }
-//    }
-
-//    public class IsupRev
-//    {
-//        public int txval { get; set; }
-//        public int iamt { get; set; }
-//        public int camt { get; set; }
-//        public int samt { get; set; }
-//        public int csamt { get; set; }
-//    }
-
-//    public class ItcAvl
-//    {
-//        public string ty { get; set; }
-//        public double iamt { get; set; }
-//        public int camt { get; set; }
-//        public double samt { get; set; }
-//        public int csamt { get; set; }
-//    }
-
-//    public class ItcElg
-//    {
-//        public List<ItcAvl> itc_avl { get; set; }
-//        public List<ItcRev> itc_rev { get; set; }
-//        public ItcNet itc_net { get; set; }
-
-//        [JsonProperty(" itc_inelg")]
-//        public List<ItcInelg> itc_inelg { get; set; }
-//    }
-
-//    public class ItcInelg
-//    {
-//        public string ty { get; set; }
-//        public double iamt { get; set; }
-//        public int camt { get; set; }
-//        public double samt { get; set; }
-//        public int csamt { get; set; }
-//    }
-
-//    public class ItcNet
-//    {
-//        public double iamt { get; set; }
-//        public int camt { get; set; }
-//        public double samt { get; set; }
-//        public int csamt { get; set; }
-//    }
-
-//    public class ItcRev
-//    {
-//        public string ty { get; set; }
-//        public double iamt { get; set; }
-//        public int camt { get; set; }
-//        public double samt { get; set; }
-//        public int csamt { get; set; }
-//    }
-
-//    public class LiabBreakup
-//    {
-//        public string ret_period { get; set; }
-//        public Liability liability { get; set; }
-//    }
-
-//    public class Liability
-//    {
-//        public int iamt { get; set; }
-//        public int camt { get; set; }
-//        public int samt { get; set; }
-//        public int csamt { get; set; }
-//    }
-
-//    public class LtfeeDetails
-//    {
-//        public int camt { get; set; }
-//        public int samt { get; set; }
-//    }
-
-//    public class OsupDet
-//    {
-//        public int txval { get; set; }
-//        public int iamt { get; set; }
-//        public int camt { get; set; }
-//        public int samt { get; set; }
-//        public int csamt { get; set; }
-//    }
-
-//    public class OsupNilExmp
-//    {
-//        public int txval { get; set; }
-//    }
-
-//    public class OsupNongst
-//    {
-//        public int txval { get; set; }
-//    }
-
-//    public class OsupZero
-//    {
-//        public int txval { get; set; }
-//        public int iamt { get; set; }
-//        public int csamt { get; set; }
-//    }
-
-//    public class Pd_cash
-//    {
-//        public int liab_ldg_id { get; set; }
-//        public int trans_typ { get; set; }
-//        public int ipd { get; set; }
-//        public int cpd { get; set; }
-//        public int spd { get; set; }
-//        public int cspd { get; set; }
-//        public int i_intrpd { get; set; }
-//        public int c_intrpd { get; set; }
-//        public int s_intrpd { get; set; }
-//        public int cs_intrpd { get; set; }
-//        public int c_lfeepd { get; set; }
-//        public int s_lfeepd { get; set; }
-//    }
-
-//    public class Pd_itc
-//    {
-//        public int liab_ldg_id { get; set; }
-//        public int trans_typ { get; set; }
-//        public int i_pdi { get; set; }
-//        public int i_pdc { get; set; }
-//        public int i_pds { get; set; }
-//        public int c_pdi { get; set; }
-//        public int c_pdc { get; set; }
-//        public int s_pdi { get; set; }
-//        public int s_pds { get; set; }
-//        public int cs_pdcs { get; set; }
-//    }
-
-
-//    public class Sgst
-//    {
-//        public int intr { get; set; }
-//        public int tx { get; set; }
-//        public int fee { get; set; }
-//    }
-
-//    public class SupDetails
-//    {
-//        public OsupDet osup_det { get; set; }
-//        public OsupZero osup_zero { get; set; }
-//        public OsupNilExmp osup_nil_exmp { get; set; }
-//        public IsupRev isup_rev { get; set; }
-//        public OsupNongst osup_nongst { get; set; }
-//    }
-
-//    //need to ask wit himanshu
-//    public class TxPmt
-//    {
-//        public List<TxPy> tx_py { get; set; }
-//        public List<Pd_cash> pdcash { get; set; }
-//        public Pd_itc pditc { get; set; }
-//    }
-
-//    public class TxPy
-//    {
-//        public int trans_typ { get; set; }
-//        public string trans_desc { get; set; }
-//        public int liab_ldg_id { get; set; }
-//        public Sgst sgst { get; set; }
-//        public Cgst cgst { get; set; }
-//        public Cess cess { get; set; }
-//        public Igst igst { get; set; }
-//    }
-
-//    public class UinDetail
-//    {
-//        public string pos { get; set; }
-//        public int txval { get; set; }
-//        public int iamt { get; set; }
-//    }
-
-//    public class UnregDetail
-//    {
-//        public string pos { get; set; }
-//        public int txval { get; set; }
-//        public int iamt { get; set; }
-//    }
-
-
-//}

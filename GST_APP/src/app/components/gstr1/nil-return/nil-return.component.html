@@ -1,0 +1,74 @@
+<form [formGroup]="gstr3Form" (ngSubmit)="onSubmit()">
+    <div style="display: flex; gap: 16px; align-items: flex-start; flex-wrap: wrap;">
+        <!-- GSTIN Input -->
+        <mat-form-field appearance="outline" style="width: 300px;">
+            <mat-label>GSTIN</mat-label>
+            <input matInput formControlName="gstin" required />
+            <mat-error>{{ getErrorMessage("gstin", "GSTIN") }}</mat-error>
+        </mat-form-field>
+
+        <!-- Financial Period Input -->
+        <mat-form-field appearance="outline" style="width: 300px;">
+            <mat-label>Financial Period</mat-label>
+            <input matInput formControlName="ret_period" required />
+            <mat-error>{{ getErrorMessage("ret_period", "Financial Period") }}</mat-error>
+        </mat-form-field>
+
+        <!-- <mat-form-field appearance="outline" style="width: 300px;">
+            <mat-label>Authorised PAN</mat-label>
+            <input matInput formControlName="PAN" placeholder="Enter Authorised PAN" required />
+            <mat-error>{{ getErrorMessage("PAN", "PAN") }}</mat-error>
+        </mat-form-field> -->
+
+        <div style="width: 100px; display: flex; align-items: center;">
+            <mat-checkbox formControlName="isNil" checked class="custom-checkbox">
+                NIL
+            </mat-checkbox>
+        </div>
+
+    </div>
+    <!-- Submit Button -->
+    <div style="display: flex; justify-content: center; gap: 16px; ">
+        <button mat-raised-button class="custom-purple-button" type="submit" [disabled]="gstr3Form.invalid">
+            Submit
+        </button>
+
+        <button mat-raised-button class="custom-purple-button" type="button" (click)="onReset()">
+            Reset
+        </button>
+    </div>
+
+</form>
+<ng-template #popupTemplatePAN let-data>
+  <div class="b2b-header">GSTR1 File</div>
+  <div class="center-container" *ngIf="!isSubmit">
+    <form [formGroup]="EVCForm">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Authorised PAN</mat-label>
+        <input matInput formControlName="PAN" placeholder="Enter Authorised PAN" required />
+         <mat-error>{{ getErrorMessage("PAN", "PAN") }}</mat-error>
+      </mat-form-field>
+    </form>
+  </div>
+  <div mat-dialog-actions class="center-actions" *ngIf="!isSubmit">
+    <button mat-raised-button color="primary" type="submit" (click)="onSubmitPAN(data.gstnId)">
+      Submit
+    </button>
+
+    <button mat-raised-button color="primary" (click)="closeDialog()">
+      Cancel
+    </button>
+  </div>
+</ng-template>
+<ng-template #popupTemplateEVC let-data>
+  <div class="b2b-header">Verify OTP</div>
+  <p class="otp-container">An OTP has been sent to your registered mobile number</p>
+  <div class="otp-container">
+    <ng-otp-input (onInputChange)="onOtpChange($event, data.data, data.pan, data.gstnId)"
+      [config]="{ length: 6, allowNumbersOnly: false}"></ng-otp-input>
+  </div>
+  <mat-error class="otp-container" *ngIf="invalidOtpMessage">
+    {{ invalidOtpMessage }}
+  </mat-error>
+  <div class="picture-content col"></div>
+</ng-template>

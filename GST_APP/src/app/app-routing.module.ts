@@ -11,7 +11,12 @@ import { Gsrt1ListComponent } from './components/gstr1/gsrt1-list/gsrt1-list.com
 import { GenerateOtpComponent } from './components/generate-otp/generate-otp.component';
 import { ViewSummaryComponent } from './components/gstr1/view-summary/view-summary.component';
 import { ViewListItemsComponent } from './components/gstr1/view-list-items/view-list-items.component';
-
+import { Gstr3bListComponent } from './components/gstr3b/gstr3b-list/gstr3b-list.component';
+import { Gstr3bComponent } from './components/gstr3b/gstr3b/gstr3b.component';
+import { Gstr9aComponent } from './components/gstr9/gstr9a/gstr9a.component';
+import { Gstr9cComponent } from './components/gstr9/gstr9c/gstr9c.component';
+import { NilReturnComponent } from './components/gstr1/nil-return/nil-return.component';
+import { Gstr3bNilReturnComponent } from './components/gstr3b/gstr3b-nil-return/gstr3b-nil-return.component';
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'generate-otp', component: GenerateOtpComponent },
@@ -21,6 +26,7 @@ const routes: Routes = [
     path: 'dashboard',
     component: DashboardComponent,
     canMatch: [authGuard], // Applying the new guard
+    data: { title: 'Dashboard' },
   },
   {
     path: 'gstr1/add',
@@ -51,6 +57,36 @@ const routes: Routes = [
     component: ViewListItemsComponent,
     canMatch: [authGuard],
     data: { title: 'View Item Details' },
+  },
+  {
+    path: 'gstr1/nilreturn',
+    component: NilReturnComponent,
+    canMatch: [authGuard],
+    data: { title: 'Nil Return' },
+  },
+  {
+    path: 'gstr3b/gstr3b',
+    component: Gstr3bComponent,
+    canMatch: [authGuard],
+    data: { title: 'GSTR 3B' },
+  },
+  {
+    path: 'gstr3b/gstr3b-nil-return',
+    component: Gstr3bNilReturnComponent,
+    canMatch: [authGuard],
+    data: { title: 'GSTR 3B - NIL Return' },
+  },
+  {
+    path: 'gstr9/gstr9a',
+    component: Gstr9aComponent,
+    canMatch: [authGuard],
+    data: { title: 'GSTR 9A' },
+  },
+  {
+    path: 'gstr9/gstr9c',
+    component: Gstr9cComponent,
+    canMatch: [authGuard],
+    data: { title: 'GSTR 9C' },
   },
   { path: '**', redirectTo: 'login' },
 ];

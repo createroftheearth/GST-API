@@ -17,4 +17,10 @@
         public string? rtin { get; set; }
         public string sec { get; set; }
     }
+
+    public class APIRequestParameters1
+    {
+        public string ret_period { get; set; }
+        public string gstin { get; set; }
+    }
 }

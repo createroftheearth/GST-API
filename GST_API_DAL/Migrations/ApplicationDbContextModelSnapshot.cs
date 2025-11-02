@@ -58,6 +58,9 @@ namespace GST_API_DAL.Migrations
                     b.Property<string>("NewProceedToFileGstr1Request")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ReferenceId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("SaveGstr1Reponse")
                         .HasColumnType("nvarchar(max)");
 
@@ -70,6 +73,53 @@ namespace GST_API_DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Gstr1");
+                });
+
+            modelBuilder.Entity("GST_API_DAL.Models.Gstr3", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedById")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("FinancialPeriod")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("GSTINNo")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
+
+                    b.Property<string>("GetGSTR3Request")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GetGSTR3Response")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Gstr3SaveRequest")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SaveGstr3Reponse")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("SaveGstr3Status")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Gstr3");
                 });
 
             modelBuilder.Entity("GST_API_DAL.Models.User", b =>
@@ -222,21 +272,21 @@ namespace GST_API_DAL.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "bef70db7-2908-429d-b1f4-85a515d03d9c",
+                            Id = "55385de5-0588-4176-9c66-d20b557a532f",
                             ConcurrencyStamp = "1",
                             Name = "APIUser",
                             NormalizedName = "APIUser"
                         },
                         new
                         {
-                            Id = "5377741c-0dd3-4124-b21a-d7757d01e368",
+                            Id = "0b123837-7471-42a4-8c21-84213b7f30e4",
                             ConcurrencyStamp = "1",
                             Name = "PublicUser",
                             NormalizedName = "PublicUser"
                         },
                         new
                         {
-                            Id = "012b62a1-e768-4f96-b91e-db20012a2509",
+                            Id = "f936c12d-f721-4119-b13e-813ab7c9f765",
                             ConcurrencyStamp = "1",
                             Name = "ASPUser",
                             NormalizedName = "ASPUser"

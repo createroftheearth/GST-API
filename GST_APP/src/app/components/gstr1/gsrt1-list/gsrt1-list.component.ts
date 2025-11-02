@@ -173,7 +173,7 @@ export class Gsrt1ListComponent implements OnInit {
   }
 
   onProceedToFile(id: number) {
-    this.gstr1Service.proceedToFile(id).subscribe((data) => {
+    this.gstr1Service.proceedToFile(id, null, null, "N").subscribe((data) => {
       if (data.isSuccess) {
         this.loadData();
       }
@@ -210,12 +210,12 @@ export class Gsrt1ListComponent implements OnInit {
   }
 
 
-  openPopupEVC(data: any, pan: string, gstnId: number) {
+  openPopupEVC(data: any, pan: string, id: number) {
     this.dialog.open(this.popupTemplateEVC, {
       data: {
         data: data,
         pan: pan,
-        gstnId: gstnId
+        id: id
       },
       width: '500px',
       height: '230px',
@@ -274,9 +274,9 @@ export class Gsrt1ListComponent implements OnInit {
     return formControl;
   }
 
-  onSubmit(gstnId: number) {
+  onSubmit(id: number) {
     if (this.EVCForm.valid) {
-      this.gstr1Service.generateOTP(this.EVCForm.value.PAN, gstnId).subscribe((data) => {
+      this.gstr1Service.generateOTP(this.EVCForm.value.PAN, id, "", "").subscribe((data) => {
         let PANNo = this.EVCForm.value.PAN;
         if (data.isSuccess) {
           // const requestData: Gstr1FileRequest = {
@@ -288,7 +288,7 @@ export class Gsrt1ListComponent implements OnInit {
           // };
 
           this.closePopup();
-          this.openPopupEVC(data.data, PANNo, gstnId);
+          this.openPopupEVC(data.data, PANNo, id);
           //TO-DO: open a new popup for OTP and send data.data in otp dialog so you can use it when sending request to Visual Studio Server. 
         } else {
           PANNo = '';//TODO: PAN needs to be update
@@ -300,7 +300,7 @@ export class Gsrt1ListComponent implements OnInit {
     }
   }
 
-  onOtpChange(otp: string, data: any, pan: string, gstnId: number): void {
+  onOtpChange(otp: string, data: any, pan: string, id: number): void {
     const alphanumericRegex = /^[a-zA-Z0-9]+$/;
 
     if (!alphanumericRegex.test(otp)) {
@@ -310,7 +310,7 @@ export class Gsrt1ListComponent implements OnInit {
       this.invalidOtpMessage = '';
     }
     if (otp.length == 6) {
-      this.gstr1Service.fileGSTR1(gstnId, data, otp, pan).subscribe((data) => {
+      this.gstr1Service.fileGSTR1(id, data, otp, pan).subscribe((data) => {
         if (data.isSuccess) {
           this.closePopup();
         }

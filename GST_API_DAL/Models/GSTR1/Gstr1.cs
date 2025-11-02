@@ -20,11 +20,12 @@ namespace GST_API_DAL.Models
         
         [Required(ErrorMessage = "GSTR1 Save Data is mandatory.")]
         [Display(Name = "GSTR1 Save Request Data")]
-        public required string Gstr1SaveRequest { get; set; }
+        public string? Gstr1SaveRequest { get; set; }
         public string? SaveGstr1Reponse { get; set; }
         public string? NewProceedToFileGstr1Request { get; set; }
         public string? NewProceedToFileGstr1Reponse { get; set; }
         public string? GetSummaryResponse{ get; set; }
+        public string? ReferenceId { get; set; }
     }
 
 }

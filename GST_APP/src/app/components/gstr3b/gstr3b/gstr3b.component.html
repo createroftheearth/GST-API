@@ -1,0 +1,122 @@
+<form [formGroup]="gstr3Form" (ngSubmit)="onSubmit()" *ngIf="!hideUploadButton">
+  <div style="display: flex; gap: 16px; align-items: flex-start; flex-wrap: wrap;">
+    <!-- GSTIN Input -->
+    <mat-form-field appearance="outline" style="width: 300px;">
+      <mat-label>GSTIN</mat-label>
+      <input matInput formControlName="gstin" required />
+      <mat-error>{{ getErrorMessage("gstin", "GSTIN") }}</mat-error>
+    </mat-form-field>
+
+    <!-- Financial Period Input -->
+    <mat-form-field appearance="outline" style="width: 300px;">
+      <mat-label>Financial Period</mat-label>
+      <input matInput formControlName="ret_period" required />
+      <mat-error>{{ getErrorMessage("ret_period", "Financial Period") }}</mat-error>
+    </mat-form-field>
+
+    <!-- Submit Button -->
+    <div style="display: flex; align-items: center;">
+      <button mat-raised-button class="custom-purple-button" type="submit" [disabled]="gstr3Form.invalid" style="margin-top: 12px;">
+        Get GSTR3B Detail
+      </button>
+    </div>
+
+    <!-- Upload Button -->
+    <div style="display: flex; align-items: center;">
+      <button mat-raised-button class="custom-purple-button" [matMenuTriggerFor]="fileMenu" *ngIf="!hideUploadButton" type="button" style="margin-top: 12px;">
+        <mat-icon>upload</mat-icon>
+        Upload File
+      </button>
+    </div>
+  </div>
+
+  <!-- Upload Menu (outside flex container but still inside form) -->
+  <mat-menu #fileMenu="matMenu">
+    <button mat-menu-item (click)="triggerFileInput('jsonFileInput')">Upload JSON</button>
+    <input type="file" id="jsonFileInput" (change)="onFileSelected($event, 'json')" accept="application/json" hidden />
+
+    <button mat-menu-item (click)="triggerFileInput('excelFileInput')">Upload Excel</button>
+    <input type="file" id="excelFileInput" (change)="onFileSelected($event, 'excel')" accept=".xls,.xlsx" hidden />
+  </mat-menu>
+</form>
+
+<br />
+<div class="row" *ngIf="jsonString">
+  <div class="col-9">
+    <h4>Uploaded JSON data</h4>
+    <h5>Please validate data before submitting</h5>
+    <ng-container *ngFor="let error of jsonValidationErrors | slice : 0 : 5">
+      <mat-error> {{ error }} </mat-error>
+      <br />
+    </ng-container>
+    <pre class="json-pretty">{{ jsonString }}</pre>
+  </div>
+  <div class="col-3">
+    <button
+      mat-raised-button
+      color="secondary"
+      class="right-aligned-button"
+      (click)="SaveGSTR3BResponse()"
+      [disabled]="this.jsonValidationErrors.length > 0"
+    >
+      <mat-icon>save</mat-icon>
+      Save Data
+    </button>
+    <!-- <button
+      mat-raised-button
+      color="primary"
+      [disabled]="this.jsonValidationErrors.length > 0"
+    >
+      <mat-icon>upload</mat-icon>
+      Submit GSTR1
+    </button> -->
+  </div>
+</div>
+
+<br />
+<mat-table [dataSource]="getGSTR3Data" class="mat-elevation-z2" style="width: 100%;" *ngIf="!hideUploadButton" >
+  <!-- ID Column -->
+  <ng-container matColumnDef="id">
+    <mat-header-cell *matHeaderCellDef> ID </mat-header-cell>
+    <mat-cell *matCellDef="let element; let i = index"> {{ i + 1 }} </mat-cell>
+  </ng-container>
+
+  <!-- GSTIN Column -->
+  <ng-container matColumnDef="gstin">
+    <mat-header-cell *matHeaderCellDef> GSTIN No </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{ element.gstin }} </mat-cell>
+  </ng-container>
+
+  <!-- Financial Period Column -->
+  <ng-container matColumnDef="fp">
+    <mat-header-cell *matHeaderCellDef> Financial Period </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{ element.fp }} </mat-cell>
+  </ng-container>
+
+  <!-- Action Column -->
+  <ng-container matColumnDef="action">
+    <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
+    <mat-cell *matCellDef="let element">
+      <button mat-mini-fab color="secondary" matTooltip="Get GSTR3B Save" (click) ="SaveGSTR3BResponse()">
+        <mat-icon>cloud_upload</mat-icon>
+      </button>
+      <!-- <button mat-mini-fab color="accent" matTooltip="Proceed To File" style="margin-left: 5px">
+        <mat-icon>description</mat-icon>
+      </button>
+      <button mat-mini-fab color="primary" matTooltip="View Summary" style="margin-left: 5px">
+        <mat-icon>visibility</mat-icon>
+      </button> -->
+      <button mat-mini-fab color="primary" matTooltip="GSTR1 File" style="margin-left: 5px">
+        <mat-icon>key</mat-icon>
+      </button>
+    </mat-cell>
+  </ng-container>
+
+  <!-- Table Rows -->
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+</mat-table>
+
+<!-- Paginator -->
+<mat-paginator [length]="0" [pageSize]="10" [pageSizeOptions]="[5, 10, 20]">
+</mat-paginator>
